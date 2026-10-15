@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import { createClient } from "@supabase/supabase-js";
 import { db } from "../db";
 import type { MediaItem } from "@/types";
 
@@ -43,22 +44,62 @@ export async function saveUploadedFile(file: File, customAlt = ""): Promise<Uplo
   }
 
   // Generate safe unique filename
-  const ext = path.extname(file.name) || (file.type === "application/pdf" ? ".pdf" : ".png");
+  const ext = path.extname(file.name) || (file.type === "application/pdf" ? ".pdf" : file.type === "image/webp" ? ".webp" : ".png");
   const cleanBase = path.basename(file.name, ext).replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 40);
   const uniqueName = `${cleanBase}_${crypto.randomBytes(6).toString("hex")}${ext.toLowerCase()}`;
 
-  // Ensure public/uploads exists
-  const uploadsDir = path.join(process.cwd(), "public", "uploads");
-  if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
+  let publicUrl = "";
+
+  // Strategy 1: Supabase Storage (Jika Supabase URL & Key tersedia)
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
+  const supabaseKey =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+    process.env.SUPABASE_PUBLISHABLE_KEY;
+  const bucketName = process.env.STORAGE_BUCKET || "media";
+
+  if (supabaseUrl && supabaseKey) {
+    try {
+      const supabase = createClient(supabaseUrl, supabaseKey);
+      const { error: uploadError } = await supabase.storage
+        .from(bucketName)
+        .upload(uniqueName, buffer, {
+          contentType: file.type,
+          upsert: true,
+        });
+
+      if (!uploadError) {
+        const { data: pubData } = supabase.storage.from(bucketName).getPublicUrl(uniqueName);
+        if (pubData?.publicUrl) {
+          publicUrl = pubData.publicUrl;
+        }
+      } else {
+        console.warn("Supabase Storage upload warning:", uploadError.message);
+      }
+    } catch (sErr) {
+      console.warn("Supabase Storage error:", sErr);
+    }
   }
 
-  const destination = path.join(uploadsDir, uniqueName);
-  fs.writeFileSync(destination, buffer);
+  // Strategy 2: Local Filesystem (Jika belum di Supabase & disk lokal writable)
+  if (!publicUrl) {
+    try {
+      const uploadsDir = path.join(process.cwd(), "public", "uploads");
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+      const destination = path.join(uploadsDir, uniqueName);
+      fs.writeFileSync(destination, buffer);
+      publicUrl = `/uploads/${uniqueName}`;
+    } catch {
+      // Strategy 3: Vercel Read-Only Fallback -> Base64 Data URL
+      // Pada serverless Vercel gratisan tanpa disk writable, gunakan Data URI yang disimpan di DB
+      const base64 = buffer.toString("base64");
+      publicUrl = `data:${file.type};base64,${base64}`;
+    }
+  }
 
-  const publicUrl = `/uploads/${uniqueName}`;
-
-  // Save metadata to media library
+  // Save metadata to database (Supabase PostgreSQL / LocalStore)
   const mediaItem = await db.saveMediaItem({
     name: uniqueName,
     url: publicUrl,

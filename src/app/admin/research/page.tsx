@@ -1,41 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Cpu, Save, CheckCircle2, AlertCircle } from "lucide-react";
 import type { ResearchItem } from "@/types";
 
 export default function AdminResearchPage() {
-  const [research, setResearch] = useState<ResearchItem>({
-    id: "res-1",
-    title:
-      "Implementasi YOLOv11 Modifikasi Untuk Deteksi Alat Pelindung Diri Helm Rompi, Sarung Tangan Dan Sepatu Dengan Alarm Otomatis.",
-    summary:
-      "Penelitian skripsi mengenai pengembangan model deteksi objek modifikasi YOLOv11 untuk mengidentifikasi 4 kelas Alat Pelindung Diri (APD) keselamatan kerja secara simultan dengan integrasi peringatan otomatis.",
-    background:
-      "Tingginya angka kecelakaan kerja pada sektor konstruksi dan industri manufaktur sebagian besar dipicu oleh kelalaian pekerja dalam memakai APD lengkap. Diperlukan sistem pengawasan digital otomatis yang mampu mendeteksi pelanggaran secara real-time.",
-    objective:
-      "Mengembangkan model deteksi modifikasi YOLOv11 yang efisien dalam mengklasifikasikan helm, rompi, sarung tangan, dan sepatu pelindung, serta menghubungkan hasil inferensi dengan sistem alarm audio-visual otomatis.",
-    methodology:
-      "Metodologi mencakup: studi literatur, akuisisi dan anotasi dataset APD, modifikasi arsitektur model YOLOv11 pada modul ekstraksi fitur, proses training dan validasi, serta pengujian sistem alarm otomatis di lingkungan uji coba.",
-    modelModification:
-      "Optimalisasi penangkapan fitur multi-skala guna meminimalisir miss-detection pada objek berskala kecil dan sering terhalang (seperti sarung tangan dan sepatu), serta mempertahankan frame rate tinggi untuk streaming kamera.",
-    datasetNotes:
-      "Dataset dikurasi secara terarah mencakup beragam sudut pandang kamera pengawas, variasi pencahayaan ruangan/lapangan, dan berbagai warna APD standar keselamatan.",
-    publishedStatus: "Penelitian Skripsi",
-    repoUrl: "https://github.com/wijayadarydimas-coder",
-    pdfUrl: "",
-    orderIndex: 1,
-    updatedAt: new Date().toISOString(),
-  });
-
+  const [research, setResearch] = useState<ResearchItem | null>(null);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState<{ type: "success" | "error" | null; message: string }>({
     type: null,
     message: "",
   });
 
+  const loadResearch = () => {
+    fetch("/api/admin/content?entity=research")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) {
+          setResearch(json.data);
+        }
+      })
+      .catch((err) => {
+        console.error("Gagal memuat riset skripsi:", err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    loadResearch();
+  }, []);
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!research) return;
     setSaving(true);
     setStatus({ type: null, message: "" });
 
@@ -55,7 +55,8 @@ export default function AdminResearchPage() {
         throw new Error(data.error || "Gagal menyimpan rincian skripsi.");
       }
 
-      setStatus({ type: "success", message: "Data penelitian skripsi berhasil diperbarui!" });
+      setResearch(data.data);
+      setStatus({ type: "success", message: "Data penelitian skripsi berhasil diperbarui dan diterapkan!" });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
       setStatus({ type: "error", message: msg });
@@ -63,6 +64,10 @@ export default function AdminResearchPage() {
       setSaving(false);
     }
   };
+
+  if (loading || !research) {
+    return <div className="text-xs text-[#71717A]">Memuat data penelitian skripsi...</div>;
+  }
 
   return (
     <div className="flex flex-col gap-6">

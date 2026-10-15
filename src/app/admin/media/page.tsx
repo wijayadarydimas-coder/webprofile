@@ -1,63 +1,55 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Image as ImageIcon, Upload, Trash2, Copy, Check, FileText } from "lucide-react";
 import type { MediaItem } from "@/types";
 
 export default function AdminMediaPage() {
-  const [mediaList, setMediaList] = useState<MediaItem[]>([
-    {
-      id: "media-1",
-      name: "profile-placeholder.svg",
-      url: "/images/profile-placeholder.svg",
-      mimeType: "image/svg+xml",
-      sizeBytes: 1024,
-      altText: "Avatar Wijaya Dary Dimas",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: "media-2",
-      name: "project-yolo.svg",
-      url: "/images/project-yolo.svg",
-      mimeType: "image/svg+xml",
-      sizeBytes: 2048,
-      altText: "YOLO APD Diagram",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: "media-3",
-      name: "project-geo.svg",
-      url: "/images/project-geo.svg",
-      mimeType: "image/svg+xml",
-      sizeBytes: 1800,
-      altText: "Geospatial Data Pipeline",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: "media-4",
-      name: "project-web.svg",
-      url: "/images/project-web.svg",
-      mimeType: "image/svg+xml",
-      sizeBytes: 1600,
-      altText: "Personal Hub Architecture",
-      createdAt: new Date().toISOString(),
-    },
-  ]);
-
+  const [mediaList, setMediaList] = useState<MediaItem[]>([]);
+  const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const loadMedia = () => {
+    setLoading(true);
+    fetch("/api/admin/content?entity=media")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && Array.isArray(json.data)) {
+          setMediaList(json.data);
+        }
+      })
+      .catch((err) => {
+        console.error("Gagal memuat media:", err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    loadMedia();
+  }, []);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("altText", file.name);
 
     try {
+      let uploadFile = file;
+      if (file.type.startsWith("image/") && file.type !== "image/svg+xml") {
+        const { convertImageToWebP } = await import("@/lib/utils/image-converter");
+        const conv = await convertImageToWebP(file);
+        uploadFile = conv.file;
+      }
+
+      const formData = new FormData();
+      formData.append("file", uploadFile);
+      formData.append("altText", file.name);
+
       const res = await fetch("/api/upload", {
         method: "POST",
         body: formData,
@@ -66,7 +58,7 @@ export default function AdminMediaPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Gagal mengunggah berkas.");
 
-      setMediaList([data.mediaItem, ...mediaList]);
+      loadMedia();
     } catch (err: unknown) {
       alert(err instanceof Error ? err.message : "Upload gagal");
     } finally {
@@ -118,6 +110,18 @@ export default function AdminMediaPage() {
             className="hidden"
           />
         </label>
+      </div>
+
+      {/* Tips Hosting Gratis Vercel */}
+      <div className="p-4 rounded-xl bg-[#1B1D23] border border-[#2B2D34] flex items-start gap-3 text-xs text-[#A1A1AA]">
+        <span className="p-1.5 rounded-lg bg-[#22C55E]/10 text-[#22C55E] shrink-0 mt-0.5">💡</span>
+        <div className="flex flex-col gap-1">
+          <span className="font-semibold text-[#F3F4F6]">Tips Berkas Optimal (Vercel &amp; Supabase):</span>
+          <p>
+            • <strong>Foto / Gambar</strong>: Seluruh gambar (JPG, PNG) otomatis dikonversi ke format <strong>WebP</strong> (menghemat hingga 80% ukuran tanpa mengurangi ketajaman).<br />
+            • <strong>Dokumen PDF</strong>: Gunakan file PDF terkompresi (&lt; 5MB) untuk CV/resume Anda agar cepat diakses dan diunduh.
+          </p>
+        </div>
       </div>
 
       {/* Grid of Media Assets */}

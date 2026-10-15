@@ -17,36 +17,17 @@ export default function AdminProfilePage() {
   });
 
   useEffect(() => {
-    fetch("/api/admin/content", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ entity: "profile", action: "get" }),
-    })
-      .then((res) => {
-        // Fallback: fetch from general public data
-        return fetch("/");
+    fetch("/api/admin/content?entity=profile")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) {
+          setProfile(json.data);
+        }
       })
-      .catch(() => {})
+      .catch((err) => {
+        console.error("Gagal memuat profil:", err);
+      })
       .finally(() => {
-        // Load default/active profile
-        setProfile({
-          id: "primary",
-          fullName: "Wijaya Dary Dimas",
-          headline: "Exploring Technology. Building Ideas. Creating Impact.",
-          shortBio:
-            "Saya memiliki latar belakang Teknik Informatika dan senang mengeksplorasi teknologi melalui proyek, penelitian, dan pengalaman praktik. Website ini menjadi tempat saya mendokumentasikan karya, proses belajar, dan perjalanan profesional.",
-          aboutMe:
-            "Halo! Saya Wijaya Dary Dimas, mahasiswa Teknik Informatika di Universitas Muhammadiyah Purwokerto dengan fokus minat pada rekayasa perangkat lunak, sistem berbasis machine learning / computer vision, dan komputasi terapan.\n\nMelalui studi dan pengalaman praktik di Badan Informasi Geospasial sebagai Pranata Komputer, saya terbiasa memecahkan masalah teknis dengan pendekatan terstruktur, menguji implementasi secara langsung, dan membangun sistem yang andal serta bermanfaat bagi pengguna.\n\nSaya percaya bahwa teknologi terbaik adalah teknologi yang dibangun dengan rasa ingin tahu tinggi, pemahaman mendalam pada masalah nyata, dan komitmen terhadap kualitas rekayasa.",
-          avatarUrl: "/images/profile-placeholder.svg",
-          avatarAlt: "Foto Profil Wijaya Dary Dimas",
-          cvUrl: "/files/cv-placeholder.pdf",
-          githubUrl: "https://github.com/wijayadarydimas-coder",
-          linkedinUrl: "",
-          email: "",
-          location: "Purwokerto, Indonesia",
-          statusText: "Pranata Komputer di BIG & Riset Deteksi APD YOLOv11",
-          updatedAt: new Date().toISOString(),
-        });
         setLoading(false);
       });
   }, []);
@@ -73,6 +54,7 @@ export default function AdminProfilePage() {
         throw new Error(json.error || "Gagal memperbarui profil.");
       }
 
+      setProfile(json.data);
       setStatus({ type: "success", message: "Profil berhasil diperbarui dan telah diterapkan ke website!" });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
@@ -83,14 +65,29 @@ export default function AdminProfilePage() {
   };
 
   const handleFileUpload = async (file: File, target: "avatar" | "cv") => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("altText", target === "avatar" ? "Foto Profil" : "Berkas Resume CV");
-
     if (target === "avatar") setUploadingAvatar(true);
     else setUploadingCv(true);
 
     try {
+      let uploadFile = file;
+      let conversionNotice = "";
+
+      // Otomatis konversi foto ke WebP jika target adalah avatar
+      if (target === "avatar" && file.type.startsWith("image/") && file.type !== "image/svg+xml") {
+        const { convertImageToWebP } = await import("@/lib/utils/image-converter");
+        const conv = await convertImageToWebP(file);
+        uploadFile = conv.file;
+        if (conv.wasConverted) {
+          const beforeKb = (conv.originalSize / 1024).toFixed(0);
+          const afterKb = (conv.convertedSize / 1024).toFixed(0);
+          conversionNotice = ` (Dikompresi WebP: ${beforeKb}KB ➡️ ${afterKb}KB)`;
+        }
+      }
+
+      const formData = new FormData();
+      formData.append("file", uploadFile);
+      formData.append("altText", target === "avatar" ? "Foto Profil" : "Berkas Resume CV");
+
       const res = await fetch("/api/upload", {
         method: "POST",
         body: formData,
@@ -108,7 +105,10 @@ export default function AdminProfilePage() {
           setProfile({ ...profile, cvUrl: data.url });
         }
       }
-      setStatus({ type: "success", message: "Berkas berhasil diunggah! Jangan lupa klik 'Simpan Perubahan'." });
+      setStatus({
+        type: "success",
+        message: `Berkas berhasil diunggah${conversionNotice}! Jangan lupa klik tombol 'Simpan Perubahan' di bawah.`,
+      });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Upload gagal";
       setStatus({ type: "error", message: msg });
@@ -150,6 +150,18 @@ export default function AdminProfilePage() {
           <span>{status.message}</span>
         </div>
       )}
+
+      {/* Tips Hosting Gratis (Vercel) */}
+      <div className="p-4 rounded-xl bg-[#1B1D23] border border-[#2B2D34] flex items-start gap-3 text-xs text-[#A1A1AA]">
+        <span className="p-1.5 rounded-lg bg-[#6D8DFF]/10 text-[#6D8DFF] shrink-0 mt-0.5">⚡</span>
+        <div className="flex flex-col gap-1">
+          <span className="font-semibold text-[#F3F4F6]">Tips Format Ringan &amp; Optimal (Vercel):</span>
+          <p>
+            • <strong>Foto Profil / Gambar</strong>: Sistem secara otomatis mengompresi gambar Anda menjadi format <strong>WebP</strong> yang sangat ringan namun tetap tajam untuk menghemat bandwidth hosting.<br />
+            • <strong>Berkas CV / Resume</strong>: Gunakan file <strong>PDF</strong> yang sudah terkompresi (ukuran ideal &lt; 2MB) agar cepat diunduh oleh pengunjung dan perekrut.
+          </p>
+        </div>
+      </div>
 
       <form onSubmit={handleSave} className="flex flex-col gap-6">
         {/* Profile Avatar Card */}

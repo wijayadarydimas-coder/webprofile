@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Settings, Save, CheckCircle2, AlertCircle, Sparkles, Shield, Key } from "lucide-react";
 import type { SiteSettings } from "@/types";
 
@@ -19,6 +19,19 @@ export default function AdminSettingsPage() {
     type: null,
     message: "",
   });
+
+  useEffect(() => {
+    fetch("/api/admin/content?entity=settings")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && json.data) {
+          setSettings(json.data);
+        }
+      })
+      .catch((err) => {
+        console.error("Gagal memuat pengaturan:", err);
+      });
+  }, []);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +52,8 @@ export default function AdminSettingsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Gagal menyimpan konfigurasi.");
 
-      setStatus({ type: "success", message: "Pengaturan sistem berhasil disimpan!" });
+      setSettings(data.data);
+      setStatus({ type: "success", message: "Pengaturan sistem berhasil disimpan dan diterapkan!" });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
       setStatus({ type: "error", message: msg });

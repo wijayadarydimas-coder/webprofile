@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { getCurrentUser } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import {
@@ -10,6 +11,59 @@ import {
   siteSettingsSchema,
 } from "@/lib/validation/schemas";
 
+export async function GET(req: Request) {
+  try {
+    const user = await getCurrentUser();
+    if (user?.role !== "admin") {
+      return NextResponse.json({ error: "Akses ditolak. Memerlukan hak admin." }, { status: 403 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const entity = searchParams.get("entity");
+
+    if (entity === "profile") {
+      const profile = await db.getProfile();
+      return NextResponse.json({ success: true, data: profile });
+    }
+
+    if (entity === "projects") {
+      const projects = await db.getProjects();
+      return NextResponse.json({ success: true, data: projects });
+    }
+
+    if (entity === "experience") {
+      const experiences = await db.getExperiences();
+      return NextResponse.json({ success: true, data: experiences });
+    }
+
+    if (entity === "education") {
+      const education = await db.getEducation();
+      return NextResponse.json({ success: true, data: education });
+    }
+
+    if (entity === "research") {
+      const research = await db.getResearchItems();
+      return NextResponse.json({ success: true, data: research[0] || null });
+    }
+
+    if (entity === "settings") {
+      const settings = await db.getSettings();
+      return NextResponse.json({ success: true, data: settings });
+    }
+
+    if (entity === "media") {
+      const media = await db.getMediaItems();
+      return NextResponse.json({ success: true, data: media });
+    }
+
+    return NextResponse.json({ error: "Entity tidak dikenali." }, { status: 400 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Error";
+    console.error("Admin content GET error:", message);
+    return NextResponse.json({ error: "Gagal mengambil data admin." }, { status: 500 });
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const user = await getCurrentUser();
@@ -20,6 +74,34 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { action, entity, data, id } = body;
 
+    // Handle get via POST if requested
+    if (action === "get") {
+      if (entity === "profile") {
+        const profile = await db.getProfile();
+        return NextResponse.json({ success: true, data: profile });
+      }
+      if (entity === "projects") {
+        const projects = await db.getProjects();
+        return NextResponse.json({ success: true, data: projects });
+      }
+      if (entity === "experience") {
+        const experiences = await db.getExperiences();
+        return NextResponse.json({ success: true, data: experiences });
+      }
+      if (entity === "education") {
+        const education = await db.getEducation();
+        return NextResponse.json({ success: true, data: education });
+      }
+      if (entity === "research") {
+        const research = await db.getResearchItems();
+        return NextResponse.json({ success: true, data: research[0] || null });
+      }
+      if (entity === "settings") {
+        const settings = await db.getSettings();
+        return NextResponse.json({ success: true, data: settings });
+      }
+    }
+
     // 1. Profile update
     if (entity === "profile") {
       const parsed = profileUpdateSchema.safeParse(data);
@@ -27,6 +109,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Data profil tidak valid.", details: parsed.error.format() }, { status: 400 });
       }
       const updated = await db.updateProfile(parsed.data);
+      revalidatePath("/", "layout");
       return NextResponse.json({ success: true, data: updated });
     }
 
@@ -35,6 +118,8 @@ export async function POST(req: Request) {
       if (action === "delete") {
         if (!id) return NextResponse.json({ error: "ID proyek diperlukan." }, { status: 400 });
         await db.deleteProject(id);
+        revalidatePath("/", "layout");
+        revalidatePath("/projects");
         return NextResponse.json({ success: true });
       }
       const parsed = projectSchema.safeParse(data);
@@ -42,6 +127,8 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Data proyek tidak valid.", details: parsed.error.format() }, { status: 400 });
       }
       const saved = await db.saveProject(parsed.data);
+      revalidatePath("/", "layout");
+      revalidatePath("/projects");
       return NextResponse.json({ success: true, data: saved });
     }
 
@@ -50,6 +137,7 @@ export async function POST(req: Request) {
       if (action === "delete") {
         if (!id) return NextResponse.json({ error: "ID diperlukan." }, { status: 400 });
         await db.deleteExperience(id);
+        revalidatePath("/", "layout");
         return NextResponse.json({ success: true });
       }
       const parsed = experienceSchema.safeParse(data);
@@ -57,6 +145,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Data pengalaman tidak valid.", details: parsed.error.format() }, { status: 400 });
       }
       const saved = await db.saveExperience(parsed.data);
+      revalidatePath("/", "layout");
       return NextResponse.json({ success: true, data: saved });
     }
 
@@ -65,6 +154,7 @@ export async function POST(req: Request) {
       if (action === "delete") {
         if (!id) return NextResponse.json({ error: "ID diperlukan." }, { status: 400 });
         await db.deleteEducation(id);
+        revalidatePath("/", "layout");
         return NextResponse.json({ success: true });
       }
       const parsed = educationSchema.safeParse(data);
@@ -72,6 +162,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Data pendidikan tidak valid.", details: parsed.error.format() }, { status: 400 });
       }
       const saved = await db.saveEducation(parsed.data);
+      revalidatePath("/", "layout");
       return NextResponse.json({ success: true, data: saved });
     }
 
@@ -80,6 +171,8 @@ export async function POST(req: Request) {
       if (action === "delete") {
         if (!id) return NextResponse.json({ error: "ID diperlukan." }, { status: 400 });
         await db.deleteResearch(id);
+        revalidatePath("/", "layout");
+        revalidatePath("/research");
         return NextResponse.json({ success: true });
       }
       const parsed = researchSchema.safeParse(data);
@@ -87,6 +180,8 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Data penelitian tidak valid.", details: parsed.error.format() }, { status: 400 });
       }
       const saved = await db.saveResearch(parsed.data);
+      revalidatePath("/", "layout");
+      revalidatePath("/research");
       return NextResponse.json({ success: true, data: saved });
     }
 
@@ -97,6 +192,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Pengaturan tidak valid.", details: parsed.error.format() }, { status: 400 });
       }
       const saved = await db.updateSettings(parsed.data);
+      revalidatePath("/", "layout");
       return NextResponse.json({ success: true, data: saved });
     }
 
@@ -111,6 +207,6 @@ export async function POST(req: Request) {
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Error";
     console.error("Admin content error:", message);
-    return NextResponse.json({ error: "Gagal menyimpan perubahan admin." }, { status: 500 });
+    return NextResponse.json({ error: "Gagal menyimpan perubahan admin: " + message }, { status: 500 });
   }
 }

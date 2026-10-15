@@ -17,76 +17,20 @@ export default function AdminProjectsPage() {
   });
 
   const loadProjects = () => {
-    // Initial fetch projects
-    fetch("/api/comments") // dummy ping to test connectivity
-      .catch(() => {});
-    
-    // Seed projects list
-    setProjects([
-      {
-        id: "proj-1",
-        slug: "yolov11-safety-detection",
-        title: "Sistem Deteksi APD Real-Time & Alarm Otomatis Berbasis YOLOv11",
-        shortDescription:
-          "Sistem computer vision cerdas untuk mendeteksi kelengkapan APD (helm, rompi, sarung tangan, sepatu keselamatan) pada pekerja industri dengan pemicu alarm otomatis.",
-        fullDescription:
-          "Proyek ini merupakan implementasi dan rekayasa sistem dari penelitian skripsi di Universitas Muhammadiyah Purwokerto...",
-        problem: "Pengawasan kepatuhan K3 manual menggunakan CCTV konvensional membutuhkan tenaga operator manusia konstan.",
-        solution: "Mengintegrasikan model YOLOv11 yang dimodifikasi untuk deteksi multi-kelas APD secara simultan dan trigger alarm audio-visual.",
-        results: "Sistem berhasil memproses aliran video secara stabil dan memicu peringatan otomatis saat mendeteksi pelanggaran APD.",
-        category: "Computer Vision",
-        technologies: ["Python", "YOLOv11", "PyTorch", "OpenCV", "FastAPI"],
-        coverImage: "/images/project-yolo.svg",
-        repoUrl: "https://github.com/wijayadarydimas-coder",
-        liveUrl: "",
-        featured: true,
-        published: true,
-        orderIndex: 1,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
-      {
-        id: "proj-2",
-        slug: "spatial-data-infrastructure",
-        title: "Geospatial Data Pipeline & Management Portal",
-        shortDescription: "Eksplorasi infrastruktur dan katalogisasi data geospasial berbasis web.",
-        fullDescription: "Proyek pendukung dan eksplorasi teknologi informasi geospasial...",
-        problem: "Distribusi dataset spasial berukuran besar memerlukan sistem pengindeksan metadata yang rapi.",
-        solution: "Membangun portal penelusuran spasial interaktif dengan filtering atribut dan layer peta.",
-        results: "Katalog data dapat diakses cepat dengan rendering layer peta responsif.",
-        category: "Geospatial",
-        technologies: ["TypeScript", "Next.js", "PostgreSQL", "PostGIS", "Tailwind CSS"],
-        coverImage: "/images/project-geo.svg",
-        repoUrl: "https://github.com/wijayadarydimas-coder",
-        liveUrl: "",
-        featured: true,
-        published: true,
-        orderIndex: 2,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
-      {
-        id: "proj-3",
-        slug: "personal-digital-hub",
-        title: "Modern Personal Digital Hub & AI Assistant Platform",
-        shortDescription: "Platform website personal production-ready dengan arsitektur modern Next.js App Router.",
-        fullDescription: "Sistem digital hub yang dirancang dari nol untuk menjadi representasi profesional jangka panjang...",
-        problem: "Template portofolio statis konvensional sulit diperbarui secara dinamis.",
-        solution: "Membangun arsitektur full-stack dengan adapter database fleksibel dan asisten AI.",
-        results: "Website interaktif yang cepat, aman, dan mudah dikelola mandiri.",
-        category: "Full-Stack",
-        technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Three.js", "PostgreSQL"],
-        coverImage: "/images/project-web.svg",
-        repoUrl: "https://github.com/wijayadarydimas-coder",
-        liveUrl: "",
-        featured: true,
-        published: true,
-        orderIndex: 3,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      },
-    ]);
-    setLoading(false);
+    setLoading(true);
+    fetch("/api/admin/content?entity=projects")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success && Array.isArray(json.data)) {
+          setProjects(json.data);
+        }
+      })
+      .catch((err) => {
+        console.error("Gagal memuat proyek:", err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -141,12 +85,7 @@ export default function AdminProjectsPage() {
 
       setStatus({ type: "success", message: "Data proyek berhasil disimpan!" });
       setIsModalOpen(false);
-      // update state
-      if (editingProj.id) {
-        setProjects(projects.map((p) => (p.id === editingProj.id ? { ...editingProj } : p)));
-      } else {
-        setProjects([...projects, { ...editingProj, id: `proj-${Date.now()}` }]);
-      }
+      loadProjects();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
       setStatus({ type: "error", message: msg });
@@ -172,11 +111,18 @@ export default function AdminProjectsPage() {
 
   const handleUploadCover = async (file: File) => {
     setUploadingImage(true);
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("altText", "Cover Proyek");
-
     try {
+      let uploadFile = file;
+      if (file.type.startsWith("image/") && file.type !== "image/svg+xml") {
+        const { convertImageToWebP } = await import("@/lib/utils/image-converter");
+        const conv = await convertImageToWebP(file);
+        uploadFile = conv.file;
+      }
+
+      const fd = new FormData();
+      fd.append("file", uploadFile);
+      fd.append("altText", "Cover Proyek");
+
       const res = await fetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Gagal upload gambar.");

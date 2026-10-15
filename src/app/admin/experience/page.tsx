@@ -1,41 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Briefcase, GraduationCap, Plus, Trash2, Save, CheckCircle2, AlertCircle } from "lucide-react";
 import type { Experience, Education } from "@/types";
 
 export default function AdminExperiencePage() {
-  const [experiences, setExperiences] = useState<Experience[]>([
-    {
-      id: "exp-1",
-      organization: "Badan Informasi Geospasial",
-      role: "Pranata Komputer",
-      period: "November 2025 – Mei 2026",
-      description:
-        "Bertanggung jawab dalam pengelolaan sistem teknologi informasi dan infrastruktur data spasial, pemeliharaan perangkat lunak layanan internal, serta memberikan dukungan teknis komputasi pada instansi.",
-      type: "internship",
-      orderIndex: 1,
-      url: "https://big.go.id",
-    },
-  ]);
-
-  const [educations, setEducations] = useState<Education[]>([
-    {
-      id: "edu-1",
-      institution: "Universitas Muhammadiyah Purwokerto",
-      degree: "S1 Teknik Informatika",
-      period: "2021 – Sekarang",
-      description:
-        "Mendalami ilmu rekayasa perangkat lunak, algoritma dan struktur data, kecerdasan buatan, jaringan komputer, serta pengolahan citra digital. Mengembangkan skripsi modifikasi arsitektur YOLOv11 untuk deteksi APD.",
-      orderIndex: 1,
-      url: "https://ump.ac.id",
-    },
-  ]);
+  const [experiences, setExperiences] = useState<Experience[]>([]);
+  const [educations, setEducations] = useState<Education[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [status, setStatus] = useState<{ type: "success" | "error" | null; message: string }>({
     type: null,
     message: "",
   });
+
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const [expRes, eduRes] = await Promise.all([
+        fetch("/api/admin/content?entity=experience").then((r) => r.json()),
+        fetch("/api/admin/content?entity=education").then((r) => r.json()),
+      ]);
+      if (expRes.success && Array.isArray(expRes.data)) {
+        setExperiences(expRes.data);
+      }
+      if (eduRes.success && Array.isArray(eduRes.data)) {
+        setEducations(eduRes.data);
+      }
+    } catch (err) {
+      console.error("Gagal memuat data pengalaman/pendidikan:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
 
   const handleSaveExp = async (exp: Experience) => {
     try {
@@ -45,6 +46,7 @@ export default function AdminExperiencePage() {
         body: JSON.stringify({ entity: "experience", action: "save", data: exp }),
       });
       setStatus({ type: "success", message: "Data pengalaman berhasil disimpan!" });
+      loadData();
     } catch {
       setStatus({ type: "error", message: "Gagal menyimpan pengalaman." });
     }
@@ -58,6 +60,7 @@ export default function AdminExperiencePage() {
         body: JSON.stringify({ entity: "education", action: "save", data: edu }),
       });
       setStatus({ type: "success", message: "Data pendidikan berhasil disimpan!" });
+      loadData();
     } catch {
       setStatus({ type: "error", message: "Gagal menyimpan pendidikan." });
     }

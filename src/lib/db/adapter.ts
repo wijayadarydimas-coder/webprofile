@@ -62,7 +62,8 @@ export interface DatabaseRepository {
   // Users
   findUserByEmail(email: string): Promise<User | null>;
   findUserById(id: string): Promise<User | null>;
-  createUser(user: Omit<User, "id" | "createdAt">): Promise<User>;
+  getUserPasswordHash(email: string): Promise<string | null>;
+  createUser(user: Omit<User, "id" | "createdAt"> & { passwordHash: string }): Promise<User>;
 
   // Contact Messages
   saveContactMessage(name: string, email: string, message: string): Promise<{ id: string }>;

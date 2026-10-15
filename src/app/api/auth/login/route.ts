@@ -66,10 +66,7 @@ export async function POST(req: Request) {
     }
 
     // Get stored password hash
-    let passwordHash = "";
-    if (db instanceof LocalStoreRepository) {
-      passwordHash = (await db.getUserPasswordHash(email)) || "";
-    }
+    const passwordHash = (await db.getUserPasswordHash(email)) || "";
 
     if (!passwordHash) {
       return NextResponse.json(
