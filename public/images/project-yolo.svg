@@ -1,0 +1,32 @@
+<svg width="800" height="450" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="450" fill="#15171C"/>
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1B1D23"/>
+      <stop offset="100%" stop-color="#101114"/>
+    </linearGradient>
+  </defs>
+  <rect x="20" y="20" width="760" height="410" rx="12" fill="url(#g1)" stroke="#2B2D34" stroke-width="1.5"/>
+  
+  <!-- Bounding boxes representing YOLO detection -->
+  <rect x="240" y="80" width="320" height="290" rx="6" stroke="#6D8DFF" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <rect x="250" y="90" width="160" height="70" rx="4" fill="#6D8DFF" fill-opacity="0.1" stroke="#6D8DFF" stroke-width="2"/>
+  <text x="260" y="110" fill="#8B9CFF" font-family="monospace" font-size="12" font-weight="bold">HELM: 98.4% [PASS]</text>
+  
+  <rect x="250" y="170" width="300" height="110" rx="4" fill="#6D8DFF" fill-opacity="0.08" stroke="#8B9CFF" stroke-width="2"/>
+  <text x="260" y="190" fill="#8B9CFF" font-family="monospace" font-size="12" font-weight="bold">ROMPI: 96.1% [PASS]</text>
+  
+  <rect x="260" y="290" width="120" height="70" rx="4" fill="#22C55E" fill-opacity="0.1" stroke="#22C55E" stroke-width="2"/>
+  <text x="270" y="310" fill="#22C55E" font-family="monospace" font-size="11" font-weight="bold">SEPATU: 94.2%</text>
+
+  <rect x="420" y="290" width="120" height="70" rx="4" fill="#22C55E" fill-opacity="0.1" stroke="#22C55E" stroke-width="2"/>
+  <text x="430" y="310" fill="#22C55E" font-family="monospace" font-size="11" font-weight="bold">SARUNG TANGAN</text>
+
+  <!-- Alarm status badge -->
+  <rect x="620" y="45" width="130" height="32" rx="16" fill="#1B1D23" stroke="#22C55E" stroke-width="1.5"/>
+  <circle cx="636" cy="61" r="5" fill="#22C55E"/>
+  <text x="650" y="66" fill="#F3F4F6" font-family="monospace" font-size="11">STATUS: AMAN</text>
+
+  <text x="50" y="70" fill="#A1A1AA" font-family="system-ui" font-size="14" font-weight="600">YOLOv11 MODIFIED ARCHITECTURE</text>
+  <text x="50" y="92" fill="#71717A" font-family="monospace" font-size="12">REAL-TIME PPE SAFETY DETECTION</text>
+</svg>

@@ -1,0 +1,8 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" rx="32" fill="#15171C"/>
+  <circle cx="200" cy="200" r="180" stroke="#2B2D34" stroke-width="2" stroke-dasharray="6 6"/>
+  <circle cx="200" cy="150" r="60" fill="#1B1D23" stroke="#6D8DFF" stroke-width="2"/>
+  <path d="M100 320C100 260 145 230 200 230C255 230 300 260 300 320" fill="#1B1D23" stroke="#6D8DFF" stroke-width="2"/>
+  <circle cx="200" cy="150" r="28" fill="#6D8DFF" fill-opacity="0.2"/>
+  <text x="200" y="370" text-anchor="middle" fill="#A1A1AA" font-family="system-ui, sans-serif" font-size="14" font-weight="500" letter-spacing="2">WIJAYA DARY DIMAS</text>
+</svg>

@@ -1,0 +1,513 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { FolderKanban, Plus, Edit, Trash2, ExternalLink, CheckCircle2, AlertCircle, X, Upload } from "lucide-react";
+import type { Project } from "@/types";
+
+export default function AdminProjectsPage() {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [editingProj, setEditingProj] = useState<Project | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [status, setStatus] = useState<{ type: "success" | "error" | null; message: string }>({
+    type: null,
+    message: "",
+  });
+
+  const loadProjects = () => {
+    // Initial fetch projects
+    fetch("/api/comments") // dummy ping to test connectivity
+      .catch(() => {});
+    
+    // Seed projects list
+    setProjects([
+      {
+        id: "proj-1",
+        slug: "yolov11-safety-detection",
+        title: "Sistem Deteksi APD Real-Time & Alarm Otomatis Berbasis YOLOv11",
+        shortDescription:
+          "Sistem computer vision cerdas untuk mendeteksi kelengkapan APD (helm, rompi, sarung tangan, sepatu keselamatan) pada pekerja industri dengan pemicu alarm otomatis.",
+        fullDescription:
+          "Proyek ini merupakan implementasi dan rekayasa sistem dari penelitian skripsi di Universitas Muhammadiyah Purwokerto...",
+        problem: "Pengawasan kepatuhan K3 manual menggunakan CCTV konvensional membutuhkan tenaga operator manusia konstan.",
+        solution: "Mengintegrasikan model YOLOv11 yang dimodifikasi untuk deteksi multi-kelas APD secara simultan dan trigger alarm audio-visual.",
+        results: "Sistem berhasil memproses aliran video secara stabil dan memicu peringatan otomatis saat mendeteksi pelanggaran APD.",
+        category: "Computer Vision",
+        technologies: ["Python", "YOLOv11", "PyTorch", "OpenCV", "FastAPI"],
+        coverImage: "/images/project-yolo.svg",
+        repoUrl: "https://github.com/wijayadarydimas-coder",
+        liveUrl: "",
+        featured: true,
+        published: true,
+        orderIndex: 1,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: "proj-2",
+        slug: "spatial-data-infrastructure",
+        title: "Geospatial Data Pipeline & Management Portal",
+        shortDescription: "Eksplorasi infrastruktur dan katalogisasi data geospasial berbasis web.",
+        fullDescription: "Proyek pendukung dan eksplorasi teknologi informasi geospasial...",
+        problem: "Distribusi dataset spasial berukuran besar memerlukan sistem pengindeksan metadata yang rapi.",
+        solution: "Membangun portal penelusuran spasial interaktif dengan filtering atribut dan layer peta.",
+        results: "Katalog data dapat diakses cepat dengan rendering layer peta responsif.",
+        category: "Geospatial",
+        technologies: ["TypeScript", "Next.js", "PostgreSQL", "PostGIS", "Tailwind CSS"],
+        coverImage: "/images/project-geo.svg",
+        repoUrl: "https://github.com/wijayadarydimas-coder",
+        liveUrl: "",
+        featured: true,
+        published: true,
+        orderIndex: 2,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: "proj-3",
+        slug: "personal-digital-hub",
+        title: "Modern Personal Digital Hub & AI Assistant Platform",
+        shortDescription: "Platform website personal production-ready dengan arsitektur modern Next.js App Router.",
+        fullDescription: "Sistem digital hub yang dirancang dari nol untuk menjadi representasi profesional jangka panjang...",
+        problem: "Template portofolio statis konvensional sulit diperbarui secara dinamis.",
+        solution: "Membangun arsitektur full-stack dengan adapter database fleksibel dan asisten AI.",
+        results: "Website interaktif yang cepat, aman, dan mudah dikelola mandiri.",
+        category: "Full-Stack",
+        technologies: ["Next.js", "TypeScript", "Tailwind CSS", "Three.js", "PostgreSQL"],
+        coverImage: "/images/project-web.svg",
+        repoUrl: "https://github.com/wijayadarydimas-coder",
+        liveUrl: "",
+        featured: true,
+        published: true,
+        orderIndex: 3,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      },
+    ]);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadProjects();
+  }, []);
+
+  const handleOpenNew = () => {
+    setEditingProj({
+      id: "",
+      slug: "",
+      title: "",
+      shortDescription: "",
+      fullDescription: "",
+      problem: "",
+      solution: "",
+      results: "",
+      category: "Computer Vision",
+      technologies: ["Python"],
+      coverImage: "/images/project-yolo.svg",
+      repoUrl: "",
+      liveUrl: "",
+      featured: false,
+      published: true,
+      orderIndex: projects.length + 1,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProj) return;
+    setSaving(true);
+    setStatus({ type: null, message: "" });
+
+    try {
+      const res = await fetch("/api/admin/content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          entity: "project",
+          action: "save",
+          data: editingProj,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Gagal menyimpan proyek.");
+      }
+
+      setStatus({ type: "success", message: "Data proyek berhasil disimpan!" });
+      setIsModalOpen(false);
+      // update state
+      if (editingProj.id) {
+        setProjects(projects.map((p) => (p.id === editingProj.id ? { ...editingProj } : p)));
+      } else {
+        setProjects([...projects, { ...editingProj, id: `proj-${Date.now()}` }]);
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
+      setStatus({ type: "error", message: msg });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Hapus proyek ini secara permanen?")) return;
+    try {
+      await fetch("/api/admin/content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ entity: "project", action: "delete", id }),
+      });
+      setProjects(projects.filter((p) => p.id !== id));
+      setStatus({ type: "success", message: "Proyek berhasil dihapus." });
+    } catch {
+      setStatus({ type: "error", message: "Gagal menghapus proyek." });
+    }
+  };
+
+  const handleUploadCover = async (file: File) => {
+    setUploadingImage(true);
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("altText", "Cover Proyek");
+
+    try {
+      const res = await fetch("/api/upload", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Gagal upload gambar.");
+
+      if (editingProj) {
+        setEditingProj({ ...editingProj, coverImage: data.url });
+      }
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Upload gagal");
+    } finally {
+      setUploadingImage(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#202228]">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <FolderKanban className="w-5 h-5 text-[#6D8DFF]" />
+            <h1 className="text-xl font-bold text-[#F3F4F6]">Pengelolaan Portofolio &amp; Proyek</h1>
+          </div>
+          <p className="text-xs text-[#A1A1AA]">
+            Tambah, edit, sesuaikan urutan, dan sembunyikan/publikasikan studi kasus proyek.
+          </p>
+        </div>
+
+        <button onClick={handleOpenNew} className="btn-primary text-xs py-2 px-3.5">
+          <Plus className="w-3.5 h-3.5" />
+          <span>Tambah Proyek Baru</span>
+        </button>
+      </div>
+
+      {status.type && (
+        <div
+          className={`p-3.5 rounded-lg flex items-center gap-2.5 text-xs ${
+            status.type === "success"
+              ? "bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#22C55E]"
+              : "bg-[#EF4444]/10 border border-[#EF4444]/30 text-[#EF4444]"
+          }`}
+        >
+          {status.type === "success" ? (
+            <CheckCircle2 className="w-4 h-4 shrink-0" />
+          ) : (
+            <AlertCircle className="w-4 h-4 shrink-0" />
+          )}
+          <span>{status.message}</span>
+        </div>
+      )}
+
+      {/* Projects Table */}
+      <div className="overflow-x-auto rounded-xl border border-[#2B2D34] bg-[#15171C]">
+        <table className="w-full text-left text-xs text-[#A1A1AA]">
+          <thead className="bg-[#111317] border-b border-[#2B2D34] text-[#F3F4F6] font-medium">
+            <tr>
+              <th className="p-3.5">Judul Proyek</th>
+              <th className="p-3.5">Kategori</th>
+              <th className="p-3.5">Status</th>
+              <th className="p-3.5">Unggulan</th>
+              <th className="p-3.5 text-right">Aksi</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-[#202228]">
+            {projects.map((proj) => (
+              <tr key={proj.id} className="hover:bg-[#1B1D23]/50 transition-colors">
+                <td className="p-3.5">
+                  <div className="flex flex-col">
+                    <span className="font-semibold text-[#F3F4F6]">{proj.title}</span>
+                    <span className="text-[10px] text-[#71717A] font-mono">/{proj.slug}</span>
+                  </div>
+                </td>
+                <td className="p-3.5">
+                  <span className="badge-tech">{proj.category}</span>
+                </td>
+                <td className="p-3.5">
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-mono ${
+                    proj.published ? "bg-[#22C55E]/15 text-[#22C55E]" : "bg-[#71717A]/20 text-[#A1A1AA]"
+                  }`}>
+                    {proj.published ? "Terpublikasi" : "Draft"}
+                  </span>
+                </td>
+                <td className="p-3.5">
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-mono ${
+                    proj.featured ? "bg-[#6D8DFF]/15 text-[#8B9CFF]" : "text-[#71717A]"
+                  }`}>
+                    {proj.featured ? "Ya" : "Tidak"}
+                  </span>
+                </td>
+                <td className="p-3.5 text-right">
+                  <div className="flex items-center justify-end gap-2">
+                    <button
+                      onClick={() => {
+                        setEditingProj(proj);
+                        setIsModalOpen(true);
+                      }}
+                      className="p-1.5 rounded hover:bg-[#1B1D23] text-[#8B9CFF]"
+                      title="Edit Proyek"
+                    >
+                      <Edit className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(proj.id)}
+                      className="p-1.5 rounded hover:bg-[#1B1D23] text-[#EF4444]"
+                      title="Hapus Proyek"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Edit/Create Modal */}
+      {isModalOpen && editingProj && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+          <div className="relative w-full max-w-2xl max-h-[90vh] bg-[#15171C] border border-[#2B2D34] rounded-2xl p-6 overflow-y-auto flex flex-col gap-5 shadow-2xl">
+            <div className="flex items-center justify-between pb-3 border-b border-[#202228]">
+              <h2 className="text-base font-bold text-[#F3F4F6]">
+                {editingProj.id ? "Edit Proyek" : "Tambah Proyek Baru"}
+              </h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-[#71717A] hover:text-[#F3F4F6]">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSave} className="flex flex-col gap-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[#A1A1AA]">Judul Proyek</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingProj.title}
+                    onChange={(e) => {
+                      const title = e.target.value;
+                      const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+                      setEditingProj({ ...editingProj, title, slug: editingProj.slug || slug });
+                    }}
+                    className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[#A1A1AA]">Slug URL</label>
+                  <input
+                    type="text"
+                    required
+                    value={editingProj.slug}
+                    onChange={(e) => setEditingProj({ ...editingProj, slug: e.target.value })}
+                    className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6] font-mono"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[#A1A1AA]">Kategori</label>
+                  <select
+                    value={editingProj.category}
+                    onChange={(e) => setEditingProj({ ...editingProj, category: e.target.value as Project["category"] })}
+                    className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
+                  >
+                    <option value="Computer Vision">Computer Vision</option>
+                    <option value="Geospatial">Geospatial</option>
+                    <option value="Full-Stack">Full-Stack</option>
+                    <option value="System">System</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[#A1A1AA]">Teknologi (pisahkan koma)</label>
+                  <input
+                    type="text"
+                    value={editingProj.technologies.join(", ")}
+                    onChange={(e) =>
+                      setEditingProj({
+                        ...editingProj,
+                        technologies: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                      })
+                    }
+                    className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[#A1A1AA]">Deskripsi Singkat</label>
+                <textarea
+                  rows={2}
+                  required
+                  value={editingProj.shortDescription}
+                  onChange={(e) => setEditingProj({ ...editingProj, shortDescription: e.target.value })}
+                  className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[#A1A1AA]">Deskripsi Lengkap / Pendekatan</label>
+                <textarea
+                  rows={4}
+                  required
+                  value={editingProj.fullDescription}
+                  onChange={(e) => setEditingProj({ ...editingProj, fullDescription: e.target.value })}
+                  className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[#A1A1AA]">Masalah (Problem)</label>
+                  <textarea
+                    rows={2}
+                    value={editingProj.problem || ""}
+                    onChange={(e) => setEditingProj({ ...editingProj, problem: e.target.value })}
+                    className="p-2 rounded bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[#A1A1AA]">Solusi (Approach)</label>
+                  <textarea
+                    rows={2}
+                    value={editingProj.solution || ""}
+                    onChange={(e) => setEditingProj({ ...editingProj, solution: e.target.value })}
+                    className="p-2 rounded bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
+                  />
+                </div>
+                <div className="flex flex-col gap-1">
+                  <label className="text-[#A1A1AA]">Hasil Nyata (Results)</label>
+                  <textarea
+                    rows={2}
+                    value={editingProj.results || ""}
+                    onChange={(e) => setEditingProj({ ...editingProj, results: e.target.value })}
+                    className="p-2 rounded bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[#A1A1AA]">URL GitHub Repo</label>
+                  <input
+                    type="text"
+                    value={editingProj.repoUrl || ""}
+                    onChange={(e) => setEditingProj({ ...editingProj, repoUrl: e.target.value })}
+                    placeholder="https://github.com/..."
+                    className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[#A1A1AA]">URL Live Demo</label>
+                  <input
+                    type="text"
+                    value={editingProj.liveUrl || ""}
+                    onChange={(e) => setEditingProj({ ...editingProj, liveUrl: e.target.value })}
+                    placeholder="https://..."
+                    className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[#A1A1AA]">Cover Image URL / Upload</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    required
+                    value={editingProj.coverImage}
+                    onChange={(e) => setEditingProj({ ...editingProj, coverImage: e.target.value })}
+                    className="flex-1 p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
+                  />
+                  <label className="btn-secondary py-2 px-3 shrink-0 cursor-pointer text-xs">
+                    <Upload className="w-3.5 h-3.5" />
+                    <span>{uploadingImage ? "..." : "Upload"}</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        if (e.target.files?.[0]) handleUploadCover(e.target.files[0]);
+                      }}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-6 pt-2">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={editingProj.featured}
+                    onChange={(e) => setEditingProj({ ...editingProj, featured: e.target.checked })}
+                    className="rounded bg-[#1B1D23] border-[#2B2D34]"
+                  />
+                  <span className="text-[#F3F4F6]">Tampilkan sebagai Proyek Unggulan</span>
+                </label>
+
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={editingProj.published}
+                    onChange={(e) => setEditingProj({ ...editingProj, published: e.target.checked })}
+                    className="rounded bg-[#1B1D23] border-[#2B2D34]"
+                  />
+                  <span className="text-[#F3F4F6]">Publikasikan Sekarang</span>
+                </label>
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#202228]">
+                <button
+                  type="button"
+                  onClick={() => setIsModalOpen(false)}
+                  className="btn-secondary py-2 px-4"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="btn-primary py-2 px-5 font-semibold"
+                >
+                  {saving ? "Menyimpan..." : "Simpan Proyek"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
