@@ -413,7 +413,10 @@ export default function ResearchDocViewer({
   }
 
   const hasRepo = isSafeUrl(activeItem.repoUrl);
-  const hasPdf = isSafeUrl(activeItem.pdfUrl);
+  const pdfHref = activeItem.pdfUrl?.startsWith("data:application/pdf;base64,")
+    ? `/api/research/${activeItem.id}/pdf`
+    : activeItem.pdfUrl;
+  const hasPdf = Boolean(pdfHref && (pdfHref.startsWith("/") || isSafeUrl(pdfHref)));
 
   return (
     <div className="pt-28 pb-24 relative z-10">
@@ -537,7 +540,7 @@ export default function ResearchDocViewer({
 
             {hasPdf && (
               <a
-                href={activeItem.pdfUrl}
+                href={pdfHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-secondary text-xs py-2 px-4"

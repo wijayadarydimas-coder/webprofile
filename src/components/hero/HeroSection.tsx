@@ -55,7 +55,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
 
               {profile.cvUrl ? (
                 <a
-                  href={profile.cvUrl}
+                  href="/api/profile/cv"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-secondary"

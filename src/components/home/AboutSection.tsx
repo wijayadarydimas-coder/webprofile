@@ -100,7 +100,7 @@ export default function AboutSection({
 
                 {profile.cvUrl && (
                   <a
-                    href={profile.cvUrl}
+                    href="/api/profile/cv"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-xs font-medium text-[#F1F2F5] hover:text-[#7790FF] transition-colors"

@@ -11,7 +11,10 @@ interface ResearchSectionProps {
 
 export default function ResearchSection({ research }: ResearchSectionProps) {
   const hasRepo = isSafeUrl(research.repoUrl);
-  const hasPdf = isSafeUrl(research.pdfUrl);
+  const pdfHref = research.pdfUrl?.startsWith("data:application/pdf;base64,")
+    ? `/api/research/${research.id}/pdf`
+    : research.pdfUrl;
+  const hasPdf = Boolean(pdfHref && (pdfHref.startsWith("/") || isSafeUrl(pdfHref)));
 
   return (
     <section id="research" className="py-24 md:py-32 border-t border-[#1C202B] relative z-10">
@@ -107,7 +110,7 @@ export default function ResearchSection({ research }: ResearchSectionProps) {
 
             {hasPdf && (
               <a
-                href={research.pdfUrl}
+                href={pdfHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-secondary text-xs py-2 px-3"
