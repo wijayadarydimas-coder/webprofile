@@ -16,6 +16,8 @@ export async function GET() {
       roleTitle: profile.roleTitle || "Informatics & CV Engineer",
       logoUrl: profile.logoUrl || "",
       aiAssistantName: settings.aiAssistantName || "Asisten AI — Wijaya Dary Dimas",
+      aiWelcomeMessage: settings.aiWelcomeMessage || "",
+      aiPersona: settings.aiPersona || "",
       enableAiAssistant: settings.enableAiAssistant !== false,
       instagramUrl: profile.instagramUrl || "",
       tiktokUrl: profile.tiktokUrl || "",
@@ -31,6 +33,8 @@ export async function GET() {
         roleTitle: "Informatics & CV Engineer",
         logoUrl: "",
         aiAssistantName: "Asisten AI — Wijaya Dary Dimas",
+        aiWelcomeMessage: "",
+        aiPersona: "",
         enableAiAssistant: true,
       },
       { status: 200 }

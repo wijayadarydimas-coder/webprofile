@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { User, Save, Upload, AlertCircle, CheckCircle2, Globe, Shield, Sparkles } from "lucide-react";
-import type { SiteProfile } from "@/types";
+import { User, Save, Upload, AlertCircle, CheckCircle2, Globe, Shield, Sparkles, GraduationCap, Briefcase, Cpu } from "lucide-react";
+import type { SiteProfile, Education, Experience, ResearchItem } from "@/types";
 
 export default function AdminProfilePage() {
   const [profile, setProfile] = useState<SiteProfile | null>(null);
@@ -12,29 +12,48 @@ export default function AdminProfilePage() {
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingCv, setUploadingCv] = useState(false);
   const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [educationsList, setEducationsList] = useState<Education[]>([]);
+  const [experiencesList, setExperiencesList] = useState<Experience[]>([]);
+  const [researchList, setResearchList] = useState<ResearchItem[]>([]);
   const [status, setStatus] = useState<{ type: "success" | "error" | null; message: string }>({
     type: null,
     message: "",
   });
 
   useEffect(() => {
-    fetch("/api/admin/content?entity=profile")
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success && json.data) {
+    Promise.all([
+      fetch("/api/admin/content?entity=profile").then((res) => res.json()),
+      fetch("/api/admin/content?entity=education").then((res) => res.json()).catch(() => ({ success: false })),
+      fetch("/api/admin/content?entity=experience").then((res) => res.json()).catch(() => ({ success: false })),
+      fetch("/api/admin/content?entity=research").then((res) => res.json()).catch(() => ({ success: false })),
+    ])
+      .then(([profileJson, eduJson, expJson, resJson]) => {
+        if (profileJson.success && profileJson.data) {
           setProfile({
-            ...json.data,
-            aboutTitle: json.data.aboutTitle || "Profil, Prinsip Belajar & Fokus Teknis",
-            roleTitle: json.data.roleTitle || "Informatics & CV Engineer",
-            brandName: json.data.brandName || "Wijaya Dary Dimas",
-            logoUrl: json.data.logoUrl || "",
-            instagramUrl: json.data.instagramUrl || "",
-            tiktokUrl: json.data.tiktokUrl || "",
+            ...profileJson.data,
+            aboutTitle: profileJson.data.aboutTitle || "Profil, Prinsip Belajar & Fokus Teknis",
+            aboutEducationId: profileJson.data.aboutEducationId || "",
+            aboutExperienceId: profileJson.data.aboutExperienceId || "",
+            aboutResearchId: profileJson.data.aboutResearchId || "",
+            roleTitle: profileJson.data.roleTitle || "Informatics & CV Engineer",
+            brandName: profileJson.data.brandName || "Wijaya Dary Dimas",
+            logoUrl: profileJson.data.logoUrl || "",
+            instagramUrl: profileJson.data.instagramUrl || "",
+            tiktokUrl: profileJson.data.tiktokUrl || "",
           });
+        }
+        if (eduJson.success && Array.isArray(eduJson.data)) {
+          setEducationsList(eduJson.data);
+        }
+        if (expJson.success && Array.isArray(expJson.data)) {
+          setExperiencesList(expJson.data);
+        }
+        if (resJson.success && Array.isArray(resJson.data)) {
+          setResearchList(resJson.data);
         }
       })
       .catch((err) => {
-        console.error("Gagal memuat profil:", err);
+        console.error("Gagal memuat profil dan konten:", err);
       })
       .finally(() => {
         setLoading(false);
@@ -378,6 +397,96 @@ export default function AdminProfilePage() {
               onChange={(e) => setProfile({ ...profile, aboutMe: e.target.value })}
               className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
             />
+          </div>
+        </div>
+
+        {/* Section: Kartu Sorotan Tentang Saya (Pendidikan, Pengalaman, dan Riset Unggulan) */}
+        <div className="p-6 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-4">
+          <div className="flex items-center gap-2">
+            <GraduationCap className="w-4 h-4 text-[#7790FF]" />
+            <h2 className="text-sm font-semibold text-[#F3F4F6]">
+              Pilihan Kartu Sorotan Tentang Saya (Pendidikan, Pengalaman, &amp; Riset)
+            </h2>
+          </div>
+          <p className="text-xs text-[#A1A1AA]">
+            Atur data spesifik yang ingin ditampilkan pada 3 kartu ringkasan di bawah foto profil seksi Tentang Saya (About Me) pada halaman depan.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+            {/* Pilihan Sekolah / Pendidikan */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-[#A1A1AA] flex items-center gap-1.5">
+                <GraduationCap className="w-3.5 h-3.5 text-[#7790FF]" />
+                <span>Pendidikan yang Ditampilkan</span>
+              </label>
+              <select
+                value={profile.aboutEducationId || ""}
+                onChange={(e) => setProfile({ ...profile, aboutEducationId: e.target.value || null })}
+                className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
+              >
+                <option value="">Otomatis (Item Teratas / Pertama)</option>
+                {educationsList.map((edu) => (
+                  <option key={edu.id} value={edu.id}>
+                    {edu.institution} — {edu.degree} ({edu.period})
+                  </option>
+                ))}
+              </select>
+              <span className="text-[11px] text-[#71717A]">
+                {profile.aboutEducationId
+                  ? `Terpilih: ${educationsList.find((e) => e.id === profile.aboutEducationId)?.institution || "Kustom"}`
+                  : "Default: Mengikuti urutan pertama"}
+              </span>
+            </div>
+
+            {/* Pilihan Pengalaman Kerja */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-[#A1A1AA] flex items-center gap-1.5">
+                <Briefcase className="w-3.5 h-3.5 text-[#96A9FF]" />
+                <span>Pengalaman yang Ditampilkan</span>
+              </label>
+              <select
+                value={profile.aboutExperienceId || ""}
+                onChange={(e) => setProfile({ ...profile, aboutExperienceId: e.target.value || null })}
+                className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
+              >
+                <option value="">Otomatis (Item Teratas / Pertama)</option>
+                {experiencesList.map((exp) => (
+                  <option key={exp.id} value={exp.id}>
+                    {exp.organization} — {exp.role} ({exp.period})
+                  </option>
+                ))}
+              </select>
+              <span className="text-[11px] text-[#71717A]">
+                {profile.aboutExperienceId
+                  ? `Terpilih: ${experiencesList.find((e) => e.id === profile.aboutExperienceId)?.organization || "Kustom"}`
+                  : "Default: Mengikuti urutan pertama"}
+              </span>
+            </div>
+
+            {/* Pilihan Riset / Skripsi */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-[#A1A1AA] flex items-center gap-1.5">
+                <Cpu className="w-3.5 h-3.5 text-[#22C55E]" />
+                <span>Penelitian yang Ditampilkan</span>
+              </label>
+              <select
+                value={profile.aboutResearchId || ""}
+                onChange={(e) => setProfile({ ...profile, aboutResearchId: e.target.value || null })}
+                className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
+              >
+                <option value="">Otomatis (Item Teratas / Pertama)</option>
+                {researchList.map((res) => (
+                  <option key={res.id} value={res.id}>
+                    {res.title} ({res.publishedStatus || "Penelitian"})
+                  </option>
+                ))}
+              </select>
+              <span className="text-[11px] text-[#71717A]">
+                {profile.aboutResearchId
+                  ? `Terpilih: ${researchList.find((r) => r.id === profile.aboutResearchId)?.title?.slice(0, 32) || "Kustom"}...`
+                  : "Default: Mengikuti urutan pertama"}
+              </span>
+            </div>
           </div>
         </div>
 

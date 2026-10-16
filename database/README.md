@@ -1,6 +1,6 @@
 # Panduan Database & Migrasi — Wijaya Dary Dimas Personal Digital Hub
 
-Dokumen ini menjelaskan arsitektur basis data, riwayat migrasi berurutan (001–005), konfigurasi provider (PostgreSQL / Supabase / Local Adaptive Store), skema JSONB tautan platform eksternal, dan prosedur inisialisasi sistem.
+Dokumen ini menjelaskan arsitektur basis data, riwayat migrasi berurutan (001–006), konfigurasi provider (PostgreSQL / Supabase / Local Adaptive Store), skema JSONB tautan platform eksternal, dan prosedur inisialisasi sistem.
 
 ---
 
@@ -52,6 +52,11 @@ Seluruh skrip migrasi berada pada direktori `database/migrations/` dan dirancang
 - Menambahkan kolom `sections JSONB DEFAULT '[]'::jsonb` untuk struktur modul dinamis Hybrid Research Editor (pengurutan, template, visibilitas, dan asisten AI).
 - Mempertahankan backward compatibility 100% untuk kolom warisan (`background`, `objective`, `model_modification`, `methodology`, `dataset_notes`).
 
+### `006_about_highlight_selection.sql`
+- Menambahkan kolom `about_education_id VARCHAR(100)`, `about_experience_id VARCHAR(100)`, dan `about_research_id VARCHAR(100)` pada tabel `site_profile` untuk memilih entitas riwayat spesifik (sekolah/pendidikan, pengalaman kerja, riset skripsi) yang disorot pada 3 kartu seksi Tentang Saya di halaman depan.
+
+### `007_ai_persona_and_instructions.sql`
+- Menambahkan kolom `ai_persona TEXT NOT NULL DEFAULT ''`, `ai_welcome_message TEXT NOT NULL DEFAULT ''`, dan `ai_system_prompt TEXT NOT NULL DEFAULT ''` pada tabel `site_settings` untuk kustomisasi persona karakter AI, pesan sapaan awal chat publik, dan instruksi sistem tambahan yang langsung terhubung ke API AI.
 
 ---
 

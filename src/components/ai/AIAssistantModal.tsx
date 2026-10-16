@@ -30,14 +30,24 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // 1. Ambil nama kustom asisten AI
+  // 1. Ambil nama kustom & pesan sapaan awal asisten AI
   useEffect(() => {
     fetch("/api/site-info")
       .then((res) => res.json())
       .then((data) => {
-        if (data?.aiAssistantName) {
-          setAssistantName(data.aiAssistantName);
-        }
+        const name = data?.aiAssistantName?.trim() || "Asisten AI — Wijaya Dary Dimas";
+        setAssistantName(name);
+
+        const customWelcome = data?.aiWelcomeMessage?.trim();
+        const fallbackWelcome = `Halo! Salam kenal ya. Saya ${name}, asisten virtual untuk website personal ${data?.brandName || "Wijaya Dary Dimas"}. Ada yang bisa saya bantu atau ingin kamu obrolkan hari ini? 😊`;
+        const activeWelcome = customWelcome || fallbackWelcome;
+
+        setMessages((prev) => {
+          if (prev.length <= 1 && (prev[0]?.content === DEFAULT_GREETING || prev.length === 0)) {
+            return [{ role: "assistant", content: activeWelcome }];
+          }
+          return prev;
+        });
       })
       .catch(() => {});
   }, []);

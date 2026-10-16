@@ -31,6 +31,18 @@ export default async function HomePage() {
     pdfUrl: "",
   };
 
+  const selectedEducation = profile.aboutEducationId
+    ? educations.find((e) => e.id === profile.aboutEducationId) || educations[0]
+    : educations[0];
+
+  const selectedExperience = profile.aboutExperienceId
+    ? experiences.find((e) => e.id === profile.aboutExperienceId) || experiences[0]
+    : experiences[0];
+
+  const selectedResearch = profile.aboutResearchId
+    ? researchItems.find((r) => r.id === profile.aboutResearchId) || primaryResearch
+    : primaryResearch;
+
   return (
     <AppShell>
       {/* 1. Hero Section */}
@@ -39,9 +51,9 @@ export default async function HomePage() {
       {/* 2. About Me Section */}
       <AboutSection
         profile={profile}
-        primaryEducation={educations[0]}
-        primaryExperience={experiences[0]}
-        primaryResearch={primaryResearch}
+        primaryEducation={selectedEducation}
+        primaryExperience={selectedExperience}
+        primaryResearch={selectedResearch}
       />
 
       {/* 3. Featured Projects Showcase */}

@@ -112,28 +112,8 @@ export default function AbstractGeometry() {
     ring2Mesh.rotation.x = -Math.PI / 6;
     group.add(ring2Mesh);
 
-    // Mouse movement damping
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetX = 0;
-    let targetY = 0;
-
-    const handleMouseMove = (event: MouseEvent) => {
-      const rect = container.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      targetX = (x / width - 0.5) * 0.7;
-      targetY = (y / height - 0.5) * 0.7;
-    };
-
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-
-    // Scroll-linked continuous rotation & subtle depth
-    let scrollY = 0;
-    const handleScroll = () => {
-      scrollY = window.scrollY;
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    // Continuous autonomous rotation state
+    let elapsedTime = 0;
 
     // Handle Resize
     const handleResize = () => {
@@ -171,30 +151,20 @@ export default function AbstractGeometry() {
         const now = performance.now();
         const delta = Math.min((now - lastTime) * 0.001, 0.1);
         lastTime = now;
+        elapsedTime += delta;
 
-        // Smooth mouse follow with inertia damping
-        mouseX += (targetX - mouseX) * 0.045;
-        mouseY += (targetY - mouseY) * 0.045;
+        // Elegant autonomous multi-axis orbital rotation (smooth and calm on mobile and desktop)
+        group.rotation.y += 0.22 * delta;
+        group.rotation.x = Math.sin(elapsedTime * 0.35) * 0.18;
+        group.rotation.z = Math.cos(elapsedTime * 0.25) * 0.12;
 
-        // Base continuous organic rotation
-        group.rotation.y += 0.2 * delta;
-        group.rotation.x += 0.1 * delta;
+        // Counter-rotating inner metallic core
+        innerMesh.rotation.y -= 0.28 * delta;
+        innerMesh.rotation.x += 0.14 * delta;
 
-        // Scroll continuity: link rotation and slight position shift to scroll
-        const scrollOffset = scrollY * 0.001;
-        group.rotation.y += scrollOffset * 0.03;
-        group.position.y = -Math.min(scrollY * 0.0006, 0.4);
-
-        // Subtle mouse tilt
-        group.rotation.y += mouseX * 0.015;
-        group.rotation.x += mouseY * 0.015;
-
-        // Counter-rotating inner core and rings
-        innerMesh.rotation.y -= 0.3 * delta;
-        innerMesh.rotation.z += 0.15 * delta;
-
-        ring1Mesh.rotation.z += 0.14 * delta;
-        ring2Mesh.rotation.z -= 0.1 * delta;
+        // Counter-rotating precision gyroscopic rings
+        ring1Mesh.rotation.z += 0.16 * delta;
+        ring2Mesh.rotation.z -= 0.12 * delta;
 
         renderer.render(scene, camera);
       };
@@ -203,8 +173,6 @@ export default function AbstractGeometry() {
     }
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
       observer.disconnect();
 
@@ -233,8 +201,8 @@ export default function AbstractGeometry() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[320px] md:h-[400px] flex items-center justify-center cursor-grab active:cursor-grabbing select-none"
-      title="Interaktif: Gerakkan kursor atau gulir halaman untuk mengamati aksen 3D"
+      className="relative w-full h-[320px] md:h-[400px] flex items-center justify-center pointer-events-none select-none"
     />
   );
 }
+

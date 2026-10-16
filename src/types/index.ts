@@ -34,6 +34,9 @@ export interface SiteProfile {
   logoUrl?: string;
   instagramUrl?: string;
   tiktokUrl?: string;
+  aboutEducationId?: string | null;
+  aboutExperienceId?: string | null;
+  aboutResearchId?: string | null;
   updatedAt: string;
 }
 
@@ -148,6 +151,9 @@ export interface SiteSettings {
   aiProvider: string;
   aiModel: string;
   aiAssistantName?: string;
+  aiPersona?: string;
+  aiWelcomeMessage?: string;
+  aiSystemPrompt?: string;
   contactEmail: string;
   enableAiAssistant: boolean;
   enableComments: boolean;

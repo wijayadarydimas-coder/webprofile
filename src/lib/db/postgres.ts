@@ -197,6 +197,9 @@ export class PostgresRepository implements DatabaseRepository {
       logoUrl: "",
       instagramUrl: "",
       tiktokUrl: "",
+      aboutEducationId: null,
+      aboutExperienceId: null,
+      aboutResearchId: null,
       updatedAt: new Date().toISOString(),
     };
   }
@@ -229,6 +232,9 @@ export class PostgresRepository implements DatabaseRepository {
         logoUrl: r.logo_url || "",
         instagramUrl: r.instagram_url || "",
         tiktokUrl: r.tiktok_url || "",
+        aboutEducationId: r.about_education_id || null,
+        aboutExperienceId: r.about_experience_id || null,
+        aboutResearchId: r.about_research_id || null,
         updatedAt: r.updated_at ? new Date(r.updated_at).toISOString() : new Date().toISOString(),
       };
     } catch (err) {
@@ -245,9 +251,10 @@ export class PostgresRepository implements DatabaseRepository {
       INSERT INTO site_profile (
         id, full_name, headline, short_bio, about_me, about_title, avatar_url, avatar_alt,
         cv_url, github_url, linkedin_url, email, location, status_text,
-        role_title, brand_name, logo_url, instagram_url, tiktok_url, updated_at
+        role_title, brand_name, logo_url, instagram_url, tiktok_url,
+        about_education_id, about_experience_id, about_research_id, updated_at
       ) VALUES (
-        'primary', $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, NOW()
+        'primary', $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, NOW()
       )
       ON CONFLICT (id) DO UPDATE SET
         full_name = EXCLUDED.full_name,
@@ -268,6 +275,9 @@ export class PostgresRepository implements DatabaseRepository {
         logo_url = EXCLUDED.logo_url,
         instagram_url = EXCLUDED.instagram_url,
         tiktok_url = EXCLUDED.tiktok_url,
+        about_education_id = EXCLUDED.about_education_id,
+        about_experience_id = EXCLUDED.about_experience_id,
+        about_research_id = EXCLUDED.about_research_id,
         updated_at = NOW()
       RETURNING *;
     `;
@@ -291,6 +301,9 @@ export class PostgresRepository implements DatabaseRepository {
       updated.logoUrl || "",
       updated.instagramUrl || "",
       updated.tiktokUrl || "",
+      updated.aboutEducationId || null,
+      updated.aboutExperienceId || null,
+      updated.aboutResearchId || null,
     ]);
 
     const r = res.rows[0];
@@ -314,6 +327,9 @@ export class PostgresRepository implements DatabaseRepository {
       logoUrl: r.logo_url || "",
       instagramUrl: r.instagram_url || "",
       tiktokUrl: r.tiktok_url || "",
+      aboutEducationId: r.about_education_id || null,
+      aboutExperienceId: r.about_experience_id || null,
+      aboutResearchId: r.about_research_id || null,
       updatedAt: r.updated_at ? new Date(r.updated_at).toISOString() : new Date().toISOString(),
     };
   }
@@ -1069,6 +1085,9 @@ export class PostgresRepository implements DatabaseRepository {
           aiProvider: "gemini",
           aiModel: "gemini-1.5-flash",
           aiAssistantName: "Asisten AI — Wijaya Dary Dimas",
+          aiPersona: "",
+          aiWelcomeMessage: "",
+          aiSystemPrompt: "",
           contactEmail: "",
           enableAiAssistant: true,
           enableComments: true,
@@ -1077,9 +1096,12 @@ export class PostgresRepository implements DatabaseRepository {
       }
       const r = res.rows[0];
       return {
-        aiProvider: r.ai_provider,
-        aiModel: r.ai_model,
+        aiProvider: r.ai_provider || "gemini",
+        aiModel: r.ai_model || "gemini-1.5-flash",
         aiAssistantName: r.ai_assistant_name || "Asisten AI — Wijaya Dary Dimas",
+        aiPersona: r.ai_persona || "",
+        aiWelcomeMessage: r.ai_welcome_message || "",
+        aiSystemPrompt: r.ai_system_prompt || "",
         contactEmail: r.contact_email || "",
         enableAiAssistant: Boolean(r.enable_ai_assistant),
         enableComments: Boolean(r.enable_comments),
@@ -1091,6 +1113,9 @@ export class PostgresRepository implements DatabaseRepository {
         aiProvider: "gemini",
         aiModel: "gemini-1.5-flash",
         aiAssistantName: "Asisten AI — Wijaya Dary Dimas",
+        aiPersona: "",
+        aiWelcomeMessage: "",
+        aiSystemPrompt: "",
         contactEmail: "",
         enableAiAssistant: true,
         enableComments: true,
@@ -1103,13 +1128,31 @@ export class PostgresRepository implements DatabaseRepository {
     const current = await this.getSettings();
     const updated = { ...current, ...data };
 
+    try {
+      await this.pool.query(`
+        ALTER TABLE site_settings 
+        ADD COLUMN IF NOT EXISTS ai_assistant_name VARCHAR(120) NOT NULL DEFAULT 'Asisten AI — Wijaya Dary Dimas',
+        ADD COLUMN IF NOT EXISTS ai_persona TEXT NOT NULL DEFAULT '',
+        ADD COLUMN IF NOT EXISTS ai_welcome_message TEXT NOT NULL DEFAULT '',
+        ADD COLUMN IF NOT EXISTS ai_system_prompt TEXT NOT NULL DEFAULT '';
+      `);
+    } catch {
+      // Ignore if columns already exist or permission restricted
+    }
+
     const query = `
-      INSERT INTO site_settings (id, ai_provider, ai_model, ai_assistant_name, contact_email, enable_ai_assistant, enable_comments, notify_on_comment, updated_at)
-      VALUES ('primary', $1, $2, $3, $4, $5, $6, $7, NOW())
+      INSERT INTO site_settings (
+        id, ai_provider, ai_model, ai_assistant_name, ai_persona, ai_welcome_message, ai_system_prompt,
+        contact_email, enable_ai_assistant, enable_comments, notify_on_comment, updated_at
+      )
+      VALUES ('primary', $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, NOW())
       ON CONFLICT (id) DO UPDATE SET
         ai_provider = EXCLUDED.ai_provider,
         ai_model = EXCLUDED.ai_model,
         ai_assistant_name = EXCLUDED.ai_assistant_name,
+        ai_persona = EXCLUDED.ai_persona,
+        ai_welcome_message = EXCLUDED.ai_welcome_message,
+        ai_system_prompt = EXCLUDED.ai_system_prompt,
         contact_email = EXCLUDED.contact_email,
         enable_ai_assistant = EXCLUDED.enable_ai_assistant,
         enable_comments = EXCLUDED.enable_comments,
@@ -1121,6 +1164,9 @@ export class PostgresRepository implements DatabaseRepository {
       updated.aiProvider,
       updated.aiModel,
       updated.aiAssistantName || "Asisten AI — Wijaya Dary Dimas",
+      updated.aiPersona || "",
+      updated.aiWelcomeMessage || "",
+      updated.aiSystemPrompt || "",
       updated.contactEmail,
       updated.enableAiAssistant,
       updated.enableComments,
@@ -1131,6 +1177,9 @@ export class PostgresRepository implements DatabaseRepository {
       aiProvider: r.ai_provider,
       aiModel: r.ai_model,
       aiAssistantName: r.ai_assistant_name || "Asisten AI — Wijaya Dary Dimas",
+      aiPersona: r.ai_persona || "",
+      aiWelcomeMessage: r.ai_welcome_message || "",
+      aiSystemPrompt: r.ai_system_prompt || "",
       contactEmail: r.contact_email || "",
       enableAiAssistant: Boolean(r.enable_ai_assistant),
       enableComments: Boolean(r.enable_comments),

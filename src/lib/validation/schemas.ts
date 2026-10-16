@@ -80,6 +80,9 @@ export const profileUpdateSchema = z.object({
   logoUrl: z.string().trim().optional().default(""),
   instagramUrl: optionalUrl,
   tiktokUrl: optionalUrl,
+  aboutEducationId: z.string().trim().optional().nullable(),
+  aboutExperienceId: z.string().trim().optional().nullable(),
+  aboutResearchId: z.string().trim().optional().nullable(),
 });
 
 export const projectSchema = z.object({
@@ -172,6 +175,9 @@ export const siteSettingsSchema = z.object({
   aiProvider: z.string().default("gemini"),
   aiModel: z.string().default("gemini-1.5-flash"),
   aiAssistantName: z.string().trim().max(120).optional().default("Asisten AI — Wijaya Dary Dimas"),
+  aiPersona: z.string().trim().max(3000).optional().default(""),
+  aiWelcomeMessage: z.string().trim().max(1500).optional().default(""),
+  aiSystemPrompt: z.string().trim().max(5000).optional().default(""),
   contactEmail: z.string().email().or(z.literal("")),
   enableAiAssistant: z.boolean().default(true),
   enableComments: z.boolean().default(true),
