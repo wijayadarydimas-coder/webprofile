@@ -65,16 +65,22 @@ async function runSetup() {
     await client.connect();
     console.log("✅ Koneksi database berhasil!");
 
-    const migrationFile = path.join(rootDir, "database", "migrations", "001_initial_schema.sql");
-    if (!fs.existsSync(migrationFile)) {
-      throw new Error(`File migrasi tidak ditemukan di: ${migrationFile}`);
+    const migrationsDir = path.join(rootDir, "database", "migrations");
+    if (!fs.existsSync(migrationsDir)) {
+      throw new Error(`Direktori migrasi tidak ditemukan di: ${migrationsDir}`);
     }
 
-    console.log("📄 Membaca berkas migrasi: 001_initial_schema.sql");
-    const sql = fs.readFileSync(migrationFile, "utf8");
+    const migrationFiles = fs.readdirSync(migrationsDir)
+      .filter((file) => file.endsWith(".sql"))
+      .sort();
 
-    console.log("⚙️  Menjalankan migrasi skema tabel, indeks, dan RLS...");
-    await client.query(sql);
+    console.log(`📁 Menemukan ${migrationFiles.length} berkas migrasi.`);
+    for (const file of migrationFiles) {
+      const filePath = path.join(migrationsDir, file);
+      console.log(`⚙️  Menjalankan migrasi: ${file}`);
+      const sql = fs.readFileSync(filePath, "utf8");
+      await client.query(sql);
+    }
 
     console.log("🔍 Memverifikasi tabel yang telah dibuat...");
     const verifyResult = await client.query(`

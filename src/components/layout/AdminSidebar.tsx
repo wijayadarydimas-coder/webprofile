@@ -22,8 +22,10 @@ export default function AdminSidebar() {
 
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/");
-    router.refresh();
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("auth-changed"));
+      window.location.href = "/";
+    }
   };
 
   const navItems = [
@@ -38,24 +40,23 @@ export default function AdminSidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-[#15171C] border-r border-[#2B2D34] flex flex-col shrink-0 min-h-screen">
+    <aside className="w-64 bg-[#171A24] border-r border-[#292D39] flex flex-col shrink-0 min-h-screen">
       {/* Brand */}
-      <div className="p-5 border-b border-[#2B2D34] flex items-center justify-between">
+      <div className="p-5 border-b border-[#292D39] flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-[#6D8DFF] text-white flex items-center justify-center font-mono font-bold text-xs">
+          <div className="w-7 h-7 rounded-lg bg-[#7790FF] text-white flex items-center justify-center font-mono font-bold text-xs">
             W
           </div>
           <div className="flex flex-col">
-            <span className="text-xs font-semibold text-[#F3F4F6]">Admin Panel</span>
-            <span className="text-[10px] text-[#71717A] font-mono">Wijaya Dary Dimas</span>
+            <span className="text-xs font-semibold text-[#F1F2F5]">Admin Panel</span>
+            <span className="text-[10px] text-[#7D8496] font-mono">Wijaya Dary Dimas</span>
           </div>
         </div>
 
         <Link
           href="/"
-          className="p-1.5 rounded hover:bg-[#1B1D23] text-[#71717A] hover:text-[#F3F4F6] transition-colors"
-          title="Buka Website Publik"
-          target="_blank"
+          className="p-1.5 rounded-lg hover:bg-[#1F2330] text-[#7D8496] hover:text-[#F1F2F5] transition-colors"
+          title="Buka Halaman Website Utama"
         >
           <ExternalLink className="w-3.5 h-3.5" />
         </Link>
@@ -72,8 +73,8 @@ export default function AdminSidebar() {
               href={item.href}
               className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
                 isActive
-                  ? "bg-[#6D8DFF]/15 text-[#8B9CFF] border border-[#6D8DFF]/30 font-semibold"
-                  : "text-[#A1A1AA] hover:text-[#F3F4F6] hover:bg-[#1B1D23]"
+                  ? "bg-[#7790FF]/15 text-[#96A9FF] border border-[#7790FF]/30 font-semibold"
+                  : "text-[#A1A6B5] hover:text-[#F1F2F5] hover:bg-[#1F2330]"
               }`}
             >
               <Icon className="w-4 h-4 shrink-0" />
@@ -84,7 +85,7 @@ export default function AdminSidebar() {
       </nav>
 
       {/* Bottom Session Action */}
-      <div className="p-3 border-t border-[#2B2D34]">
+      <div className="p-3 border-t border-[#292D39]">
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-[#EF4444] hover:bg-[#EF4444]/10 transition-colors cursor-pointer"

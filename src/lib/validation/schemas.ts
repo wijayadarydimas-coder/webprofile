@@ -47,11 +47,26 @@ export const contactMessageSchema = z.object({
   hp: z.string().max(0).optional(),
 });
 
+export const externalLinkSchema = z.object({
+  provider: z.string().trim().min(1, "Provider wajib dipilih"),
+  url: z
+    .string()
+    .trim()
+    .transform((val) => {
+      if (!val) return "";
+      if (/^https?:\/\//i.test(val) || val.startsWith("/")) return val;
+      return `https://${val}`;
+    })
+    .default(""),
+  label: z.string().trim().optional(),
+});
+
 export const profileUpdateSchema = z.object({
   fullName: z.string().trim().min(2).max(100),
   headline: z.string().trim().min(5).max(200),
   shortBio: z.string().trim().min(10).max(1000),
   aboutMe: z.string().trim().min(20).max(5000),
+  aboutTitle: z.string().trim().max(200).optional().default("Profil, Prinsip Belajar & Fokus Teknis"),
   avatarUrl: z.string().trim(),
   avatarAlt: z.string().trim().max(150),
   cvUrl: z.string().trim(),
@@ -81,11 +96,12 @@ export const projectSchema = z.object({
   problem: z.string().trim().max(2000).optional().default(""),
   solution: z.string().trim().max(2000).optional().default(""),
   results: z.string().trim().max(2000).optional().default(""),
-  category: z.enum(["Computer Vision", "Geospatial", "Full-Stack", "System", "Other"]),
+  category: z.string().trim().min(1, "Kategori wajib diisi").max(100),
   technologies: z.array(z.string().trim()).min(1, "Minimal satu teknologi"),
   coverImage: z.string().trim().min(1, "Cover image wajib diisi"),
   repoUrl: optionalUrl,
   liveUrl: optionalUrl,
+  externalLinks: z.array(externalLinkSchema).optional().default([]),
   featured: z.boolean().default(false),
   published: z.boolean().default(true),
   orderIndex: z.number().int().default(0),
@@ -112,18 +128,43 @@ export const educationSchema = z.object({
   url: optionalUrl,
 });
 
+export const researchSectionSchema = z.object({
+  id: z.string().default(() => Math.random().toString(36).substring(2, 9)),
+  title: z.string().trim().min(1, "Judul bagian wajib diisi").max(200),
+  type: z
+    .enum([
+      "text",
+      "markdown",
+      "methodology",
+      "architecture",
+      "dataset",
+      "results",
+      "integration",
+      "references",
+    ])
+    .default("markdown"),
+  content: z.string().default(""),
+  orderIndex: z.number().int().default(0),
+  isVisible: z.boolean().default(true),
+});
+
 export const researchSchema = z.object({
   id: z.string().optional(),
   title: z.string().trim().min(5).max(300),
   summary: z.string().trim().min(10).max(1000),
-  background: z.string().trim().max(3000).default(""),
-  objective: z.string().trim().max(2000).default(""),
-  methodology: z.string().trim().max(4000).default(""),
-  modelModification: z.string().trim().max(4000).default(""),
-  datasetNotes: z.string().trim().max(2000).default(""),
+  background: z.string().trim().max(10000).default(""),
+  objective: z.string().trim().max(5000).default(""),
+  methodology: z.string().trim().max(10000).default(""),
+  modelModification: z.string().trim().max(10000).default(""),
+  datasetNotes: z.string().trim().max(5000).default(""),
   publishedStatus: z.string().trim().default("Penelitian Skripsi"),
   repoUrl: optionalUrl,
   pdfUrl: optionalUrl,
+  externalLinks: z.array(externalLinkSchema).optional().default([]),
+  institution: z.string().trim().max(255).optional().default("Universitas Muhammadiyah Purwokerto"),
+  studyProgram: z.string().trim().max(255).optional().default("S1 Teknik Informatika"),
+  technologies: z.array(z.string().trim()).optional().default([]),
+  sections: z.array(researchSectionSchema).optional().default([]),
   orderIndex: z.number().int().default(0),
 });
 

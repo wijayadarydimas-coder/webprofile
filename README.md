@@ -1,84 +1,123 @@
-# Wijaya Dary Dimas — Personal Digital Hub & Portfolio
+# Wijaya Dary Dimas — Personal Digital Hub & Interactive Portfolio
 
 > **"Exploring Technology. Building Ideas. Creating Impact."**
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.4.1-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
-[![Three.js](https://img.shields.io/badge/Three.js-3D_Interactive-black?style=flat-square&logo=three.js)](https://threejs.org/)
+[![Three.js](https://img.shields.io/badge/Three.js-Dark_Matter_3D-black?style=flat-square&logo=three.js)](https://threejs.org/)
 [![Database](https://img.shields.io/badge/PostgreSQL-Supabase-3ECF8E?style=flat-square&logo=supabase)](https://supabase.com/)
 [![AI Assistant](https://img.shields.io/badge/AI_Assistant-Google_Gemini-4285F4?style=flat-square&logo=google)](https://aistudio.google.com/)
 [![Deployment](https://img.shields.io/badge/Deploy-Vercel-black?style=flat-square&logo=vercel)](https://vercel.com/)
 
-Website personal _production-ready_ untuk **Wijaya Dary Dimas**, dirancang dengan identitas visual _dark modern_ yang elegan, profesional, alami, dan berkepribadian manusia.
+Website personal _production-ready_ untuk **Wijaya Dary Dimas**, dirancang dengan konsep visual **Dark Matter — Interactive Portfolio** yang menggabungkan estetika antarmuka modern yang futuristik, atmosfer partikel interaktif, pencahayaan sinematik, dan pengalaman interaksi yang responsif.
 
-Website ini bukan sekadar portofolio statis, melainkan **Personal Digital Hub** interaktif yang mencakup personal branding, portofolio proyek terverifikasi, studi kasus mendalam, riwayat pengalaman di Badan Informasi Geospasial (BIG), rekam jejak pendidikan di Universitas Muhammadiyah Purwokerto (UMP), skripsi modifikasi YOLOv11 deteksi APD, asisten AI terintegrasi, forum diskusi komunitas 2-arah, dan panel admin lengkap untuk mengelola seluruh konten secara dinamis.
+Website ini berfungsi sebagai **Personal Digital Hub** interaktif yang mencakup personal branding, portofolio proyek rekayasa, studi kasus arsitektural, riwayat karier, rekam jejak akademik, dokumentasi riset skripsi, asisten AI terintegrasi dengan memori percakapan, forum diskusi komunitas dua arah, dan panel admin lengkap untuk mengelola seluruh konten secara dinamis.
 
 ---
 
 ## 📑 Daftar Isi
 
 1. [Fitur Utama](#-fitur-utama)
-2. [Stack Teknologi](#-stack-teknologi)
-3. [Panduan Instalasi Cepat](#-panduan-instalasi-cepat)
-4. [Penjelasan Lengkap Environment Variables (.env)](#-penjelasan-lengkap-environment-variables-env)
-5. [Panduan Menghubungkan Database Supabase](#-panduan-menghubungkan-database-supabase)
-6. [Panduan Menghubungkan Google Gemini AI](#-panduan-menghubungkan-google-gemini-ai)
-7. [Panduan Deployment ke Vercel](#-panduan-deployment-ke-vercel)
-8. [Mengakses Admin Dashboard](#-mengakses-admin-dashboard)
-9. [Struktur Direktori Proyek](#-struktur-direktori-proyek)
-10. [Lisensi](#-lisensi--hak-cipta)
+2. [Ekosistem 37 Provider Platform Eksternal](#-ekosistem-37-provider-platform-eksternal)
+3. [Stack Teknologi](#-stack-teknologi)
+4. [Panduan Instalasi Cepat](#-panduan-instalasi-cepat)
+5. [Penjelasan Lengkap Environment Variables (.env)](#-penjelasan-lengkap-environment-variables-env)
+6. [Panduan Menghubungkan Database Supabase & Migrasi](#-panduan-menghubungkan-database-supabase--migrasi)
+7. [Panduan Menghubungkan Google Gemini AI](#-panduan-menghubungkan-google-gemini-ai)
+8. [Panduan Deployment ke Vercel](#-panduan-deployment-ke-vercel)
+9. [Mengakses Admin Dashboard](#-mengakses-admin-dashboard)
+10. [Struktur Direktori Proyek](#-struktur-direktori-proyek)
+11. [Lisensi](#-lisensi--hak-cipta)
 
 ---
 
 ## ✨ Fitur Utama
 
-1. **Personal Branding & Hero 3D Interaktif**
-   - Tagline resmi: _"Exploring Technology. Building Ideas. Creating Impact."_
-   - Elemen 3D abstrak berbasis **Three.js** dengan pencahayaan halus, rotasi teredam interaktif (_pointer-reactive_), dan fallback visual otomatis untuk perangkat ringan atau preferensi `prefers-reduced-motion`.
-   - Foto profil resmi yang dapat diperbarui secara dinamis langsung dari dashboard admin.
-2. **Portofolio Proyek & Studi Kasus Mendalam (`/projects`)**
-   - Direktori proyek dengan filter kategori (_Computer Vision_, _Geospatial_, _Full-Stack_, _System Architecture_) dan pencarian kata kunci langsung.
-   - Halaman detail studi kasus (`/projects/[slug]`) dengan struktur arsitektur: Masalah (_Problem_), Solusi Teknis (_Solution_), dan Hasil Evaluasi Nyata (_Results_).
-3. **Rekam Jejak Profesional & Pendidikan Terverifikasi (`/#experience`)**
-   - **Pranata Komputer** di **Badan Informasi Geospasial (BIG)** (Periode: November 2025 – Mei 2026), berfokus pada infrastruktur data spasial dan sistem komputasi.
-   - **S1 Teknik Informatika** di **Universitas Muhammadiyah Purwokerto (UMP)**.
-4. **Penelitian & Skripsi Khusus (`/research`)**
-   - _"Implementasi YOLOv11 Modifikasi Untuk Deteksi Alat Pelindung Diri Helm Rompi, Sarung Tangan Dan Sepatu Dengan Alarm Otomatis."_
-   - Arsitektur ekstraksi multi-skala, deteksi 4 kelas APD industri (_Safety Helmet_, _Safety Vest_, _Gloves_, _Safety Boots_), dataset industri, dan integrasi pemicu alarm audio-visual otomatis.
-5. **Asisten AI Terintegrasi (`/api/ai/chat`)**
-   - Didukung oleh model **Google Gemini** (misal `gemini-3.5-flash-lite`, `gemini-1.5-flash`, `gemini-2.0-flash`).
-   - Server-side only: API key aman dan tidak pernah terekspos ke sisi klien.
-   - _Grounded Knowledge_: Jawaban AI didasarkan pada basis fakta resmi pemilik website seputar skripsi, riwayat magang, proyek, dan kontak.
-   - Fitur proteksi: pembatasan frekuensi (_rate limiting_), validasi skema Zod, sanitasi XSS, serta _grounded fallback preview_ otomatis jika API key belum dipasang.
-6. **Forum Komunitas & Komentar Dua Arah (`/community`)**
-   - Sistem diskusi _threaded_ (balasan bersarang berjenjang).
-   - Sistem autentikasi mandiri bagi pengunjung untuk membuat akun, menulis, mengedit, dan menghapus komentar sendiri.
-   - Fitur _soft-delete_ otomatis agar struktur hierarki pohon diskusi tidak rusak saat sebuah komentar dihapus.
-   - Panel moderasi admin untuk mengontrol visibilitas komentar atau menyaring spam.
-7. **Admin Dashboard Lengkap (`/admin`)**
-   - Dilindungi autentikasi sesi JWT HttpOnly berbasis peran administrator.
-   - Modul: Profil & Hero, Portofolio Proyek (CRUD & cover upload), Pengalaman Kerja & Pendidikan, Riset Skripsi, Media Library, Moderasi Komentar, dan Konfigurasi AI.
-8. **Media Library & Upload Berkas (`/admin/media`)**
-   - Upload file aman dengan verifikasi tipe MIME (JPEG, PNG, WebP, SVG, PDF), batas ukuran 10MB, dan sanitasi berkas SVG.
-9. **Koneksi Database Dual-Mode (Zero-Config Development)**
-   - Mendukung PostgreSQL langsung (`DATABASE_URL`), Supabase / PostgREST, serta **Local Adaptive Store** bawaan di `.data/db.json` sehingga aplikasi dapat langsung dijalankan oleh siapa saja tanpa perlu konfigurasi database di awal.
+### 1. Desain Visual Dark Matter & Hero 3D Sinematik
+
+- **Three.js Interactive Abstract Geometry**: Geometri 3D dinamis dengan respons kursor halus (_pointer-reactive damping_), pencahayaan _point-light_ bergradasi, dan fallback visual otomatis untuk mode hemat daya atau preferensi `prefers-reduced-motion`.
+- **Lusion Particle Atmosphere**: Lapisan partikel debu kosmis yang melayang lembut menciptakan kedalaman visual (_visual depth_) yang imersif.
+- **Glassmorphism & Micro-Interactions**: Navigasi kaca tembus pandang dengan aksen neon indigo/violet yang halus.
+
+### 2. Seksi Tentang Dinamis (About Section)
+
+- **Judul Seksi Dapat Diedit**: Judul utama seksi About (_"Profil, Prinsip Belajar & Fokus Teknis"_) dapat dikustomisasi langsung melalui Admin Profile (`/admin/profile`).
+- **Data Riil Terintegrasi**: Menampilkan ringkasan data Pendidikan, Pengalaman, dan Penelitian secara langsung dari database tanpa data statis hardcoded.
+- **Tampilan Bersih**: Kartu ringkasan About difokuskan sebagai narasi profil esensial tanpa tautan berulang.
+
+### 3. Ekosistem Multi-Provider Proyek & Riset (37 Platform)
+
+- Terhubung langsung dengan repositori kode, platform model AI, dataset anotasi, compute MLOps, dan live cloud deployment melalui tombol **`+ Tambah Provider`** di panel admin.
+- Komponen badge responsif (`ProviderBadge`) yang menampilkan ikon, warna khas platform, indikator status, serta custom label di kartu proyek, halaman detail studi kasus, dan penampil riset skripsi.
+
+### 4. Portofolio Proyek & Studi Kasus Mendalam (`/projects`)
+
+- Direktori proyek dengan filter kategori (_Computer Vision_,_Full-Stack_, _System Architecture_) dan pencarian real-time.
+- Halaman detail studi kasus (`/projects/[slug]`) dengan struktur arsitektur: Masalah (_Problem_), Solusi (_Solution_), dan Hasil Evaluasi (_Results_).
+- Kompresi gambar otomatis ke format WebP saat mengunggah cover proyek.
+
+### 5. Dokumentasi Riset & Hybrid Research Editor (`/research` & `/admin/research`)
+
+- **Technical Documentation Layout**: Desain dokumentasi teknis dua kolom dengan Table of Contents (TOC) sticky desktop, pelacak scroll aktif (_scrollspy_), dan dropdown navigasi mobile.
+- **Executive Header**: Menampilkan kategori publikasi, institusi, program studi, ringkasan eksekutif, tag teknologi/model, repositori GitHub, dokumen PDF, dan badge ekosistem provider.
+- **Hybrid Research Editor**: Panel admin riset yang memadukan field metadata terstruktur dengan pengelola modul fleksibel (tambah, hapus dengan konfirmasi, duplikasi, sembunyikan, dan susun urutan modul).
+- **Template Penulisan Riset**: Template kerangka profesional siap pakai untuk Latar Belakang Masalah, Tujuan & Sasaran, Metodologi Eksperimen, Modifikasi Arsitektur Model, Dataset & Anotasi, Hasil & Metrik Evaluasi, Integrasi Alarm Otomatis, dan Referensi Ilmiah.
+- **Asisten Penulisan AI**: Terintegrasi dengan endpoint server-side `/api/ai/research-assistant` (Google Gemini) yang mendukung 8 aksi penulisan akademik dengan modal pembanding draf (*side-by-side comparison*) sebelum diterapkan.
+- **Live Markdown Renderer & Device Preview**: Toolbar Markdown cepat (bold, italic, heading, code block, tabel, callout alert) dengan pratinjau langsung desktop & mobile.
+- **Kompatibilitas Penuh**: Migrasi non-destruktif (005) pada Supabase PostgreSQL yang mempertahankan seluruh data kolom warisan.
+
+### 6. Asisten AI Terintegrasi dengan Memori Percakapan (`/api/ai/chat`)
+
+- Ditenagai oleh model **Google Gemini** (misal `gemini-2.0-flash`, `gemini-1.5-flash`, atau `gemini-3.5-flash-lite`).
+- **Persistent Chat Memories**: Sesi percakapan disimpan ke tabel database `ai_chat_memories` untuk interaksi multi-turn yang kontekstual.
+- **Grounded Knowledge Base**: Jawaban AI berpedoman pada basis data resmi pemilik website.
+- **Grounded Fallback Mode**: Tetap merespons dengan cerdas meski API Key belum dipasang.
+
+### 7. Forum Diskusi Komunitas Dua Arah (`/community`)
+
+- Sistem diskusi berulir bertingkat (_threaded nested replies_).
+- Autentikasi mandiri pengunjung dengan enkripsi bcrypt dan sesi JWT HttpOnly.
+- Fitur _soft delete_ untuk menjaga keutuhan struktur hierarki pohon percakapan.
+
+### 8. Panel Admin Terpadu (`/admin`)
+
+- Pengelolaan Profil, Tagline, dan Judul Seksi Tentang.
+- CRUD Proyek dengan Editor Provider Eksternal interaktif.
+- CRUD Riset / Skripsi dengan Editor Provider Eksternal.
+- Pengelolaan Pengalaman Kerja & Riwayat Pendidikan.
+- Media Library dengan upload berkas aman (JPEG, PNG, WebP, SVG, PDF).
+- Moderasi Diskusi Komunitas dan Konfigurasi AI Persona.
+
+---
+
+## 🌐 Ekosistem 37 Provider Platform Eksternal
+
+Admin dan tampilan website mendukung integrasi langsung ke 37 platform eksternal berikut:
+
+| Kategori                       | Platform / Provider yang Didukung                                                                             |
+| :----------------------------- | :------------------------------------------------------------------------------------------------------------ |
+| **Code & Repositories**        | GitHub, GitLab, Bitbucket, Codeberg, SourceHut, Gitea, Forgejo, Launchpad                                     |
+| **Models & Datasets**          | Hugging Face, Roboflow, Civitai, Kaggle, Replicate, Ollama, Papers with Code, LM Studio, OpenXLab, ModelScope |
+| **Computer Vision & Labeling** | CVAT, Label Studio, Supervisely, V7 Darwin, Encord, Scale AI                                                  |
+| **Compute & MLOps**            | Modal, RunPod, Vast.ai, Weights & Biases, BentoML, LangChain, LlamaIndex                                      |
+| **Cloud & Deployment**         | Vercel, Supabase, Render, Netlify, Railway, Fly.io                                                            |
 
 ---
 
 ## 🛠️ Stack Teknologi
 
-| Kategori                   | Teknologi                                                        |
-| :------------------------- | :--------------------------------------------------------------- |
-| **Framework**              | Next.js 16.4+ (App Router, Server Components, Turbopack)         |
-| **Bahasa Pemrograman**     | TypeScript (Strict Mode)                                         |
-| **Styling & Desain**       | Tailwind CSS v4, HSL Color Palette, Custom CSS Variables         |
-| **Visual 3D**              | Three.js (dengan _resource disposal_ & _low-power fallback_)     |
-| **Basis Data**             | PostgreSQL / Supabase / PostgREST (fallback Local Store)         |
-| **Keamanan & Autentikasi** | Jose (JWT HttpOnly Cookies), Bcryptjs (Password Hashing)         |
-| **Validasi & Sanitasi**    | Zod, DOMPurify Sanitization                                      |
-| **Asisten AI**             | Google Gemini API (`gemini-3.5-flash-lite` / `gemini-1.5-flash`) |
-| **Ikon Antarmuka**         | Lucide React                                                     |
+| Kategori               | Teknologi             | Keterangan                                                  |
+| :--------------------- | :-------------------- | :---------------------------------------------------------- |
+| **Framework**          | Next.js 16.4+         | App Router, Server Components, Turbopack                    |
+| **Bahasa Pemrograman** | TypeScript 5.x        | Strict Mode, Type Safety penuh                              |
+| **Styling & Desain**   | Tailwind CSS v4       | Dark Matter Design System, HSL Tokens, Glassmorphism        |
+| **Grafika 3D & Efek**  | Three.js              | Geometri 3D interaktif, particle system, low-power fallback |
+| **Basis Data**         | PostgreSQL / Supabase | Relational Database, JSONB, Local Fallback Store            |
+| **Keamanan & Sesi**    | Jose & Bcryptjs       | JWT HttpOnly Cookies, 12 rounds bcrypt salt                 |
+| **Validasi Skema**     | Zod                   | Runtime type validation untuk API & form                    |
+| **Asisten AI**         | Google Gemini API     | `gemini-2.0-flash` / `gemini-1.5-flash` dengan grounding    |
+| **Ikon Antarmuka**     | Lucide React          | Ikon modern dan konsisten                                   |
 
 ---
 
@@ -99,8 +138,6 @@ npm install
 
 ### 3. Buat File Konfigurasi `.env.local`
 
-Salin template `.env.example`:
-
 - **Windows (PowerShell)**:
   ```powershell
   Copy-Item .env.example .env.local
@@ -119,169 +156,104 @@ npm run dev
 Buka browser di: [http://localhost:3000](http://localhost:3000)
 
 > [!NOTE]
-> **Aplikasi langsung berfungsi seketika!** Jika Anda belum mengatur Supabase atau Gemini AI, aplikasi otomatis berjalan dalam mode **Local Adaptive Store** dengan data awal terverifikasi.
+> Aplikasi siap digunakan seketika! Jika database belum dikonfigurasi, sistem otomatis menggunakan **Local Adaptive Store** (`.data/db.json`).
 
 ---
 
 ## 🔑 Penjelasan Lengkap Environment Variables (.env)
 
-Berikut adalah panduan lengkap setiap variabel yang ada di `.env.example` dan `.env.local`:
-
-| Nama Variabel                   |  Wajib?  | Contoh Isi                                                                   | Penjelasan & Fungsi                                                                                                            |
-| :------------------------------ | :------: | :--------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_SITE_URL`          |  **Ya**  | `http://localhost:3000` (lokal)<br>`https://proyek-anda.vercel.app` (Vercel) | URL publik situs Anda. Digunakan oleh mesin pencari (SEO), tautan kanonikal, Open Graph preview media sosial, dan sitemap XML. |
-| `AUTH_SECRET`                   |  **Ya**  | `min-32-karakter-acak-dan-sangat-rahasia`                                    | Kunci enkripsi untuk menandatangani _JWT session cookie_ HttpOnly pada login Admin dan autentikasi Komentar Komunitas.         |
-| `ADMIN_EMAIL`                   | Opsional | `admin@wijayadarydimas.dev`                                                  | Email akun administrator awal untuk masuk pertama kali ke `/admin/login`.                                                      |
-| `ADMIN_PASSWORD`                | Opsional | `PasswordSuperAman2026!`                                                     | Password akun administrator awal.                                                                                              |
-| `DATABASE_URL`                  |  Opsi A  | `postgresql://postgres:pass@host:6543/postgres`                              | URI koneksi PostgreSQL lengkap (didapat dari Supabase Dashboard).                                                              |
-| `host` / `HOST`                 |  Opsi B  | `aws-0-ap-southeast-1.pooler.supabase.com`                                   | Host database jika menggunakan format parameter terpisah dari Supabase.                                                        |
-| `port` / `PORT`                 |  Opsi B  | `6543` (Pooling) atau `5432` (Direct)                                        | Port database PostgreSQL Supabase.                                                                                             |
-| `database` / `DATABASE`         |  Opsi B  | `postgres`                                                                   | Nama database Supabase.                                                                                                        |
-| `user` / `USER`                 |  Opsi B  | `postgres.xxxxxx`                                                            | Username database PostgreSQL Supabase.                                                                                         |
-| `password` / `PASSWORD`         |  Opsi B  | `password_anda`                                                              | Password database yang Anda tentukan saat membuat proyek Supabase.                                                             |
-| `SUPABASE_URL`                  | Opsional | `https://xxxxxx.supabase.co`                                                 | URL proyek Supabase untuk REST API dan Storage client.                                                                         |
-| `SUPABASE_PUBLISHABLE_KEY`      | Opsional | `eyJhbGciOi...`                                                              | Kunci anon/publishable publik Supabase.                                                                                        |
-| `SUPABASE_JWKS_URL`             | Opsional | `https://xxxxxx.supabase.co/auth/v1/.well-known/jwks.json`                   | URL verifikasi JSON Web Key Set Supabase Auth.                                                                                 |
-| `AI_PROVIDER`                   | Opsional | `gemini`                                                                     | Penyedia AI: pilih `gemini` (disarankan) atau `openai`.                                                                        |
-| `GEMINI_API_KEY` / `AI_API_KEY` | Opsional | `AIzaSy...`                                                                  | Secret API Key Google Gemini (Gratis di [Google AI Studio](https://aistudio.google.com/)).                                     |
-| `GEMINI_MODEL` / `AI_MODEL`     | Opsional | `gemini-3.5-flash-lite`                                                      | Model Gemini yang dipilih (`gemini-3.5-flash-lite`, `gemini-1.5-flash`, atau `gemini-2.0-flash`).                              |
-
-> [!TIP]
-> **Cara Cepat Membuat AUTH_SECRET yang Aman:**
-> Jalankan perintah berikut di terminal Anda untuk menghasilkan string acak 32-byte:
->
-> ```bash
-> openssl rand -base64 32
-> ```
+| Nama Variabel                                  |  Wajib?  | Contoh Isi                                                    | Penjelasan & Fungsi                                                            |
+| :--------------------------------------------- | :------: | :------------------------------------------------------------ | :----------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL`                         |  **Ya**  | `http://localhost:3000`<br>`https://webprofile-mu.vercel.app` | URL publik situs untuk canonical URL, Open Graph preview, dan sitemap XML.     |
+| `AUTH_SECRET`                                  |  **Ya**  | `string-acak-minimal-32-karakter`                             | Kunci enkripsi untuk menandatangani JWT session cookie HttpOnly.               |
+| `ADMIN_EMAIL`                                  | Opsional | `wijayadarydimas@gmail.com`                                   | Email login administrator awal untuk `/admin/login`.                           |
+| `ADMIN_PASSWORD`                               | Opsional | `@Skidrow999110761`                                           | Password administrator awal.                                                   |
+| `DATABASE_URL`                                 |  Opsi A  | `postgresql://postgres.[ref]:[pass]@[host]:6543/postgres`     | URI PostgreSQL Supabase (Direct atau Transaction Pooler).                      |
+| `host`, `port`, `database`, `user`, `password` |  Opsi B  | Parameter terpisah dari dashboard Supabase                    | Digunakan otomatis oleh script setup jika format URI tidak digunakan.          |
+| `AI_PROVIDER`                                  | Opsional | `gemini`                                                      | Penyedia AI (`gemini` disarankan).                                             |
+| `GEMINI_API_KEY`                               | Opsional | `AIzaSy...`                                                   | Kunci API Google Gemini dari [Google AI Studio](https://aistudio.google.com/). |
+| `GEMINI_MODEL`                                 | Opsional | `gemini-1.5-flash` / `gemini-2.0-flash`                       | Model Gemini yang digunakan.                                                   |
 
 ---
 
-## 🗄️ Panduan Menghubungkan Database Supabase
-
-Untuk menghubungkan database Supabase dan memigrasikan tabel:
+## 🗄️ Panduan Menghubungkan Database Supabase & Migrasi
 
 ### 1. Buat Proyek di Supabase
 
 1. Masuk ke [Supabase Dashboard](https://supabase.com/dashboard) dan klik **New Project**.
-2. Beri nama proyek (misal `webprofile-wijaya`) dan buat **Database Password** yang kuat (simpan password ini!).
+2. Simpan Database Password yang Anda tentukan.
 
-### 2. Dapatkan Kredensial Koneksi
+### 2. Pasang `DATABASE_URL` di `.env.local`
 
-Buka menu **Project Settings ➡️ Database**:
+Buka **Project Settings ➡️ Database ➡️ Connection string ➡️ Tab URI**:
 
-- **Format URI (Disarankan)**: Scroll ke bagian **Connection string**, pilih tab **URI**, salin string tersebut dan tempelkan ke `DATABASE_URL` di `.env.local`:
-  ```env
-  DATABASE_URL="postgresql://postgres:[PASSWORD_ANDA]@aws-0-ap-southeast-1.pooler.supabase.com:6543/postgres"
-  ```
-  _(Ganti `[PASSWORD_ANDA]` dengan password database Anda)._
-- **Format Parameter Terpisah**: Jika Anda menyalin nilai terpisah dari dashboard Supabase:
-  ```env
-  host="aws-0-ap-southeast-1.pooler.supabase.com"
-  port="6543"
-  database="postgres"
-  user="postgres.xxxxxx"
-  password="password_database_anda"
-  ```
+```env
+DATABASE_URL="postgresql://postgres.[PROJECT_REF]:[PASSWORD]@aws-0-ap-northeast-1.pooler.supabase.com:6543/postgres"
+```
 
-### 3. Jalankan Migrasi Tabel Otomatis
+### 3. Eksekusi Seluruh Migrasi Otomatis
 
-Jalankan script migrasi yang telah disediakan:
+Jalankan satu perintah berikut di terminal:
 
 ```bash
 node scripts/db-setup.mjs
 ```
 
-_Script ini akan memverifikasi koneksi database, membuat 10 tabel sistem (`site_profile`, `projects`, `experience`, `research_items`, `comments`, dll), mengatur indeks performa, dan memasukkan data awal terverifikasi._
+Script ini akan secara berurutan mengeksekusi semua migrasi di folder `database/migrations/`:
 
-### 4. Buat Akun Administrator di Database
+- `001_initial_schema.sql` — Skema tabel dasar & data awal.
+- `002_community_auth.sql` — Autentikasi komunitas & moderasi komentar.
+- `003_ai_chat_memories.sql` — Tabel riwayat percakapan asisten AI.
+- `004_about_title_and_external_links.sql` — Judul dinamis About & kolom JSONB 37 provider.
 
-Jalankan script inisialisasi admin:
+### 4. Inisialisasi Akun Admin
 
 ```bash
-# Opsi 1: Otomatis membaca ADMIN_EMAIL, ADMIN_PASSWORD, dan ADMIN_NAME dari .env.local:
 node scripts/create-admin.mjs
-
-# Opsi 2: Atau tentukan langsung melalui argumen terminal:
-node scripts/create-admin.mjs admin@wijayadarydimas.dev "PasswordSuperAman2026!" "Wijaya Dary Dimas"
 ```
-
-Dokumentasi skema SQL selengkapnya dapat dibaca di [`database/README.md`](file:///c:/Users/daryd/ITSME/Programming/webprofile/database/README.md).
 
 ---
 
 ## 🤖 Panduan Menghubungkan Google Gemini AI
 
-Asisten AI pada website ini dirancang untuk menjawab pertanyaan pengunjung seputar rekam jejak, skripsi YOLOv11, proyek, dan kontak Wijaya Dary Dimas.
-
-1. Buka [Google AI Studio](https://aistudio.google.com/) dan login dengan akun Google.
-2. Klik tombol **Get API key** lalu **Create API key**.
-3. Buka file `.env.local` dan masukkan kunci Anda:
+1. Buka [Google AI Studio](https://aistudio.google.com/) dan buat API Key.
+2. Tambahkan ke file `.env.local`:
    ```env
    AI_PROVIDER="gemini"
    GEMINI_API_KEY="AIzaSyXXXXXXXXXXXXXXXXXXXXXXXXX"
-   GEMINI_MODEL="gemini-3.5-flash-lite"
+   GEMINI_MODEL="gemini-1.5-flash"
    ```
-4. Restart dev server (`npm run dev`).
-5. Klik tombol asisten AI di pojok kanan bawah website untuk mulai berinteraksi!
-
-> [!NOTE]
-> Jika API Key belum diisi, sistem secara otomatis memberikan **Grounded Fallback Response** yang tetap informatif mengenai profil, riset skripsi di UMP, dan magang di Badan Informasi Geospasial tanpa menyebabkan error.
+3. Restart server dev (`npm run dev`).
+4. Klik tombol Asisten AI di pojok kanan bawah website untuk mulai berinteraksi.
 
 ---
 
 ## 🚀 Panduan Deployment ke Vercel
 
-### 1. Push Kode ke GitHub
-
-Pastikan semua perubahan telah ter-commit ke repositori GitHub Anda:
-
-```bash
-git add .
-git commit -m "feat: complete production-ready personal digital hub"
-git push origin main
-```
-
-### 2. Hubungkan Proyek ke Vercel
-
-1. Buka [Dashboard Vercel](https://vercel.com/dashboard) dan klik **Add New... ➡️ Project**.
-2. Pilih repositori `webprofile` dan klik **Import**.
-
-### 3. Masukkan Environment Variables di Vercel
-
-Pada langkah konfigurasi proyek Vercel, buka menu **Environment Variables** dan tambahkan variabel berikut:
-
-| Key                             | Value Contoh                           | Keterangan                    |
-| :------------------------------ | :------------------------------------- | :---------------------------- |
-| `NEXT_PUBLIC_SITE_URL`          | `https://nama-project-anda.vercel.app` | URL domain Vercel Anda        |
-| `AUTH_SECRET`                   | `string-acak-minimal-32-karakter`      | Kunci enkripsi sesi JWT       |
-| `DATABASE_URL`                  | `postgresql://postgres:...`            | Koneksi database Supabase     |
-| `ADMIN_EMAIL`                   | `admin@wijayadarydimas.dev`            | Email admin                   |
-| `ADMIN_PASSWORD`                | `PasswordSuperAman2026!`               | Password admin                |
-| `AI_PROVIDER`                   | `gemini`                               | Provider AI                   |
-| `GEMINI_API_KEY`                | `AIzaSy...`                            | API Key dari Google AI Studio |
-| `GEMINI_MODEL`                  | `gemini-3.5-flash-lite`                | Model Gemini                  |
-| `NEXT_PUBLIC_SUPABASE_URL`      | `https://xxxxxx.supabase.co`           | (Opsional) Supabase REST URL  |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `eyJhbGciOi...`                        | (Opsional) Supabase Anon Key  |
-
-### 4. Deploy!
-
-Klik tombol **Deploy**. Vercel akan otomatis melakukan proses _building_ dan meluncurkan website personal Anda secara publik dengan sertifikat SSL gratis, CDN global berkecepatan tinggi, dan optimasi aset otomatis.
+1. Commit dan push seluruh kode ke repositori GitHub:
+   ```bash
+   git add .
+   git commit -m "feat: complete dark matter interactive portfolio"
+   git push origin main
+   ```
+2. Buka [Dashboard Vercel](https://vercel.com/dashboard) ➡️ **Add New Project** ➡️ Import repositori `webprofile`.
+3. Masukkan Environment Variables (`NEXT_PUBLIC_SITE_URL`, `AUTH_SECRET`, `DATABASE_URL`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `GEMINI_API_KEY`).
+4. Klik **Deploy**.
 
 ---
 
 ## 🔐 Mengakses Admin Dashboard
 
-1. Akses halaman `/admin/login` (atau klik **Admin Portal** di footer website).
-2. Masukkan email dan password administrator Anda.
-3. Fitur yang tersedia di Admin Dashboard:
-   - **Profil & Hero**: Mengubah nama, tagline, headline, bio pengantar, dan mengunggah foto profil resmi.
-   - **CV Resume**: Mengunggah berkas CV terbaru (PDF).
-   - **Proyek & Studi Kasus**: Tambah, edit, unggah cover gambar, dan atur tautan GitHub / demo.
-   - **Pengalaman Kerja & Pendidikan**: Kelola riwayat karier (BIG) dan pendidikan (UMP).
-   - **Skripsi & Riset**: Pembaruan komprehensif metrik dan deskripsi modifikasi YOLOv11.
-   - **Media Library**: Kelola seluruh aset gambar dan dokumen yang telah diunggah.
-   - **Moderasi Komunitas**: Pantau, tampilkan, sembunyikan, atau hapus komentar pengunjung.
-   - **Konfigurasi AI**: Atur model dan persona asisten virtual.
+1. Kunjungi `/admin/login` (atau klik **Admin Portal** di footer website).
+2. Masukkan email dan password admin Anda.
+3. Modul yang tersedia:
+   - **Profil & Identitas**: Mengubah nama, headline, bio, dan **Judul Seksi Tentang**.
+   - **Proyek & Portofolio**: Tambah/edit studi kasus dan pasang tautan ke 37 provider (Roboflow, Hugging Face, Kaggle, dll.).
+   - **Riset & Skripsi**: Kelola dokumentasi penelitian APD YOLOv11 dan tautan model/dataset eksternal.
+   - **Pengalaman & Pendidikan**: Kelola riwayat kerja (BIG) dan pendidikan formal (UMP).
+   - **Media Library**: Upload dan kelola berkas aset (dengan kompresi WebP otomatis).
+   - **Moderasi Komunitas**: Kelola komentar pengunjung forum.
+   - **Konfigurasi AI**: Atur model dan kepribadian asisten virtual.
 
 ---
 
@@ -289,49 +261,65 @@ Klik tombol **Deploy**. Vercel akan otomatis melakukan proses _building_ dan mel
 
 ```text
 webprofile/
-├── .data/                      # Local Adaptive Store fallback (db.json)
+├── .data/                                  # Local Adaptive Store fallback (db.json)
 ├── database/
-│   ├── migrations/             # Skrip SQL skema tabel PostgreSQL Supabase
-│   └── README.md               # Dokumentasi arsitektur database & RLS
+│   ├── migrations/
+│   │   ├── 001_initial_schema.sql          # Skema dasar dan tabel utama
+│   │   ├── 002_community_auth.sql          # Fitur otentikasi komunitas
+│   │   ├── 003_ai_chat_memories.sql        # Memori obrolan asisten AI
+│   │   └── 004_about_title_and_external_links.sql # Judul about & JSONB 37 provider
+│   └── README.md                           # Dokumentasi mendalam arsitektur database & RLS
 ├── public/
-│   └── uploads/                # Direktori penyimpanan berkas & media lokal
+│   ├── images/                             # Gambar visual dan diagram arsitektur
+│   └── uploads/                            # Berkas media yang diunggah dari admin
 ├── scripts/
-│   ├── db-setup.mjs            # Runner migrasi tabel & seed database
-│   └── create-admin.mjs        # Utilitas inisialisasi akun admin baru
+│   ├── db-setup.mjs                        # Runner migrasi SQL berurutan otomatis
+│   └── create-admin.mjs                    # Generator akun administrator di database
 ├── src/
-│   ├── app/                    # Next.js App Router (Pages, Layouts, API Routes)
-│   │   ├── admin/              # Dashboard manajemen konten & login admin
-│   │   ├── api/                # API Routes (auth, ai/chat, upload, comments)
-│   │   ├── community/          # Halaman forum diskusi publik dua arah
-│   │   ├── projects/           # Direktori & halaman detail studi kasus
-│   │   ├── research/           # Halaman khusus penelitian skripsi YOLOv11
-│   │   └── page.tsx            # Homepage utama (Hero 3D, About, Timeline)
-│   ├── components/             # Komponen UI modular
-│   │   ├── ai/                 # Modal & dialog Asisten AI
-│   │   ├── community/          # Komponen threaded comments & auth modal
-│   │   ├── hero/               # Canvas Three.js 3D & fallback visual
-│   │   ├── layout/             # Navbar kaca (glassmorphism) & Footer
-│   │   └── ui/                 # Tombol, card, badge, dan ikon SVG kustom
-│   └── lib/                    # Logika bisnis inti
-│       ├── ai/                 # Adapter Gemini / OpenAI & knowledge base
-│       ├── auth/               # Autentikasi sesi JWT HttpOnly & hashing
-│       ├── db/                 # Adapter database (PostgreSQL & Local Store)
-│       └── security/           # Sanitasi input & pencegahan serangan XSS
-├── .env.example                # Template lengkap environment variables
-└── README.md                   # Dokumentasi resmi proyek
+│   ├── app/
+│   │   ├── admin/                          # Dashboard CMS & autentikasi admin
+│   │   │   ├── profile/                    # Edit profil & judul seksi about
+│   │   │   ├── projects/                   # Manajemen proyek & picker provider eksternal
+│   │   │   └── research/                   # Manajemen riset & picker provider eksternal
+│   │   ├── api/                            # API endpoints (admin, ai, auth, comments, upload)
+│   │   ├── community/                      # Forum diskusi interaktif komunitas
+│   │   ├── projects/                       # Portofolio proyek & detail [slug]
+│   │   ├── research/                       # Halaman riset skripsi YOLOv11
+│   │   └── page.tsx                        # Beranda Dark Matter (Hero, About, Timeline)
+│   ├── components/
+│   │   ├── admin/
+│   │   │   └── ExternalLinksEditor.tsx     # Komponen pemilih 37 platform eksternal
+│   │   ├── hero/
+│   │   │   ├── AbstractGeometry.tsx        # Geometri 3D Three.js interaktif
+│   │   │   └── LusionParticleAtmosphere.tsx # Partikel atmosfer kosmis ambient
+│   │   ├── home/
+│   │   │   └── AboutSection.tsx            # Seksi About dinamis tanpa tautan berulang
+│   │   ├── projects/
+│   │   │   └── ProjectCard.tsx             # Kartu proyek dengan badge provider eksternal
+│   │   └── ui/
+│   │       └── ProviderBadge.tsx           # Badge styling platform eksternal
+│   ├── lib/
+│   │   ├── constants/
+│   │   │   └── providers.ts                # Kamus 37 platform eksternal & metadata
+│   │   ├── db/                             # Lapisan database (Postgres & Local Store)
+│   │   └── validation/
+│   │       └── schemas.ts                  # Skema validasi Zod
+│   └── types/                              # Definisi tipe data TypeScript
+├── .env.example                            # Template variabel lingkungan
+└── README.md                               # Dokumentasi utama proyek
 ```
 
 ---
 
-## 🧪 Validasi Build & Linting
+## 🧪 Validasi Build Produksi
 
-Untuk memastikan kode siap produksi tanpa error:
+Untuk memastikan kode siap produksi tanpa peringatan atau kesalahan kompilasi:
 
 ```bash
-# Type check & build produksi Next.js (Turbopack)
+# Validasi TypeScript dan Build Produksi Turbopack
 npm run build
 
-# Menjalankan build produksi di mesin lokal
+# Menjalankan server hasil build
 npm run start
 ```
 
@@ -340,4 +328,4 @@ npm run start
 ## 📄 Lisensi & Hak Cipta
 
 &copy; 2026 **Wijaya Dary Dimas**. Seluruh hak cipta dilindungi undang-undang.  
-Didesain dan dikembangkan sebagai _Personal Digital Hub & Professional Engineering Showcase_.
+Didesain dan dikembangkan sebagai _Personal Digital Hub & Interactive Portfolio_.

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ExternalLink, Cpu, CheckCircle2, AlertTriangle, Layers } from "lucide-react";
 import { GithubIcon } from "@/components/ui/Icons";
+import ProviderBadge from "@/components/ui/ProviderBadge";
 import { db } from "@/lib/db";
 import AppShell from "@/components/layout/AppShell";
 import { isSafeUrl } from "@/lib/security/sanitize";
@@ -93,11 +94,17 @@ export default async function ProjectDetailPage({
                   <span>Kunjungi Live Demo</span>
                 </a>
               )}
+
+              {/* Dynamic External Platform Badges */}
+              {project.externalLinks &&
+                project.externalLinks.map((link, idx) => (
+                  <ProviderBadge key={`${link.provider}-${idx}`} link={link} size="md" />
+                ))}
             </div>
           </div>
 
           {/* Cover Media Card */}
-          <div className="relative w-full h-64 sm:h-96 rounded-2xl overflow-hidden bg-[#15171C] border border-[#2B2D34]">
+          <div className="relative w-full h-64 sm:h-96 rounded-2xl overflow-hidden bg-[#171A24] border border-[#292D39]">
             {project.coverImage ? (
               <Image
                 src={project.coverImage}
@@ -113,36 +120,36 @@ export default async function ProjectDetailPage({
           {/* Structured Case Study Sections */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {project.problem && (
-              <div className="p-5 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-2.5">
+              <div className="p-5 rounded-xl bg-[#171A24] border border-[#292D39] flex flex-col gap-2.5">
                 <div className="flex items-center gap-2 text-[#F59E0B]">
                   <AlertTriangle className="w-4 h-4" />
                   <span className="text-xs font-mono font-semibold uppercase">Masalah (Problem)</span>
                 </div>
-                <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#A1A6B5] leading-relaxed">
                   {project.problem}
                 </p>
               </div>
             )}
 
             {project.solution && (
-              <div className="p-5 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-2.5">
-                <div className="flex items-center gap-2 text-[#6D8DFF]">
+              <div className="p-5 rounded-xl bg-[#171A24] border border-[#292D39] flex flex-col gap-2.5">
+                <div className="flex items-center gap-2 text-[#7790FF]">
                   <Layers className="w-4 h-4" />
                   <span className="text-xs font-mono font-semibold uppercase">Pendekatan Teknis</span>
                 </div>
-                <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#A1A6B5] leading-relaxed">
                   {project.solution}
                 </p>
               </div>
             )}
 
             {project.results && (
-              <div className="p-5 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-2.5">
+              <div className="p-5 rounded-xl bg-[#171A24] border border-[#292D39] flex flex-col gap-2.5">
                 <div className="flex items-center gap-2 text-[#22C55E]">
                   <CheckCircle2 className="w-4 h-4" />
                   <span className="text-xs font-mono font-semibold uppercase">Hasil &amp; Evaluasi</span>
                 </div>
-                <p className="text-xs sm:text-sm text-[#A1A1AA] leading-relaxed">
+                <p className="text-xs sm:text-sm text-[#A1A6B5] leading-relaxed">
                   {project.results}
                 </p>
               </div>
@@ -150,9 +157,9 @@ export default async function ProjectDetailPage({
           </div>
 
           {/* Full Narrative Content */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-4">
-            <h2 className="text-lg font-bold text-[#F3F4F6]">Dokumentasi &amp; Penjelasan Teknis</h2>
-            <div className="text-sm text-[#A1A1AA] leading-relaxed whitespace-pre-wrap flex flex-col gap-4">
+          <div className="p-6 sm:p-8 rounded-2xl bg-[#171A24] border border-[#292D39] flex flex-col gap-4">
+            <h2 className="text-lg font-bold text-[#F1F2F5]">Dokumentasi &amp; Penjelasan Teknis</h2>
+            <div className="text-sm text-[#A1A6B5] leading-relaxed whitespace-pre-wrap flex flex-col gap-4">
               {project.fullDescription.split("\n\n").map((para, i) => (
                 <p key={i}>{para}</p>
               ))}
@@ -160,8 +167,8 @@ export default async function ProjectDetailPage({
           </div>
 
           {/* Technologies Used */}
-          <div className="flex flex-col gap-3 p-6 rounded-2xl bg-[#15171C] border border-[#2B2D34]">
-            <h3 className="text-xs font-mono font-semibold text-[#8B9CFF] uppercase">
+          <div className="flex flex-col gap-3 p-6 rounded-2xl bg-[#171A24] border border-[#292D39]">
+            <h3 className="text-xs font-mono font-semibold text-[#96A9FF] uppercase">
               Stack &amp; Perangkat Lunak yang Digunakan
             </h3>
             <div className="flex flex-wrap gap-2">

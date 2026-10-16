@@ -8,12 +8,19 @@ export interface User {
   createdAt: string;
 }
 
+export interface ExternalProviderLink {
+  provider: string; // e.g. "github", "roboflow", "huggingface", etc.
+  url: string;
+  label?: string; // Optional custom display label
+}
+
 export interface SiteProfile {
   id: string;
   fullName: string;
   headline: string;
   shortBio: string;
   aboutMe: string;
+  aboutTitle?: string;
   avatarUrl: string;
   avatarAlt: string;
   cvUrl: string;
@@ -39,11 +46,12 @@ export interface Project {
   problem?: string;
   solution?: string;
   results?: string;
-  category: "Computer Vision" | "Geospatial" | "Full-Stack" | "System" | "Other";
+  category: string;
   technologies: string[];
   coverImage: string;
   repoUrl?: string;
   liveUrl?: string;
+  externalLinks?: ExternalProviderLink[];
   featured: boolean;
   published: boolean;
   orderIndex: number;
@@ -72,6 +80,25 @@ export interface Education {
   url?: string;
 }
 
+export type ResearchSectionType =
+  | "text"
+  | "markdown"
+  | "methodology"
+  | "architecture"
+  | "dataset"
+  | "results"
+  | "integration"
+  | "references";
+
+export interface ResearchSectionItem {
+  id: string;
+  title: string;
+  type: ResearchSectionType;
+  content: string;
+  orderIndex: number;
+  isVisible: boolean;
+}
+
 export interface ResearchItem {
   id: string;
   title: string;
@@ -84,7 +111,12 @@ export interface ResearchItem {
   publishedStatus: string;
   repoUrl?: string;
   pdfUrl?: string;
+  externalLinks?: ExternalProviderLink[];
   orderIndex: number;
+  institution?: string;
+  studyProgram?: string;
+  technologies?: string[];
+  sections?: ResearchSectionItem[];
   updatedAt: string;
 }
 

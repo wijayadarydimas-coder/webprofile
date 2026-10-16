@@ -29,12 +29,12 @@ export default function CommentForm({ currentUser, onSubmit, onOpenAuth }: Comme
 
   if (!currentUser) {
     return (
-      <div className="p-6 rounded-2xl bg-[#15171C] border border-[#2B2D34] flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div className="p-6 rounded-2xl bg-[#171A24] border border-[#292D39] flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
         <div className="flex flex-col gap-1">
-          <span className="text-sm font-semibold text-[#F3F4F6]">
+          <span className="text-sm font-semibold text-[#F1F2F5]">
             Ingin bergabung dalam diskusi?
           </span>
-          <p className="text-xs text-[#71717A]">
+          <p className="text-xs text-[#7D8496]">
             Masuk atau daftarkan akun komunitas Anda untuk menulis komentar dan tanggapan.
           </p>
         </div>
@@ -48,15 +48,15 @@ export default function CommentForm({ currentUser, onSubmit, onOpenAuth }: Comme
   }
 
   return (
-    <div className="p-5 rounded-2xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-3">
+    <div className="p-5 rounded-2xl bg-[#171A24] border border-[#292D39] flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <MessageSquare className="w-4 h-4 text-[#6D8DFF]" />
-          <span className="text-xs font-semibold text-[#F3F4F6]">
-            Tulis Komentar sebagai <span className="text-[#8B9CFF]">{currentUser.name}</span>
+          <MessageSquare className="w-4 h-4 text-[#7790FF]" />
+          <span className="text-xs font-semibold text-[#F1F2F5]">
+            Tulis Komentar sebagai <span className="text-[#96A9FF]">{currentUser.name}</span>
           </span>
         </div>
-        <span className="text-[11px] text-[#71717A] font-mono">
+        <span className="text-[11px] text-[#7D8496] font-mono">
           {content.length}/1000
         </span>
       </div>
@@ -69,7 +69,7 @@ export default function CommentForm({ currentUser, onSubmit, onOpenAuth }: Comme
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Tuliskan pemikiran, tanggapan teknis, atau pertanyaan Anda..."
-          className="w-full p-3 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] placeholder-[#71717A] focus:border-[#6D8DFF] focus:outline-none transition-colors"
+          className="w-full p-3 rounded-lg bg-[#1F2330] border border-[#292D39] text-xs text-[#F1F2F5] placeholder-[#7D8496] focus:border-[#7790FF] focus:outline-none transition-colors"
         />
 
         <div className="flex items-center justify-end">

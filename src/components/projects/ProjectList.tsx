@@ -60,17 +60,17 @@ export default function ProjectList({ initialProjects }: ProjectListProps) {
   return (
     <div className="flex flex-col gap-8">
       {/* Search and Dynamic Technology Filter Toolbar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 rounded-xl bg-[#15171C] border border-[#2B2D34]">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 rounded-xl bg-[#171A24] border border-[#292D39]">
         {/* Dynamic Technology Pills (Max 5 + Semua) */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
           {filterOptions.map((item) => (
             <button
               key={item}
               onClick={() => setSelectedTech(item)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors cursor-pointer ${
                 selectedTech === item
-                  ? "bg-[#6D8DFF] text-white shadow-sm"
-                  : "bg-[#1B1D23] text-[#A1A1AA] hover:text-[#F3F4F6] hover:bg-[#22252E] border border-[#2B2D34]"
+                  ? "bg-[#7790FF] text-white shadow-sm"
+                  : "bg-[#1F2330] text-[#A1A6B5] hover:text-[#F1F2F5] hover:bg-[#262A38] border border-[#292D39]"
               }`}
             >
               {item}
@@ -80,24 +80,24 @@ export default function ProjectList({ initialProjects }: ProjectListProps) {
 
         {/* Search input */}
         <div className="relative min-w-[220px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#71717A]" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#7D8496]" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Cari proyek atau teknologi..."
-            className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] placeholder-[#71717A] focus:border-[#6D8DFF] focus:outline-none"
+            className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-[#1F2330] border border-[#292D39] text-xs text-[#F1F2F5] placeholder-[#7D8496] focus:border-[#7790FF] focus:outline-none"
           />
         </div>
       </div>
 
       {/* Grid of Results */}
       {filtered.length === 0 ? (
-        <div className="py-16 text-center text-xs text-[#71717A] bg-[#15171C] rounded-2xl border border-[#2B2D34]">
+        <div className="py-16 text-center text-xs text-[#7D8496] bg-[#171A24] rounded-2xl border border-[#292D39]">
           Tidak ditemukan proyek yang cocok dengan filter atau kata kunci pencarian.
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filtered.map((proj) => (
             <ProjectCard key={proj.id} project={proj} />
           ))}

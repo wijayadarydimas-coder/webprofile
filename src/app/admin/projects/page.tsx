@@ -2,12 +2,31 @@
 
 import { useState, useEffect } from "react";
 import { FolderKanban, Plus, Edit, Trash2, ExternalLink, CheckCircle2, AlertCircle, X, Upload } from "lucide-react";
+import ExternalLinksEditor from "@/components/admin/ExternalLinksEditor";
 import type { Project } from "@/types";
+
+const SUGGESTED_CATEGORIES = [
+  "Computer Vision",
+  "Deep Learning & AI",
+  "Geospatial & GIS",
+  "Full-Stack",
+  "Web Development",
+  "Mobile App",
+  "System Architecture",
+  "Cloud & DevOps",
+  "Data Science & Analytics",
+  "Embedded Systems & IoT",
+  "Robotics & Automation",
+  "Cybersecurity",
+  "Open Source Tool",
+  "Other",
+];
 
 export default function AdminProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingProj, setEditingProj] = useState<Project | null>(null);
+  const [techInput, setTechInput] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
@@ -52,12 +71,14 @@ export default function AdminProjectsPage() {
       coverImage: "/images/project-yolo.svg",
       repoUrl: "",
       liveUrl: "",
+      externalLinks: [],
       featured: false,
       published: true,
       orderIndex: projects.length + 1,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     });
+    setTechInput("Python");
     setIsModalOpen(true);
   };
 
@@ -68,13 +89,36 @@ export default function AdminProjectsPage() {
     setStatus({ type: null, message: "" });
 
     try {
+      const cleanExternalLinks = (editingProj.externalLinks || [])
+        .filter((link) => link && link.url && link.url.trim() !== "")
+        .map((link) => {
+          const trimmed = link.url.trim();
+          const url = /^https?:\/\//i.test(trimmed) || trimmed.startsWith("/") ? trimmed : `https://${trimmed}`;
+          return {
+            provider: link.provider,
+            url,
+            label: link.label?.trim() || undefined,
+          };
+        });
+
+      const parsedTechs = techInput
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean);
+
+      const payload = {
+        ...editingProj,
+        technologies: parsedTechs.length > 0 ? parsedTechs : [techInput.trim() || "Technology"],
+        externalLinks: cleanExternalLinks,
+      };
+
       const res = await fetch("/api/admin/content", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           entity: "project",
           action: "save",
-          data: editingProj,
+          data: payload,
         }),
       });
 
@@ -215,7 +259,11 @@ export default function AdminProjectsPage() {
                   <div className="flex items-center justify-end gap-2">
                     <button
                       onClick={() => {
-                        setEditingProj(proj);
+                        setEditingProj({
+                          ...proj,
+                          externalLinks: proj.externalLinks || [],
+                        });
+                        setTechInput(Array.isArray(proj.technologies) ? proj.technologies.join(", ") : "");
                         setIsModalOpen(true);
                       }}
                       className="p-1.5 rounded hover:bg-[#1B1D23] text-[#8B9CFF]"
@@ -282,32 +330,63 @@ export default function AdminProjectsPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[#A1A1AA]">Kategori</label>
-                  <select
-                    value={editingProj.category}
-                    onChange={(e) => setEditingProj({ ...editingProj, category: e.target.value as Project["category"] })}
-                    className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
-                  >
-                    <option value="Computer Vision">Computer Vision</option>
-                    <option value="Geospatial">Geospatial</option>
-                    <option value="Full-Stack">Full-Stack</option>
-                    <option value="System">System</option>
-                    <option value="Other">Other</option>
-                  </select>
+                  <div className="flex items-center justify-between">
+                    <label className="text-[#A1A1AA]">Kategori Proyek</label>
+                    <span className="text-[10px] text-[#71717A]">Pilih cepat atau tulis manual</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      list="project-categories-list"
+                      required
+                      value={editingProj.category}
+                      onChange={(e) => setEditingProj({ ...editingProj, category: e.target.value })}
+                      placeholder="Pilih atau ketik kategori..."
+                      className="flex-1 p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
+                    />
+                    <select
+                      value={SUGGESTED_CATEGORIES.includes(editingProj.category) ? editingProj.category : "manual"}
+                      onChange={(e) => {
+                        if (e.target.value !== "manual") {
+                          setEditingProj({ ...editingProj, category: e.target.value });
+                        }
+                      }}
+                      className="w-36 p-2.5 rounded-lg bg-[#15171C] border border-[#2B2D34] text-xs text-[#A1A6B5] focus:border-[#6D8DFF] focus:outline-none cursor-pointer"
+                    >
+                      <option value="manual">-- Dropdown --</option>
+                      {SUGGESTED_CATEGORIES.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <datalist id="project-categories-list">
+                    {SUGGESTED_CATEGORIES.map((cat) => (
+                      <option key={cat} value={cat} />
+                    ))}
+                  </datalist>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[#A1A1AA]">Teknologi (pisahkan koma)</label>
+                  <div className="flex items-center justify-between">
+                    <label className="text-[#A1A1AA]">Teknologi (pisahkan koma)</label>
+                    <span className="text-[10px] text-[#71717A]">Bebas ketik koma &amp; spasi</span>
+                  </div>
                   <input
                     type="text"
-                    value={editingProj.technologies.join(", ")}
-                    onChange={(e) =>
+                    value={techInput}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setTechInput(val);
+                      const parsed = val.split(",").map((s) => s.trim()).filter(Boolean);
                       setEditingProj({
                         ...editingProj,
-                        technologies: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
-                      })
-                    }
-                    className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
+                        technologies: parsed.length > 0 ? parsed : [val.trim()],
+                      });
+                    }}
+                    placeholder="Contoh: Python, PyTorch, YOLOv11, OpenCV, FastAPI"
+                    className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none font-mono text-xs"
                   />
                 </div>
               </div>
@@ -386,6 +465,16 @@ export default function AdminProjectsPage() {
                   />
                 </div>
               </div>
+
+              {/* Dynamic External Platform / Provider Links */}
+              <ExternalLinksEditor
+                links={editingProj.externalLinks || []}
+                onChange={(updatedLinks) =>
+                  setEditingProj({ ...editingProj, externalLinks: updatedLinks })
+                }
+                title="Tautan Ekosistem & Platform Proyek (Roboflow, Hugging Face, Kaggle, GitHub, dll.)"
+                description="Hubungkan proyek dengan Roboflow Universe, Hugging Face Hub, Kaggle Notebooks, model weights, API docs, dsb."
+              />
 
               <div className="flex flex-col gap-1.5">
                 <label className="text-[#A1A1AA]">Cover Image URL / Upload</label>

@@ -10,77 +10,107 @@ export default function AbstractGeometry() {
     const container = containerRef.current;
     if (!container) return;
 
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     let animationFrameId: number;
-    const width = container.clientWidth || 360;
-    const height = container.clientHeight || 360;
+    const width = container.clientWidth || 380;
+    const height = container.clientHeight || 380;
 
     // Scene
     const scene = new THREE.Scene();
 
     // Camera
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.z = 4.5;
+    camera.position.z = 4.8;
 
     // Renderer
     let renderer: THREE.WebGLRenderer;
     try {
-      renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "high-performance" });
+      renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true,
+        powerPreference: "high-performance",
+      });
       renderer.setSize(width, height);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       container.appendChild(renderer.domElement);
     } catch {
-      // Fallback handled by parent if WebGL context creation fails
       return;
     }
 
-    // Lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    // Controlled Cinematic Lighting (Dark Matter palette)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
     scene.add(ambientLight);
 
-    const dirLight1 = new THREE.DirectionalLight(0x6d8dff, 2.5);
-    dirLight1.position.set(5, 5, 5);
-    scene.add(dirLight1);
+    const keyLight = new THREE.DirectionalLight(0x7790ff, 2.2);
+    keyLight.position.set(4, 5, 4);
+    scene.add(keyLight);
 
-    const dirLight2 = new THREE.DirectionalLight(0x8b9cff, 1.2);
-    dirLight2.position.set(-5, -3, -2);
-    scene.add(dirLight2);
+    const rimLight = new THREE.DirectionalLight(0x96a9ff, 1.4);
+    rimLight.position.set(-4, -3, -2);
+    scene.add(rimLight);
 
     // Group for objects
     const group = new THREE.Group();
     scene.add(group);
 
-    // Outer Wireframe Polyhedron
-    const outerGeo = new THREE.IcosahedronGeometry(1.4, 0);
+    // 1. Outer Precision Wireframe (Muted technical icosahedron)
+    const outerGeo = new THREE.IcosahedronGeometry(1.45, 0);
     const outerMat = new THREE.MeshBasicMaterial({
-      color: 0x6d8dff,
+      color: 0x7790ff,
       wireframe: true,
       transparent: true,
-      opacity: 0.35,
+      opacity: 0.25,
     });
     const outerMesh = new THREE.Mesh(outerGeo, outerMat);
     group.add(outerMesh);
 
-    // Inner Solid Faceted Mesh
-    const innerGeo = new THREE.OctahedronGeometry(0.85, 0);
+    // 2. Inner Dark Metallic Faceted Core
+    const innerGeo = new THREE.OctahedronGeometry(0.9, 0);
     const innerMat = new THREE.MeshStandardMaterial({
-      color: 0x1b1d23,
-      metalness: 0.8,
-      roughness: 0.25,
-      emissive: 0x15171c,
+      color: 0x171a24,
+      metalness: 0.88,
+      roughness: 0.24,
+      emissive: 0x0b0d12,
+      flatShading: true,
     });
     const innerMesh = new THREE.Mesh(innerGeo, innerMat);
     group.add(innerMesh);
 
-    // Point anchors
-    const pointsGeo = new THREE.IcosahedronGeometry(1.4, 0);
+    // 3. Precision Node Anchors
+    const pointsGeo = new THREE.IcosahedronGeometry(1.45, 0);
     const pointsMat = new THREE.PointsMaterial({
-      color: 0x8b9cff,
+      color: 0x96a9ff,
       size: 0.05,
       transparent: true,
-      opacity: 0.8,
+      opacity: 0.85,
     });
     const points = new THREE.Points(pointsGeo, pointsMat);
     group.add(points);
+
+    // 4. Dual Orbital Planetary / Gyroscope Rings
+    const ring1Geo = new THREE.RingGeometry(1.8, 1.815, 64);
+    const ring1Mat = new THREE.MeshBasicMaterial({
+      color: 0x292d39,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.45,
+    });
+    const ring1Mesh = new THREE.Mesh(ring1Geo, ring1Mat);
+    ring1Mesh.rotation.x = Math.PI / 3;
+    group.add(ring1Mesh);
+
+    const ring2Geo = new THREE.RingGeometry(2.05, 2.062, 64);
+    const ring2Mat = new THREE.MeshBasicMaterial({
+      color: 0x7790ff,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.2,
+    });
+    const ring2Mesh = new THREE.Mesh(ring2Geo, ring2Mat);
+    ring2Mesh.rotation.y = Math.PI / 4;
+    ring2Mesh.rotation.x = -Math.PI / 6;
+    group.add(ring2Mesh);
 
     // Mouse movement damping
     let mouseX = 0;
@@ -92,11 +122,18 @@ export default function AbstractGeometry() {
       const rect = container.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
-      targetX = ((x / width) - 0.5) * 0.8;
-      targetY = ((y / height) - 0.5) * 0.8;
+      targetX = (x / width - 0.5) * 0.7;
+      targetY = (y / height - 0.5) * 0.7;
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
+
+    // Scroll-linked continuous rotation & subtle depth
+    let scrollY = 0;
+    const handleScroll = () => {
+      scrollY = window.scrollY;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     // Handle Resize
     const handleResize = () => {
@@ -110,36 +147,70 @@ export default function AbstractGeometry() {
 
     window.addEventListener("resize", handleResize);
 
-    // Animation Loop
-    let clock = new THREE.Clock();
-    const animate = () => {
-      animationFrameId = requestAnimationFrame(animate);
-      const delta = clock.getDelta();
+    // Visibility Observer
+    let isVisible = true;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+      },
+      { threshold: 0.05 }
+    );
+    observer.observe(container);
 
-      // Smooth mouse follow
-      mouseX += (targetX - mouseX) * 0.05;
-      mouseY += (targetY - mouseY) * 0.05;
+    // Animation Loop with performance.now()
+    let lastTime = performance.now();
 
-      // Slow subtle natural rotation
-      group.rotation.y += 0.25 * delta;
-      group.rotation.x += 0.15 * delta;
-
-      // Mouse tilt offset
-      group.rotation.y += mouseX * 0.02;
-      group.rotation.x += mouseY * 0.02;
-
-      innerMesh.rotation.y -= 0.35 * delta;
-      innerMesh.rotation.z += 0.2 * delta;
-
+    if (prefersReducedMotion) {
       renderer.render(scene, camera);
-    };
+    } else {
+      const animate = () => {
+        animationFrameId = requestAnimationFrame(animate);
 
-    animate();
+        if (!isVisible) return;
+
+        const now = performance.now();
+        const delta = Math.min((now - lastTime) * 0.001, 0.1);
+        lastTime = now;
+
+        // Smooth mouse follow with inertia damping
+        mouseX += (targetX - mouseX) * 0.045;
+        mouseY += (targetY - mouseY) * 0.045;
+
+        // Base continuous organic rotation
+        group.rotation.y += 0.2 * delta;
+        group.rotation.x += 0.1 * delta;
+
+        // Scroll continuity: link rotation and slight position shift to scroll
+        const scrollOffset = scrollY * 0.001;
+        group.rotation.y += scrollOffset * 0.03;
+        group.position.y = -Math.min(scrollY * 0.0006, 0.4);
+
+        // Subtle mouse tilt
+        group.rotation.y += mouseX * 0.015;
+        group.rotation.x += mouseY * 0.015;
+
+        // Counter-rotating inner core and rings
+        innerMesh.rotation.y -= 0.3 * delta;
+        innerMesh.rotation.z += 0.15 * delta;
+
+        ring1Mesh.rotation.z += 0.14 * delta;
+        ring2Mesh.rotation.z -= 0.1 * delta;
+
+        renderer.render(scene, camera);
+      };
+
+      animate();
+    }
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleResize);
-      cancelAnimationFrame(animationFrameId);
+      observer.disconnect();
+
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
 
       outerGeo.dispose();
       outerMat.dispose();
@@ -147,6 +218,10 @@ export default function AbstractGeometry() {
       innerMat.dispose();
       pointsGeo.dispose();
       pointsMat.dispose();
+      ring1Geo.dispose();
+      ring1Mat.dispose();
+      ring2Geo.dispose();
+      ring2Mat.dispose();
 
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
@@ -158,8 +233,8 @@ export default function AbstractGeometry() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[320px] md:h-[380px] flex items-center justify-center cursor-grab active:cursor-grabbing"
-      title="Interaktif: Gerakkan kursor untuk mengamati aksen 3D"
+      className="relative w-full h-[320px] md:h-[400px] flex items-center justify-center cursor-grab active:cursor-grabbing select-none"
+      title="Interaktif: Gerakkan kursor atau gulir halaman untuk mengamati aksen 3D"
     />
   );
 }

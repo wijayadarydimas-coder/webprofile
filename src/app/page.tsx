@@ -37,7 +37,12 @@ export default async function HomePage() {
       <HeroSection profile={profile} />
 
       {/* 2. About Me Section */}
-      <AboutSection profile={profile} />
+      <AboutSection
+        profile={profile}
+        primaryEducation={educations[0]}
+        primaryExperience={experiences[0]}
+        primaryResearch={primaryResearch}
+      />
 
       {/* 3. Featured Projects Showcase */}
       <FeaturedProjects projects={projects} />

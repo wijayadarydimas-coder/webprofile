@@ -17,14 +17,22 @@ export default function CommunityView({ initialComments, initialUser }: Communit
   const [currentUser, setCurrentUser] = useState<User | null>(initialUser);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
-  // Check auth session on mount
+  // Reactive auth session check
   useEffect(() => {
-    fetch("/api/auth/me")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data?.user) setCurrentUser(data.user);
-      })
-      .catch(() => {});
+    const checkUser = () => {
+      fetch("/api/auth/me", { cache: "no-store" })
+        .then((res) => res.json())
+        .then((data) => {
+          setCurrentUser(data?.user || null);
+        })
+        .catch(() => {
+          setCurrentUser(null);
+        });
+    };
+
+    checkUser();
+    window.addEventListener("auth-changed", checkUser);
+    return () => window.removeEventListener("auth-changed", checkUser);
   }, []);
 
   const refreshComments = async () => {
@@ -90,6 +98,9 @@ export default function CommunityView({ initialComments, initialUser }: Communit
   const handleLogout = async () => {
     await fetch("/api/auth/logout", { method: "POST" });
     setCurrentUser(null);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("auth-changed"));
+    }
   };
 
   // Filter root comments (parentId === null)
@@ -98,16 +109,16 @@ export default function CommunityView({ initialComments, initialUser }: Communit
   return (
     <div className="flex flex-col gap-8">
       {/* Session status banner */}
-      <div className="p-4 rounded-xl bg-[#15171C] border border-[#2B2D34] flex items-center justify-between gap-4 flex-wrap">
+      <div className="p-4 rounded-xl bg-[#171A24] border border-[#292D39] flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-[#1B1D23] text-[#6D8DFF]">
+          <div className="p-2 rounded-lg bg-[#1F2330] text-[#7790FF]">
             <Users className="w-4 h-4" />
           </div>
           <div className="flex flex-col">
-            <span className="text-xs font-semibold text-[#F3F4F6]">
+            <span className="text-xs font-semibold text-[#F1F2F5]">
               {currentUser ? `Masuk sebagai: ${currentUser.name}` : "Mode Pengunjung (Tamu)"}
             </span>
-            <span className="text-[11px] text-[#71717A]">
+            <span className="text-[11px] text-[#7D8496]">
               {currentUser
                 ? currentUser.role === "admin"
                   ? "Hak Akses Administrator Aktif"
@@ -121,7 +132,7 @@ export default function CommunityView({ initialComments, initialUser }: Communit
           {currentUser ? (
             <button
               onClick={handleLogout}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1B1D23] hover:bg-[#22252E] border border-[#2B2D34] text-xs text-[#EF4444] transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1F2330] hover:bg-[#262A38] border border-[#292D39] text-xs text-[#EF4444] transition-colors cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Keluar Sesi</span>
@@ -146,15 +157,15 @@ export default function CommunityView({ initialComments, initialUser }: Communit
 
       {/* Threaded Comments List */}
       <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between pb-2 border-b border-[#202228]">
-          <h2 className="text-sm font-semibold text-[#F3F4F6] flex items-center gap-2">
-            <MessageSquare className="w-4 h-4 text-[#8B9CFF]" />
+        <div className="flex items-center justify-between pb-2 border-b border-[#1C202B]">
+          <h2 className="text-sm font-semibold text-[#F1F2F5] flex items-center gap-2">
+            <MessageSquare className="w-4 h-4 text-[#96A9FF]" />
             <span>Diskusi Terbuka ({comments.length})</span>
           </h2>
         </div>
 
         {rootComments.length === 0 ? (
-          <div className="py-12 text-center text-xs text-[#71717A] bg-[#15171C] rounded-2xl border border-[#2B2D34]">
+          <div className="py-12 text-center text-xs text-[#7D8496] bg-[#171A24] rounded-2xl border border-[#292D39]">
             Belum ada diskusi terbuka. Jadilah yang pertama memberikan masukan atau pertanyaan!
           </div>
         ) : (

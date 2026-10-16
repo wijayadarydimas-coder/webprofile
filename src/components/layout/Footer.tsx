@@ -32,46 +32,46 @@ export default function Footer() {
   const role = siteInfo.roleTitle || "Informatics & CV Engineer";
 
   return (
-    <footer className="w-full bg-[#101114] border-t border-[#2B2D34] mt-24 py-12 text-sm text-[#A1A1AA]">
-      <div className="container-custom flex flex-col gap-8">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-[#202228]">
+    <footer className="w-full bg-[#0B0D12] border-t border-[#1C202B] py-16 text-sm text-[#A1A6B5] relative z-10">
+      <div className="container-custom flex flex-col gap-10">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-8 border-b border-[#1C202B]">
           <div className="flex flex-col gap-1.5">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-base text-[#F3F4F6]">{brand}</span>
-              <span className="text-xs px-2 py-0.5 rounded bg-[#1B1D23] border border-[#2B2D34] text-[#A1A1AA] font-mono">
+            <div className="flex items-center gap-2.5">
+              <span className="font-semibold text-base text-[#F1F2F5]">{brand}</span>
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-[#171A24] border border-[#292D39] text-[#A1A6B5] font-mono">
                 {role}
               </span>
             </div>
-            <p className="text-xs text-[#71717A] max-w-md">
+            <p className="text-xs text-[#7D8496] max-w-md">
               Exploring Technology. Building Ideas. Creating Impact.
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-6 text-xs">
-            <Link href="/" className="hover:text-[#F3F4F6] transition-colors">
+          <div className="flex flex-wrap items-center gap-6 text-xs font-medium">
+            <Link href="/" className="text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors">
               Home
             </Link>
-            <Link href="/projects" className="hover:text-[#F3F4F6] transition-colors">
+            <Link href="/projects" className="text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors">
               Projects
             </Link>
-            <Link href="/research" className="hover:text-[#F3F4F6] transition-colors">
+            <Link href="/research" className="text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors">
               Research &amp; Skripsi
             </Link>
-            <Link href="/community" className="hover:text-[#F3F4F6] transition-colors">
+            <Link href="/community" className="text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors">
               Community
             </Link>
-            <Link href="/contact" className="hover:text-[#F3F4F6] transition-colors">
+            <Link href="/contact" className="text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors">
               Contact
             </Link>
-            <Link href="/admin/login" className="text-[#71717A] hover:text-[#A1A1AA] transition-colors">
+            <Link href="/admin/login" className="text-[#7D8496] hover:text-[#A1A6B5] transition-colors">
               Admin Portal
             </Link>
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#71717A]">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#7D8496]">
           <div className="flex items-center gap-1.5">
-            <span>&copy; {currentYear} {brand}. Seluruh hak cipta dilindungi.</span>
+            <span>&copy; {currentYear} {brand}. Dark Matter Portfolio. All rights reserved.</span>
           </div>
 
           <div className="flex items-center gap-4">
@@ -80,7 +80,7 @@ export default function Footer() {
                 href={siteInfo.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 hover:text-[#F3F4F6] transition-colors"
+                className="flex items-center gap-1.5 hover:text-[#F1F2F5] transition-colors"
                 title="GitHub"
               >
                 <GithubIcon className="w-3.5 h-3.5" />
@@ -129,7 +129,7 @@ export default function Footer() {
 
             <button
               onClick={scrollToTop}
-              className="flex items-center gap-1 hover:text-[#F3F4F6] transition-colors cursor-pointer ml-2"
+              className="flex items-center gap-1 text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors cursor-pointer ml-2"
               title="Kembali ke atas"
               aria-label="Kembali ke atas halaman"
             >

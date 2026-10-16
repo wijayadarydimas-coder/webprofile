@@ -12,13 +12,22 @@ import {
 } from "lucide-react";
 
 export default async function AdminOverviewPage() {
-  const [profile, projects, comments, media, messages] = await Promise.all([
+  const [profileRes, projectsRes, commentsRes, mediaRes, messagesRes] = await Promise.allSettled([
     db.getProfile(),
     db.getProjects(),
     db.getComments({ includeHidden: true }),
     db.getMediaItems(),
     db.getContactMessages(),
   ]);
+
+  const profile =
+    profileRes.status === "fulfilled" && profileRes.value
+      ? profileRes.value
+      : { fullName: "Wijaya Dary Dimas", headline: "Admin" };
+  const projects = projectsRes.status === "fulfilled" ? projectsRes.value : [];
+  const comments = commentsRes.status === "fulfilled" ? commentsRes.value : [];
+  const media = mediaRes.status === "fulfilled" ? mediaRes.value : [];
+  const messages = messagesRes.status === "fulfilled" ? messagesRes.value : [];
 
   const activeComments = comments.filter((c) => !c.isHidden && !c.isDeleted);
   const hiddenComments = comments.filter((c) => c.isHidden);

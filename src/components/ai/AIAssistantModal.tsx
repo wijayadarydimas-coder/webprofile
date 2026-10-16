@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { X, Send, Bot, User, Sparkles, RotateCcw, AlertCircle } from "lucide-react";
+import { X, Send, Bot, User, Sparkles, Trash2, AlertCircle } from "lucide-react";
 
 interface AIAssistantModalProps {
   isOpen: boolean;
@@ -13,23 +13,25 @@ interface Message {
   content: string;
 }
 
+const DEFAULT_GREETING = "Hai, ada yang bisa saya bantu?";
+
 export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalProps) {
   const [assistantName, setAssistantName] = useState("Asisten AI — Wijaya Dary Dimas");
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content:
-        "Halo! Saya Asisten AI Wijaya Dary Dimas. Saya dapat membantu Anda memahami proyek, penelitian skripsi deteksi APD berbasis YOLOv11, dan pengalaman magang di Badan Informasi Geospasial. Ada yang ingin Anda tanyakan?",
+      content: DEFAULT_GREETING,
     },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // 1. Ambil nama kustom asisten AI
   useEffect(() => {
-    // Ambil nama asisten AI dinamis dari konfigurasi admin
     fetch("/api/site-info")
       .then((res) => res.json())
       .then((data) => {
@@ -39,6 +41,25 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
       })
       .catch(() => {});
   }, []);
+
+  // 2. Ambil riwayat percakapan dari PostgreSQL jika user terdaftar / admin sudah login
+  useEffect(() => {
+    if (isOpen) {
+      fetch("/api/ai/history", { cache: "no-store" })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data?.loggedIn) {
+            setIsLoggedIn(true);
+            if (Array.isArray(data.messages) && data.messages.length > 0) {
+              setMessages(data.messages);
+            }
+          } else {
+            setIsLoggedIn(false);
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen) {
@@ -70,7 +91,7 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
     setLoading(true);
 
     try {
-      const res = await fetch("/api/ai", {
+      const res = await fetch("/api/ai/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -88,7 +109,7 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
 
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: data.reply || "Maaf, tidak ada tanggapan." },
+        { role: "assistant", content: data.reply || data.message || "Maaf, tidak ada tanggapan." },
       ]);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan koneksi";
@@ -98,52 +119,63 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
     }
   };
 
-  const handleReset = () => {
-    setMessages([
-      {
-        role: "assistant",
-        content: `Halo! Saya ${assistantName}. Silakan tanyakan seputar portofolio dan riwayat pengalaman teknis!`,
-      },
-    ]);
-    setError(null);
+  // Fitur hapus riwayat / reset memory secara sukarela
+  const handleClearHistory = async () => {
+    if (!confirm("Hapus seluruh riwayat percakapan Anda dengan Asisten AI?")) return;
+    try {
+      if (isLoggedIn) {
+        await fetch("/api/ai/history", { method: "DELETE" });
+      }
+      setMessages([{ role: "assistant", content: DEFAULT_GREETING }]);
+      setError(null);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Gagal menghapus riwayat";
+      setError(msg);
+    }
   };
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md"
       role="dialog"
       aria-modal="true"
       aria-labelledby="ai-modal-title"
     >
-      <div className="relative w-full max-w-xl h-[560px] max-h-[90vh] bg-[#15171C] border border-[#2B2D34] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-xl h-[560px] max-h-[90vh] bg-[#171A24] border border-[#292D39] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="px-5 py-3.5 border-b border-[#2B2D34] bg-[#111317] flex items-center justify-between">
+        <div className="px-5 py-3.5 border-b border-[#292D39] bg-[#0B0D12] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-[#1B1D23] border border-[#6D8DFF]/40 flex items-center justify-center text-[#6D8DFF]">
+            <div className="w-7 h-7 rounded-lg bg-[#1F2330] border border-[#7790FF]/40 flex items-center justify-center text-[#7790FF]">
               <Sparkles className="w-4 h-4" />
             </div>
             <div className="flex flex-col">
-              <span id="ai-modal-title" className="text-xs font-semibold text-[#F3F4F6]">
+              <span id="ai-modal-title" className="text-xs font-semibold text-[#F1F2F5]">
                 {assistantName}
               </span>
-              <span className="text-[10px] text-[#22C55E] flex items-center gap-1 font-mono">
+              <span className="text-[10px] text-[#22C55E] flex items-center gap-1.5 font-mono">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
                 Online
+                {isLoggedIn && (
+                  <span className="text-[#96A9FF] font-sans">&bull; Memori Tersimpan</span>
+                )}
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
+            {/* Tombol Hapus Riwayat Percakapan (Memory) Sukarela */}
             <button
-              onClick={handleReset}
-              className="p-1.5 rounded-md hover:bg-[#1B1D23] text-[#71717A] hover:text-[#A1A1AA] transition-colors"
-              title="Reset Percakapan"
+              onClick={handleClearHistory}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-[#EF4444]/15 text-[#7D8496] hover:text-[#EF4444] transition-colors text-xs cursor-pointer"
+              title="Hapus seluruh riwayat percakapan Anda"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
+              <Trash2 className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline text-[11px]">Hapus Riwayat</span>
             </button>
+
             <button
               onClick={onClose}
-              className="p-1.5 rounded-md hover:bg-[#1B1D23] text-[#71717A] hover:text-[#F3F4F6] transition-colors"
+              className="p-1.5 rounded-lg hover:bg-[#1F2330] text-[#7D8496] hover:text-[#F1F2F5] transition-colors cursor-pointer"
               aria-label="Tutup Asisten AI"
             >
               <X className="w-4 h-4" />
@@ -163,8 +195,8 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
               <div
                 className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 ${
                   msg.role === "user"
-                    ? "bg-[#6D8DFF] text-white"
-                    : "bg-[#1B1D23] border border-[#2B2D34] text-[#8B9CFF]"
+                    ? "bg-[#7790FF] text-white"
+                    : "bg-[#1F2330] border border-[#292D39] text-[#96A9FF]"
                 }`}
               >
                 {msg.role === "user" ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
@@ -173,8 +205,8 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
               <div
                 className={`p-3 rounded-xl leading-relaxed whitespace-pre-wrap ${
                   msg.role === "user"
-                    ? "bg-[#6D8DFF] text-white"
-                    : "bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
+                    ? "bg-[#7790FF] text-white"
+                    : "bg-[#1F2330] border border-[#292D39] text-[#F1F2F5]"
                 }`}
               >
                 {msg.content}
@@ -183,8 +215,8 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
           ))}
 
           {loading && (
-            <div className="flex items-center gap-2 text-[#71717A] text-xs">
-              <Bot className="w-3.5 h-3.5 text-[#6D8DFF] animate-pulse" />
+            <div className="flex items-center gap-2 text-[#7D8496] text-xs">
+              <Bot className="w-3.5 h-3.5 text-[#7790FF] animate-pulse" />
               <span>Sedang mengetik jawaban...</span>
             </div>
           )}
@@ -200,7 +232,7 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
         </div>
 
         {/* Input Bar */}
-        <div className="p-3 border-t border-[#2B2D34] bg-[#111317]">
+        <div className="p-3 border-t border-[#292D39] bg-[#0B0D12]">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -212,22 +244,22 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
               ref={inputRef}
               type="text"
               value={input}
-              maxLength={500}
+              maxLength={800}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Tanyakan sesuatu tentang proyek atau profil..."
-              className="flex-1 px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] placeholder-[#71717A] focus:border-[#6D8DFF] focus:outline-none transition-colors"
+              placeholder="Ketik pesan atau tanyakan apa saja..."
+              className="flex-1 px-3.5 py-2.5 rounded-lg bg-[#1F2330] border border-[#292D39] text-xs text-[#F1F2F5] placeholder-[#7D8496] focus:border-[#7790FF] focus:outline-none transition-colors"
             />
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="p-2.5 rounded-lg bg-[#6D8DFF] hover:bg-[#5A7AE8] text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="p-2.5 rounded-lg bg-[#7790FF] hover:bg-[#5E7DFE] text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
               title="Kirim pesan"
             >
               <Send className="w-3.5 h-3.5" />
             </button>
           </form>
-          <div className="flex justify-end items-center text-[10px] text-[#71717A] mt-1.5 px-1 font-mono">
-            <span>{input.length}/500</span>
+          <div className="flex justify-end items-center text-[10px] text-[#7D8496] mt-1.5 px-1 font-mono">
+            <span>{input.length}/800</span>
           </div>
         </div>
       </div>

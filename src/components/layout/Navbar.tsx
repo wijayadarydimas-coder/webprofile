@@ -42,15 +42,21 @@ export default function Navbar({ onOpenAi }: NavbarProps) {
   ];
 
   useEffect(() => {
-    // 1. Cek hak akses admin
-    fetch("/api/auth/me")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data?.user?.role === "admin") {
-          setIsAdmin(true);
-        }
-      })
-      .catch(() => {});
+    // 1. Cek hak akses admin secara reaktif & no-store
+    const checkAuth = () => {
+      fetch("/api/auth/me", { cache: "no-store" })
+        .then((res) => res.json())
+        .then((data) => {
+          setIsAdmin(data?.user?.role === "admin");
+        })
+        .catch(() => {
+          setIsAdmin(false);
+        });
+    };
+
+    checkAuth();
+    window.addEventListener("auth-changed", checkAuth);
+    window.addEventListener("focus", checkAuth);
 
     // 2. Ambil branding kustom (Logo, Nama Brand, Sub-Title Profesi)
     fetch("/api/site-info")
@@ -89,8 +95,12 @@ export default function Navbar({ onOpenAi }: NavbarProps) {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [isHomePage]);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("auth-changed", checkAuth);
+      window.removeEventListener("focus", checkAuth);
+    };
+  }, [isHomePage, pathname]);
 
   // Handler klik menu navbar
   const handleNavClick = (e: React.MouseEvent, item: NavItem) => {
@@ -114,15 +124,15 @@ export default function Navbar({ onOpenAi }: NavbarProps) {
   };
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        scrolled
-          ? "bg-[#101114]/90 backdrop-blur-md border-b border-[#2B2D34] shadow-lg shadow-black/20 py-3"
-          : "bg-transparent border-b border-transparent py-5"
-      }`}
-    >
-      <div className="container-custom flex items-center justify-between">
-        {/* Brand Logo & Name (Bisa diedit via Admin) */}
+    <header className="fixed top-3 sm:top-5 inset-x-0 z-40 flex justify-center px-3 sm:px-6 pointer-events-none">
+      <div
+        className={`pointer-events-auto flex items-center justify-between gap-4 sm:gap-6 px-3.5 sm:px-5 py-2.5 rounded-2xl sm:rounded-full transition-all duration-300 w-full max-w-5xl ${
+          scrolled
+            ? "bg-[#0B0D12]/85 backdrop-blur-xl border border-[#292D39] shadow-[0_12px_36px_rgba(0,0,0,0.65)]"
+            : "bg-[#0B0D12]/70 backdrop-blur-lg border border-[#292D39]/70 shadow-[0_8px_24px_rgba(0,0,0,0.45)]"
+        }`}
+      >
+        {/* Brand Logo & Name */}
         <Link
           href="/"
           onClick={(e) => {
@@ -132,10 +142,10 @@ export default function Navbar({ onOpenAi }: NavbarProps) {
               setActiveSection("home");
             }
           }}
-          className="group flex items-center gap-2.5 text-decoration-none focus:outline-none"
+          className="group flex items-center gap-2.5 text-decoration-none focus:outline-none shrink-0"
           aria-label={`${branding.brandName} Homepage`}
         >
-          <div className="relative w-8 h-8 rounded-lg bg-[#1B1D23] border border-[#2B2D34] flex items-center justify-center font-mono font-bold text-sm text-[#F3F4F6] group-hover:border-[#6D8DFF] transition-colors overflow-hidden">
+          <div className="relative w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-full bg-[#171A24] border border-[#292D39] flex items-center justify-center font-mono font-bold text-xs text-[#F1F2F5] group-hover:border-[#7790FF] transition-colors overflow-hidden">
             {branding.logoUrl ? (
               <Image
                 src={branding.logoUrl}
@@ -149,17 +159,17 @@ export default function Navbar({ onOpenAi }: NavbarProps) {
             )}
           </div>
           <div className="flex flex-col">
-            <span className="font-semibold text-sm tracking-tight text-[#F3F4F6] group-hover:text-[#6D8DFF] transition-colors">
+            <span className="font-semibold text-xs sm:text-sm tracking-tight text-[#F1F2F5] group-hover:text-[#7790FF] transition-colors">
               {branding.brandName}
             </span>
-            <span className="text-[10px] text-[#71717A] font-mono leading-none">
+            <span className="text-[10px] text-[#7D8496] font-mono leading-none hidden xs:inline">
               {branding.roleTitle}
             </span>
           </div>
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-1.5" aria-label="Main Navigation">
+        <nav className="hidden md:flex items-center gap-2 lg:gap-3" aria-label="Main Navigation">
           {navItems.map((item) => {
             let isActive = false;
             if (isHomePage) {
@@ -173,28 +183,34 @@ export default function Navbar({ onOpenAi }: NavbarProps) {
                 key={item.name}
                 href={isHomePage ? `#${item.sectionId}` : item.pageHref}
                 onClick={(e) => handleNavClick(e, item)}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                className={`relative px-2.5 py-1 text-xs font-medium transition-colors ${
                   isActive
-                    ? "text-[#F3F4F6] bg-[#1B1D23] border border-[#2B2D34]"
-                    : "text-[#A1A1AA] hover:text-[#F3F4F6] hover:bg-[#15171C]"
+                    ? "text-[#F1F2F5]"
+                    : "text-[#A1A6B5] hover:text-[#F1F2F5]"
                 }`}
               >
-                {item.name}
+                <span>{item.name}</span>
+                {isActive && (
+                  <span
+                    className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#7790FF] shadow-[0_0_8px_#7790FF]"
+                    aria-hidden="true"
+                  />
+                )}
               </Link>
             );
           })}
         </nav>
 
-        {/* Actions: AI Assistant & Admin (if authorized) */}
-        <div className="flex items-center gap-2.5">
+        {/* Actions: AI Assistant & Admin */}
+        <div className="flex items-center gap-2">
           {/* AI Assistant Trigger Button */}
           <button
             onClick={onOpenAi}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#15171C] hover:bg-[#1B1D23] border border-[#2B2D34] hover:border-[#6D8DFF]/40 text-xs font-medium text-[#F3F4F6] transition-all cursor-pointer group shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#171A24] hover:bg-[#1F2330] border border-[#292D39] hover:border-[#7790FF]/50 text-xs font-medium text-[#F1F2F5] transition-all cursor-pointer group shadow-sm"
             aria-label="Tanya AI Assistant"
             title={`Tanya seputar profil & proyek ${branding.brandName}`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-[#6D8DFF] group-hover:rotate-12 transition-transform" />
+            <Sparkles className="w-3.5 h-3.5 text-[#7790FF] group-hover:rotate-12 transition-transform" />
             <span className="hidden sm:inline">Ask AI</span>
           </button>
 
@@ -202,7 +218,7 @@ export default function Navbar({ onOpenAi }: NavbarProps) {
           {isAdmin && (
             <Link
               href="/admin"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#6D8DFF]/10 border border-[#6D8DFF]/30 text-xs font-medium text-[#8B9CFF] hover:bg-[#6D8DFF]/20 transition-colors"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[#7790FF]/10 border border-[#7790FF]/30 text-xs font-medium text-[#96A9FF] hover:bg-[#7790FF]/20 transition-colors"
               title="Akses Dashboard Admin"
             >
               <Shield className="w-3.5 h-3.5" />
@@ -213,7 +229,7 @@ export default function Navbar({ onOpenAi }: NavbarProps) {
           {/* Mobile Menu Hamburger Toggle */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg bg-[#15171C] border border-[#2B2D34] text-[#A1A1AA] hover:text-[#F3F4F6] transition-colors cursor-pointer"
+            className="md:hidden p-2 rounded-full bg-[#171A24] border border-[#292D39] text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors cursor-pointer"
             aria-label={isOpen ? "Tutup Menu" : "Buka Menu"}
             aria-expanded={isOpen}
           >
@@ -222,30 +238,46 @@ export default function Navbar({ onOpenAi }: NavbarProps) {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer Floating Panel */}
       {isOpen && (
-        <div className="md:hidden fixed inset-x-0 top-[65px] bg-[#101114]/98 backdrop-blur-xl border-b border-[#2B2D34] py-4 px-6 shadow-2xl transition-all">
-          <nav className="flex flex-col gap-2">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={isHomePage ? `#${item.sectionId}` : item.pageHref}
-                onClick={(e) => handleNavClick(e, item)}
-                className="px-4 py-2.5 rounded-lg text-sm font-medium text-[#A1A1AA] hover:text-[#F3F4F6] hover:bg-[#1B1D23] transition-colors"
-              >
-                {item.name}
-              </Link>
-            ))}
+        <div className="pointer-events-auto md:hidden fixed inset-x-3 top-[68px] sm:top-[74px] bg-[#0B0D12]/95 backdrop-blur-2xl border border-[#292D39] rounded-2xl py-4 px-5 shadow-2xl transition-all">
+          <nav className="flex flex-col gap-1.5">
+            {navItems.map((item) => {
+              let isActive = false;
+              if (isHomePage) {
+                isActive = activeSection === item.sectionId;
+              } else {
+                isActive = pathname === item.pageHref || (item.pageHref !== "/" && pathname.startsWith(item.pageHref));
+              }
 
-            <div className="pt-3 border-t border-[#2B2D34] flex flex-col gap-2">
+              return (
+                <Link
+                  key={item.name}
+                  href={isHomePage ? `#${item.sectionId}` : item.pageHref}
+                  onClick={(e) => handleNavClick(e, item)}
+                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-[#171A24] text-[#F1F2F5] border border-[#292D39]"
+                      : "text-[#A1A6B5] hover:text-[#F1F2F5] hover:bg-[#171A24]"
+                  }`}
+                >
+                  <span>{item.name}</span>
+                  {isActive && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#7790FF]" />
+                  )}
+                </Link>
+              );
+            })}
+
+            <div className="pt-3 mt-2 border-t border-[#292D39] flex flex-col gap-2">
               <button
                 onClick={() => {
                   setIsOpen(false);
                   onOpenAi();
                 }}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#1B1D23] border border-[#6D8DFF]/40 text-sm font-medium text-[#F3F4F6]"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#171A24] border border-[#7790FF]/40 text-sm font-medium text-[#F1F2F5] hover:bg-[#1F2330] transition-colors"
               >
-                <Bot className="w-4 h-4 text-[#6D8DFF]" />
+                <Bot className="w-4 h-4 text-[#7790FF]" />
                 Tanya Asisten AI
               </button>
 
@@ -253,7 +285,7 @@ export default function Navbar({ onOpenAi }: NavbarProps) {
                 <Link
                   href="/admin"
                   onClick={() => setIsOpen(false)}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#6D8DFF]/15 border border-[#6D8DFF]/30 text-sm font-medium text-[#8B9CFF]"
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#7790FF]/15 border border-[#7790FF]/30 text-sm font-medium text-[#96A9FF]"
                 >
                   <Shield className="w-4 h-4" />
                   Buka Panel Admin

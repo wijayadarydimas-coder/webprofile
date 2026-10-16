@@ -30,6 +30,9 @@ export async function POST(req: Request) {
 
     const { email, password } = parsed.data;
 
+    // Check if user already exists in database
+    let dbUser = await db.findUserByEmail(email);
+
     // 1. Check environment admin credentials (quick setup & override)
     const envAdminEmail = process.env.ADMIN_EMAIL || "admin@wijayadarydimas.dev";
     const envAdminPassword = process.env.ADMIN_PASSWORD || "AdminWDD2026!";
@@ -37,9 +40,27 @@ export async function POST(req: Request) {
     if (email.toLowerCase() === envAdminEmail.toLowerCase()) {
       const isPasswordMatch = password === envAdminPassword;
       if (isPasswordMatch) {
+        if (!dbUser) {
+          try {
+            const salt = await bcrypt.genSalt(10);
+            const hash = await bcrypt.hash(password, salt);
+            dbUser = await db.createUser({
+              name: process.env.ADMIN_NAME || "Wijaya Dary Dimas",
+              email: envAdminEmail,
+              role: "admin",
+              passwordHash: hash,
+            });
+          } catch (createErr) {
+            console.error("Auto-provision admin error:", createErr);
+          }
+        }
+
+        const adminId = dbUser?.id || "admin-master-id";
+        const adminName = dbUser?.name || "Wijaya Dary Dimas";
+
         const token = await createSessionToken({
-          id: "admin-master-id",
-          name: "Wijaya Dary Dimas",
+          id: adminId,
+          name: adminName,
           email: envAdminEmail,
           role: "admin",
         });
@@ -47,8 +68,8 @@ export async function POST(req: Request) {
 
         return NextResponse.json({
           user: {
-            id: "admin-master-id",
-            name: "Wijaya Dary Dimas",
+            id: adminId,
+            name: adminName,
             email: envAdminEmail,
             role: "admin",
           },
@@ -57,7 +78,7 @@ export async function POST(req: Request) {
     }
 
     // 2. Check Database users
-    const user = await db.findUserByEmail(email);
+    const user = dbUser;
     if (!user) {
       return NextResponse.json(
         { error: "Email atau kata sandi tidak cocok." },

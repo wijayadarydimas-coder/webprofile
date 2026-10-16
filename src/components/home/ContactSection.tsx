@@ -56,40 +56,40 @@ export default function ContactSection({ profile }: ContactSectionProps) {
   };
 
   return (
-    <section id="contact" className="py-20 border-t border-[#202228]">
+    <section id="contact" className="py-24 md:py-32 border-t border-[#1C202B] relative z-10">
       <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          {/* Left Column: Direct Info */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14">
+          {/* Left Column: Direct Info & Social Channels */}
           <div className="lg:col-span-5 flex flex-col gap-6">
             <div className="flex flex-col gap-2">
-              <span className="text-xs font-mono font-medium text-[#6D8DFF] uppercase tracking-wider">
-                Hubungi
+              <span className="text-xs font-mono font-medium text-[#7790FF] uppercase tracking-wider">
+                KONTAK
               </span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#F3F4F6] tracking-tight">
-                Mulai Diskusi &amp; Kolaborasi
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#F1F2F5] tracking-tight">
+                Mari Terhubung
               </h2>
-              <p className="text-sm text-[#A1A1AA] leading-relaxed">
-                Terbuka untuk diskusi seputar teknologi, penelitian computer vision, atau eksplorasi kesempatan kerja sama profesional.
+              <p className="text-sm text-[#A1A6B5] leading-relaxed">
+                Saya terbuka untuk bertukar pikiran, berdiskusi tentang teknologi, atau menjajaki kesempatan untuk bekerja sama. Silakan hubungi saya melalui salah satu kanal berikut.
               </p>
             </div>
 
             <div className="flex flex-col gap-3 pt-2">
               {profile.email ? (
-                <div className="p-4 rounded-xl bg-[#15171C] border border-[#2B2D34] flex items-center justify-between gap-3">
+                <div className="p-4 rounded-xl bg-[#171A24] border border-[#292D39] flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="p-2 rounded-lg bg-[#1B1D23] text-[#6D8DFF]">
+                    <div className="p-2 rounded-lg bg-[#1F2330] text-[#7790FF]">
                       <Mail className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="text-xs text-[#71717A]">Email Resmi</span>
-                      <span className="text-xs sm:text-sm font-medium text-[#F3F4F6] truncate">
+                      <span className="text-xs text-[#7D8496]">Email Resmi</span>
+                      <span className="text-xs sm:text-sm font-medium text-[#F1F2F5] truncate">
                         {profile.email}
                       </span>
                     </div>
                   </div>
                   <button
                     onClick={handleCopyEmail}
-                    className="p-2 rounded-lg hover:bg-[#1B1D23] text-[#A1A1AA] hover:text-[#F3F4F6] transition-colors"
+                    className="p-2 rounded-lg hover:bg-[#1F2330] text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors cursor-pointer"
                     title="Salin alamat email"
                   >
                     {copied ? <Check className="w-4 h-4 text-[#22C55E]" /> : <Copy className="w-4 h-4" />}
@@ -101,20 +101,20 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                 href={profile.githubUrl || "https://github.com/wijayadarydimas-coder"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-4 rounded-xl bg-[#15171C] border border-[#2B2D34] hover:border-[#6D8DFF]/40 transition-all flex items-center justify-between"
+                className="p-4 rounded-xl bg-[#171A24] border border-[#292D39] hover:border-[#7790FF]/40 transition-all flex items-center justify-between"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-[#1B1D23] text-[#F3F4F6]">
+                  <div className="p-2 rounded-lg bg-[#1F2330] text-[#F1F2F5]">
                     <GithubIcon className="w-4 h-4" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xs text-[#71717A]">GitHub Profile</span>
-                    <span className="text-xs sm:text-sm font-medium text-[#F3F4F6]">
+                    <span className="text-xs text-[#7D8496]">GitHub Profile</span>
+                    <span className="text-xs sm:text-sm font-medium text-[#F1F2F5]">
                       @wijayadarydimas-coder
                     </span>
                   </div>
                 </div>
-                <span className="text-xs text-[#8B9CFF] font-medium">Kunjungi &rarr;</span>
+                <span className="text-xs text-[#96A9FF] font-medium">Kunjungi &rarr;</span>
               </a>
 
               {profile.linkedinUrl && (
@@ -122,20 +122,20 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                   href={profile.linkedinUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-4 rounded-xl bg-[#15171C] border border-[#2B2D34] hover:border-[#6D8DFF]/40 transition-all flex items-center justify-between"
+                  className="p-4 rounded-xl bg-[#171A24] border border-[#292D39] hover:border-[#7790FF]/40 transition-all flex items-center justify-between"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-[#1B1D23] text-[#0A66C2]">
+                    <div className="p-2 rounded-lg bg-[#1F2330] text-[#0A66C2]">
                       <LinkedinIcon className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-xs text-[#71717A]">LinkedIn</span>
-                      <span className="text-xs sm:text-sm font-medium text-[#F3F4F6]">
+                      <span className="text-xs text-[#7D8496]">LinkedIn</span>
+                      <span className="text-xs sm:text-sm font-medium text-[#F1F2F5]">
                         {profile.fullName || "LinkedIn Profile"}
                       </span>
                     </div>
                   </div>
-                  <span className="text-xs text-[#8B9CFF] font-medium">Kunjungi &rarr;</span>
+                  <span className="text-xs text-[#96A9FF] font-medium">Kunjungi &rarr;</span>
                 </a>
               )}
 
@@ -144,20 +144,20 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                   href={profile.instagramUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-4 rounded-xl bg-[#15171C] border border-[#2B2D34] hover:border-[#E1306C]/40 transition-all flex items-center justify-between"
+                  className="p-4 rounded-xl bg-[#171A24] border border-[#292D39] hover:border-[#E1306C]/40 transition-all flex items-center justify-between"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-[#1B1D23] text-[#E1306C]">
+                    <div className="p-2 rounded-lg bg-[#1F2330] text-[#E1306C]">
                       <InstagramIcon className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-xs text-[#71717A]">Instagram</span>
-                      <span className="text-xs sm:text-sm font-medium text-[#F3F4F6]">
+                      <span className="text-xs text-[#7D8496]">Instagram</span>
+                      <span className="text-xs sm:text-sm font-medium text-[#F1F2F5]">
                         @{profile.instagramUrl.split("/").filter(Boolean).pop()?.replace(/^@/, "") || "Instagram"}
                       </span>
                     </div>
                   </div>
-                  <span className="text-xs text-[#8B9CFF] font-medium">Kunjungi &rarr;</span>
+                  <span className="text-xs text-[#96A9FF] font-medium">Kunjungi &rarr;</span>
                 </a>
               )}
 
@@ -166,20 +166,20 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                   href={profile.tiktokUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-4 rounded-xl bg-[#15171C] border border-[#2B2D34] hover:border-[#25F4EE]/40 transition-all flex items-center justify-between"
+                  className="p-4 rounded-xl bg-[#171A24] border border-[#292D39] hover:border-[#25F4EE]/40 transition-all flex items-center justify-between"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-[#1B1D23] text-[#25F4EE]">
+                    <div className="p-2 rounded-lg bg-[#1F2330] text-[#25F4EE]">
                       <TikTokIcon className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-xs text-[#71717A]">TikTok</span>
-                      <span className="text-xs sm:text-sm font-medium text-[#F3F4F6]">
+                      <span className="text-xs text-[#7D8496]">TikTok</span>
+                      <span className="text-xs sm:text-sm font-medium text-[#F1F2F5]">
                         @{profile.tiktokUrl.split("/").filter(Boolean).pop()?.replace(/^@/, "") || "TikTok"}
                       </span>
                     </div>
                   </div>
-                  <span className="text-xs text-[#8B9CFF] font-medium">Kunjungi &rarr;</span>
+                  <span className="text-xs text-[#96A9FF] font-medium">Kunjungi &rarr;</span>
                 </a>
               )}
             </div>
@@ -187,9 +187,9 @@ export default function ContactSection({ profile }: ContactSectionProps) {
 
           {/* Right Column: Contact Message Form */}
           <div className="lg:col-span-7">
-            <div className="p-6 sm:p-8 rounded-2xl bg-[#15171C] border border-[#2B2D34]">
-              <h3 className="text-lg font-semibold text-[#F3F4F6] mb-1">Kirim Pesan Langsung</h3>
-              <p className="text-xs text-[#71717A] mb-6">
+            <div className="p-6 sm:p-8 rounded-2xl bg-[#171A24] border border-[#292D39] shadow-xl">
+              <h3 className="text-lg font-semibold text-[#F1F2F5] mb-1">Kirim Pesan Langsung</h3>
+              <p className="text-xs text-[#7D8496] mb-6">
                 Pesan akan tersimpan langsung di inbox admin dan dibalas ke alamat email Anda.
               </p>
 
@@ -224,7 +224,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="contact-name" className="text-xs font-medium text-[#A1A1AA]">
+                    <label htmlFor="contact-name" className="text-xs font-medium text-[#A1A6B5]">
                       Nama Lengkap
                     </label>
                     <input
@@ -234,12 +234,12 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Nama Anda"
-                      className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] placeholder-[#71717A] focus:border-[#6D8DFF] focus:outline-none transition-colors"
+                      className="px-3.5 py-2.5 rounded-lg bg-[#1F2330] border border-[#292D39] text-xs text-[#F1F2F5] placeholder-[#7D8496] focus:border-[#7790FF] focus:outline-none transition-colors"
                     />
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label htmlFor="contact-email" className="text-xs font-medium text-[#A1A1AA]">
+                    <label htmlFor="contact-email" className="text-xs font-medium text-[#A1A6B5]">
                       Alamat Email
                     </label>
                     <input
@@ -249,14 +249,14 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="email@domain.com"
-                      className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] placeholder-[#71717A] focus:border-[#6D8DFF] focus:outline-none transition-colors"
+                      className="px-3.5 py-2.5 rounded-lg bg-[#1F2330] border border-[#292D39] text-xs text-[#F1F2F5] placeholder-[#7D8496] focus:border-[#7790FF] focus:outline-none transition-colors"
                     />
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label htmlFor="contact-message" className="text-xs font-medium text-[#A1A1AA]">
-                    Isi Pesan
+                  <label htmlFor="contact-message" className="text-xs font-medium text-[#A1A6B5]">
+                    Pesan
                   </label>
                   <textarea
                     id="contact-message"
@@ -264,8 +264,8 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                     rows={4}
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Tuliskan pesan, pertanyaan, atau tawaran kerja sama Anda di sini..."
-                    className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] placeholder-[#71717A] focus:border-[#6D8DFF] focus:outline-none transition-colors resize-y"
+                    placeholder="Ada pertanyaan, ide, atau hal yang ingin didiskusikan? Tinggalkan pesan melalui formulir ini."
+                    className="px-3.5 py-2.5 rounded-lg bg-[#1F2330] border border-[#292D39] text-xs text-[#F1F2F5] placeholder-[#7D8496] focus:border-[#7790FF] focus:outline-none transition-colors resize-y"
                   />
                 </div>
 
@@ -275,7 +275,7 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                   className="btn-primary w-fit mt-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <Send className="w-3.5 h-3.5" />
-                  <span>{loading ? "Mengirimkan Pesan..." : "Kirimkan Pesan"}</span>
+                  <span>{loading ? "Mengirim Pesan..." : "Kirim Pesan"}</span>
                 </button>
               </form>
             </div>

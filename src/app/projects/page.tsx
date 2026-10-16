@@ -16,13 +16,13 @@ export default async function ProjectsPage() {
         <div className="container-custom flex flex-col gap-10">
           <div className="flex flex-col gap-2 max-w-2xl">
             <span className="text-xs font-mono font-medium text-[#6D8DFF] uppercase tracking-wider">
-              Koleksi Portofolio
+              PORTOFOLIO
             </span>
             <h1 className="text-3xl sm:text-4xl font-bold text-[#F3F4F6] tracking-tight">
-              Proyek &amp; Studi Kasus Rekayasa
+              Kumpulan Proyek
             </h1>
             <p className="text-sm text-[#A1A1AA] leading-relaxed">
-              Dokumentasi teknis dari solusi yang dibangun, mulai dari modifikasi YOLOv11 untuk deteksi APD, infrastruktur geospasial di BIG, hingga platform aplikasi full-stack.
+              Beberapa proyek dan eksperimen yang saya kerjakan untuk menerapkan ide, mencoba pendekatan baru, dan mempelajari berbagai teknologi.
             </p>
           </div>
 

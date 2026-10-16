@@ -46,6 +46,7 @@ const initialSeed: DataStoreSchema = {
     statusText: "Pranata Komputer di BIG & Riset Deteksi APD YOLOv11",
     roleTitle: "Informatics & CV Engineer",
     brandName: "Wijaya Dary Dimas",
+    aboutTitle: "Profil, Prinsip Belajar & Fokus Teknis",
     logoUrl: "",
     instagramUrl: "",
     tiktokUrl: "",
@@ -399,27 +400,84 @@ export class LocalStoreRepository implements DatabaseRepository {
 
   async getResearchItems(): Promise<ResearchItem[]> {
     const data = this.readData();
-    return (data.research || []).sort((a, b) => a.orderIndex - b.orderIndex);
+    const list = (data.research || []).map((r) => {
+      if (!r.sections || r.sections.length === 0) {
+        return {
+          ...r,
+          institution: r.institution || "Universitas Muhammadiyah Purwokerto",
+          studyProgram: r.studyProgram || "S1 Teknik Informatika",
+          technologies: r.technologies || ["Python", "PyTorch", "YOLOv11", "OpenCV", "Roboflow"],
+          sections: [
+            ...(r.background ? [{ id: "sec-background", title: "Latar Belakang Masalah", type: "markdown" as const, content: r.background, orderIndex: 1, isVisible: true }] : []),
+            ...(r.objective ? [{ id: "sec-objective", title: "Tujuan Penelitian & Sasaran", type: "markdown" as const, content: r.objective, orderIndex: 2, isVisible: true }] : []),
+            ...(r.modelModification ? [{ id: "sec-architecture", title: "Modifikasi Arsitektur Model", type: "architecture" as const, content: r.modelModification, orderIndex: 3, isVisible: true }] : []),
+            ...(r.methodology ? [{ id: "sec-methodology", title: "Metodologi & Alur Pengujian", type: "methodology" as const, content: r.methodology, orderIndex: 4, isVisible: true }] : []),
+            ...(r.datasetNotes ? [{ id: "sec-dataset", title: "Akuisisi Dataset & Batasan Uji", type: "dataset" as const, content: r.datasetNotes, orderIndex: 5, isVisible: true }] : []),
+            {
+              id: "sec-alarm",
+              title: "Logika Integrasi Alarm Otomatis",
+              type: "integration" as const,
+              content: "Output inferensi deteksi objek dipetakan ke aturan kepatuhan zona keselamatan kerja. Apabila seorang pekerja terdeteksi berada di dalam area bahaya tanpa perlengkapan APD esensial selama durasi ambang batas tertentu, sistem kontrol mengirim sinyal pemicu alarm peringatan (audio-visual) untuk mencegah risiko insiden secara preventif.",
+              orderIndex: 6,
+              isVisible: true,
+            },
+          ],
+        };
+      }
+      return r;
+    });
+    return list.sort((a, b) => a.orderIndex - b.orderIndex);
   }
 
   async getResearchById(id: string): Promise<ResearchItem | null> {
-    const data = this.readData();
-    return data.research?.find((r) => r.id === id) || null;
+    const items = await this.getResearchItems();
+    return items.find((r) => r.id === id) || null;
   }
 
   async saveResearch(res: Omit<ResearchItem, "id" | "updatedAt"> & { id?: string }): Promise<ResearchItem> {
     const data = this.readData();
     const now = new Date().toISOString();
+
+    let background = res.background || "";
+    let objective = res.objective || "";
+    let methodology = res.methodology || "";
+    let modelModification = res.modelModification || "";
+    let datasetNotes = res.datasetNotes || "";
+
+    if (Array.isArray(res.sections) && res.sections.length > 0) {
+      for (const s of res.sections) {
+        const titleLower = s.title.toLowerCase();
+        if (titleLower.includes("latar belakang") && s.content) background = s.content;
+        else if (titleLower.includes("tujuan") && s.content) objective = s.content;
+        else if ((titleLower.includes("metodologi") || titleLower.includes("metode")) && s.content) methodology = s.content;
+        else if ((titleLower.includes("modifikasi") || titleLower.includes("arsitektur")) && s.content) modelModification = s.content;
+        else if (titleLower.includes("dataset") && s.content) datasetNotes = s.content;
+      }
+    }
+
+    const payload = {
+      ...res,
+      background,
+      objective,
+      methodology,
+      modelModification,
+      datasetNotes,
+      institution: res.institution || "Universitas Muhammadiyah Purwokerto",
+      studyProgram: res.studyProgram || "S1 Teknik Informatika",
+      technologies: res.technologies || ["Python", "PyTorch", "YOLOv11", "OpenCV"],
+      sections: res.sections || [],
+    };
+
     if (res.id) {
       const idx = data.research.findIndex((r) => r.id === res.id);
       if (idx !== -1) {
-        data.research[idx] = { ...data.research[idx], ...res, updatedAt: now };
+        data.research[idx] = { ...data.research[idx], ...payload, updatedAt: now };
         this.writeData(data);
         return data.research[idx];
       }
     }
     const newRes: ResearchItem = {
-      ...res,
+      ...payload,
       id: crypto.randomUUID(),
       updatedAt: now,
     };
@@ -630,5 +688,38 @@ export class LocalStoreRepository implements DatabaseRepository {
   async getContactMessages(): Promise<Array<{ id: string; name: string; email: string; message: string; createdAt: string; isRead: boolean }>> {
     const data = this.readData();
     return data.messages || [];
+  }
+
+  // AI Chat Memories
+  async getAIChatMemories(userId: string): Promise<Array<{ id: string; role: "user" | "assistant"; content: string; createdAt: string }>> {
+    const data = this.readData();
+    const list = (data as any).aiMemories || [];
+    return list.filter((m: any) => m.userId === userId).map((m: any) => ({
+      id: m.id,
+      role: m.role,
+      content: m.content,
+      createdAt: m.createdAt,
+    }));
+  }
+
+  async saveAIChatMemory(userId: string, role: "user" | "assistant", content: string): Promise<void> {
+    const data = this.readData();
+    if (!(data as any).aiMemories) (data as any).aiMemories = [];
+    (data as any).aiMemories.push({
+      id: crypto.randomUUID(),
+      userId,
+      role,
+      content,
+      createdAt: new Date().toISOString(),
+    });
+    this.writeData(data);
+  }
+
+  async clearAIChatMemories(userId: string): Promise<boolean> {
+    const data = this.readData();
+    if (!(data as any).aiMemories) return true;
+    (data as any).aiMemories = (data as any).aiMemories.filter((m: any) => m.userId !== userId);
+    this.writeData(data);
+    return true;
   }
 }

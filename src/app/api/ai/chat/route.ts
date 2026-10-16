@@ -1,24 +1,28 @@
 import { NextResponse } from "next/server";
 import { checkRateLimit, getClientIp } from "@/lib/security/ratelimit";
 import { generateAIChatResponse, type ChatMessage } from "@/lib/ai/adapter";
+import { getCurrentUser } from "@/lib/auth/session";
+import { db } from "@/lib/db";
 import { z } from "zod";
+
+export const dynamic = "force-dynamic";
 
 const chatRequestSchema = z.object({
   messages: z
     .array(
       z.object({
         role: z.enum(["user", "assistant", "system"]),
-        content: z.string().trim().min(1).max(500),
+        content: z.string().trim().min(1).max(1000),
       })
     )
     .min(1)
-    .max(20),
+    .max(50),
 });
 
 export async function POST(req: Request) {
   try {
     const ip = getClientIp(req.headers);
-    const rateCheck = checkRateLimit(`ai:${ip}`, { limit: 12, windowMs: 60 * 1000 });
+    const rateCheck = checkRateLimit(`ai:${ip}`, { limit: 15, windowMs: 60 * 1000 });
 
     if (!rateCheck.allowed) {
       return NextResponse.json(
@@ -40,9 +44,32 @@ export async function POST(req: Request) {
       );
     }
 
-    const response = await generateAIChatResponse(parsed.data.messages as ChatMessage[]);
+    const messages = parsed.data.messages as ChatMessage[];
+    const response = await generateAIChatResponse(messages);
 
-    return NextResponse.json(response);
+    // Cek apakah ada sesi user (visitor terdaftar atau admin)
+    const currentUser = await getCurrentUser();
+    if (currentUser?.id) {
+      try {
+        const lastUserMsg = messages[messages.length - 1];
+        if (lastUserMsg && lastUserMsg.role === "user") {
+          await db.saveAIChatMemory(currentUser.id, "user", lastUserMsg.content);
+        }
+        if (response.message) {
+          await db.saveAIChatMemory(currentUser.id, "assistant", response.message);
+        }
+      } catch (saveErr) {
+        console.error("Gagal menyimpan memori chat AI:", saveErr);
+      }
+    }
+
+    return NextResponse.json({
+      reply: response.message,
+      message: response.message,
+      provider: response.provider,
+      model: response.model,
+      savedToMemory: Boolean(currentUser),
+    });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Internal Server Error";
     console.error("AI Route Error:", message);

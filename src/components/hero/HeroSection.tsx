@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight, FileText, Sparkles } from "lucide-react";
 import { GithubIcon } from "@/components/ui/Icons";
 import type { SiteProfile } from "@/types";
@@ -13,42 +12,42 @@ interface HeroSectionProps {
 
 export default function HeroSection({ profile }: HeroSectionProps) {
   return (
-    <section id="home" className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
-      {/* Background glow accent */}
+    <section id="home" className="relative z-10 pt-36 pb-20 md:pt-44 md:pb-32 overflow-hidden">
+      {/* Ambient Dark Matter subtle light falloff behind 3D focal visual */}
       <div
-        className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-[#6D8DFF]/10 blur-[120px] rounded-full pointer-events-none -z-10"
+        className="absolute top-1/3 right-1/4 w-[500px] h-[400px] bg-[#7790FF]/[0.04] blur-[150px] rounded-full pointer-events-none -z-10"
         aria-hidden="true"
       />
 
-      <div className="container-custom">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          {/* Left Column: Typography & CTAs */}
+      <div className="container-custom relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          {/* Left Column: Typographic Focus & Calls to Action */}
           <div className="lg:col-span-7 flex flex-col gap-6 text-left">
             {/* Status indicator badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#15171C] border border-[#2B2D34] w-fit">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#171A24] border border-[#292D39] w-fit shadow-sm">
               <span className="w-2 h-2 rounded-full bg-[#22C55E] animate-pulse" />
-              <span className="text-xs font-mono text-[#A1A1AA]">
+              <span className="text-xs font-mono text-[#A1A6B5] tracking-wide">
                 {profile.statusText || "Pranata Komputer di BIG & Riset YOLOv11 APD"}
               </span>
             </div>
 
-            {/* Main Headline */}
-            <div className="flex flex-col gap-2">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-[#F3F4F6] leading-[1.1]">
+            {/* Main Typographic Focus: Name & Headline */}
+            <div className="flex flex-col gap-3">
+              <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[#F1F2F5] leading-[1.05]">
                 {profile.fullName}
               </h1>
-              <p className="text-lg sm:text-xl text-[#8B9CFF] font-medium tracking-tight">
+              <p className="text-lg sm:text-2xl text-[#96A9FF] font-medium tracking-tight leading-snug">
                 {profile.headline}
               </p>
             </div>
 
             {/* Short Bio Description */}
-            <p className="text-sm sm:text-base text-[#A1A1AA] leading-relaxed max-w-xl">
+            <p className="text-sm sm:text-base text-[#A1A6B5] leading-relaxed max-w-xl">
               {profile.shortBio}
             </p>
 
-            {/* CTAs and Links */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            {/* Calls to Action */}
+            <div className="flex flex-wrap items-center gap-3 pt-3">
               <Link href="/projects" className="btn-primary">
                 <span>Jelajahi Proyek</span>
                 <ArrowRight className="w-4 h-4" />
@@ -61,7 +60,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                   rel="noopener noreferrer"
                   className="btn-secondary"
                 >
-                  <FileText className="w-4 h-4 text-[#A1A1AA]" />
+                  <FileText className="w-4 h-4 text-[#A1A6B5]" />
                   <span>Lihat CV</span>
                 </a>
               ) : (
@@ -69,7 +68,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                   onClick={() => alert("CV dapat diunggah melalui Admin Dashboard")}
                   className="btn-secondary"
                 >
-                  <FileText className="w-4 h-4 text-[#A1A1AA]" />
+                  <FileText className="w-4 h-4 text-[#A1A6B5]" />
                   <span>Lihat CV</span>
                 </button>
               )}
@@ -88,50 +87,18 @@ export default function HeroSection({ profile }: HeroSectionProps) {
 
               <button
                 onClick={() => window.dispatchEvent(new CustomEvent("open-ai-modal"))}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#1B1D23] border border-[#6D8DFF]/30 text-xs font-medium text-[#8B9CFF] hover:bg-[#6D8DFF]/15 transition-all cursor-pointer"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#171A24] border border-[#7790FF]/30 text-xs font-medium text-[#96A9FF] hover:bg-[#7790FF]/15 transition-all cursor-pointer"
               >
-                <Sparkles className="w-3.5 h-3.5 text-[#6D8DFF]" />
+                <Sparkles className="w-3.5 h-3.5 text-[#7790FF]" />
                 <span>Asisten AI</span>
               </button>
             </div>
           </div>
 
-          {/* Right Column: 3D Geometric Visual & Profile Photo Badge */}
+          {/* Right Column: 3D Geometric Focal Wireframe Object */}
           <div className="lg:col-span-5 flex flex-col items-center justify-center relative">
-            <div className="relative w-full max-w-[380px] flex flex-col items-center">
-              {/* 3D Canvas element */}
-              <div className="w-full">
-                <Hero3DCanvas />
-              </div>
-
-              {/* Verified profile portrait card floating below 3D accent */}
-              <div className="mt-4 flex items-center gap-3.5 p-3 rounded-xl bg-[#15171C]/90 backdrop-blur-md border border-[#2B2D34] shadow-xl w-full max-w-[320px]">
-                <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-[#1B1D23] border border-[#2B2D34] shrink-0 flex items-center justify-center">
-                  {profile.avatarUrl ? (
-                    <Image
-                      src={profile.avatarUrl}
-                      alt={profile.avatarAlt || "Foto Profil Wijaya Dary Dimas"}
-                      fill
-                      sizes="48px"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <span className="font-mono font-bold text-sm text-[#8B9CFF]">WDD</span>
-                  )}
-                </div>
-
-                <div className="flex flex-col min-w-0">
-                  <span className="text-xs font-semibold text-[#F3F4F6] truncate">
-                    {profile.fullName}
-                  </span>
-                  <span className="text-[11px] text-[#A1A1AA] truncate">
-                    Teknik Informatika &bull; UMP
-                  </span>
-                  <span className="text-[10px] text-[#71717A] truncate font-mono">
-                    {profile.location}
-                  </span>
-                </div>
-              </div>
+            <div className="relative w-full max-w-[420px] flex flex-col items-center">
+              <Hero3DCanvas />
             </div>
           </div>
         </div>

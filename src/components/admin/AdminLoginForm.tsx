@@ -33,8 +33,9 @@ export default function AdminLoginForm() {
         throw new Error("Akun ini tidak memiliki hak akses administrator.");
       }
 
-      router.push("/admin");
-      router.refresh();
+      // Dispatch auth change event so other components update immediately
+      window.dispatchEvent(new Event("auth-changed"));
+      window.location.href = "/admin";
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
       setError(msg);

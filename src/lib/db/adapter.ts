@@ -68,4 +68,9 @@ export interface DatabaseRepository {
   // Contact Messages
   saveContactMessage(name: string, email: string, message: string): Promise<{ id: string }>;
   getContactMessages(): Promise<Array<{ id: string; name: string; email: string; message: string; createdAt: string; isRead: boolean }>>;
+
+  // AI Chat Memories
+  getAIChatMemories(userId: string): Promise<Array<{ id: string; role: "user" | "assistant"; content: string; createdAt: string }>>;
+  saveAIChatMemory(userId: string, role: "user" | "assistant", content: string): Promise<void>;
+  clearAIChatMemories(userId: string): Promise<boolean>;
 }

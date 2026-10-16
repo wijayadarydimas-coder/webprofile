@@ -1,16 +1,29 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Cpu, Plus, Edit, Trash2, Save, X, ExternalLink, CheckCircle2, AlertCircle, FileText } from "lucide-react";
+import {
+  Cpu,
+  Plus,
+  Edit,
+  Trash2,
+  CheckCircle2,
+  AlertCircle,
+  FileText,
+  Layers,
+  Sparkles,
+} from "lucide-react";
+import ResearchHybridEditor from "@/components/admin/ResearchHybridEditor";
 import type { ResearchItem } from "@/types";
 
 export default function AdminResearchPage() {
   const [researchList, setResearchList] = useState<ResearchItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingItem, setEditingItem] = useState<ResearchItem | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [status, setStatus] = useState<{ type: "success" | "error" | null; message: string }>({
+  const [status, setStatus] = useState<{
+    type: "success" | "error" | null;
+    message: string;
+  }>({
     type: null,
     message: "",
   });
@@ -46,34 +59,60 @@ export default function AdminResearchPage() {
       methodology: "",
       modelModification: "",
       datasetNotes: "",
+      institution: "Universitas Muhammadiyah Purwokerto",
+      studyProgram: "S1 Teknik Informatika",
+      technologies: ["YOLOv11", "PyTorch", "Computer Vision"],
       publishedStatus: "Penelitian Skripsi",
       repoUrl: "",
       pdfUrl: "",
+      externalLinks: [],
       orderIndex: researchList.length + 1,
       updatedAt: new Date().toISOString(),
+      sections: [],
     });
-    setIsModalOpen(true);
   };
 
   const handleEdit = (item: ResearchItem) => {
-    setEditingItem({ ...item });
-    setIsModalOpen(true);
+    setEditingItem({
+      ...item,
+      externalLinks: item.externalLinks || [],
+      technologies: item.technologies || [],
+      sections: item.sections || [],
+    });
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingItem) return;
+  const handleSaveHybrid = async (itemToSave: ResearchItem) => {
     setSaving(true);
     setStatus({ type: null, message: "" });
 
     try {
+      const cleanExternalLinks = (itemToSave.externalLinks || [])
+        .filter((link) => link && link.url && link.url.trim() !== "")
+        .map((link) => {
+          const trimmed = link.url.trim();
+          const url =
+            /^https?:\/\//i.test(trimmed) || trimmed.startsWith("/")
+              ? trimmed
+              : `https://${trimmed}`;
+          return {
+            provider: link.provider,
+            url,
+            label: link.label?.trim() || undefined,
+          };
+        });
+
+      const payload: ResearchItem = {
+        ...itemToSave,
+        externalLinks: cleanExternalLinks,
+      };
+
       const res = await fetch("/api/admin/content", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           entity: "research",
           action: "save",
-          data: editingItem,
+          data: payload,
         }),
       });
 
@@ -82,19 +121,25 @@ export default function AdminResearchPage() {
         throw new Error(data.error || "Gagal menyimpan rincian riset.");
       }
 
-      setStatus({ type: "success", message: "Data penelitian / skripsi berhasil disimpan dan diterapkan!" });
-      setIsModalOpen(false);
+      setStatus({
+        type: "success",
+        message:
+          "Dokumentasi penelitian berhasil disimpan dan disinkronkan ke basis data!",
+      });
+      setEditingItem(null);
       loadResearch();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
       setStatus({ type: "error", message: msg });
+      throw err;
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Hapus penelitian/skripsi ini secara permanen?")) return;
+    if (!confirm("Hapus penelitian/skripsi ini secara permanen dari basis data?"))
+      return;
     try {
       if (id && !id.startsWith("res-")) {
         const res = await fetch("/api/admin/content", {
@@ -105,7 +150,10 @@ export default function AdminResearchPage() {
         const json = await res.json();
         if (!res.ok) throw new Error(json.error || "Gagal menghapus data.");
       }
-      setStatus({ type: "success", message: "Data penelitian berhasil dihapus." });
+      setStatus({
+        type: "success",
+        message: "Data penelitian berhasil dihapus.",
+      });
       loadResearch();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Gagal menghapus";
@@ -113,28 +161,45 @@ export default function AdminResearchPage() {
     }
   };
 
+  // If currently editing, show dedicated Hybrid Research Editor
+  if (editingItem) {
+    return (
+      <ResearchHybridEditor
+        initialItem={editingItem}
+        onSave={handleSaveHybrid}
+        onCancel={() => setEditingItem(null)}
+        isSaving={saving}
+      />
+    );
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#202228]">
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
-            <Cpu className="w-5 h-5 text-[#22C55E]" />
-            <h1 className="text-xl font-bold text-[#F3F4F6]">Pengelolaan Penelitian &amp; Skripsi</h1>
+            <Cpu className="w-5 h-5 text-[#7790FF]" />
+            <h1 className="text-xl font-bold text-[#F3F4F6]">
+              Pengelolaan Penelitian &amp; Skripsi (Dark Matter)
+            </h1>
           </div>
           <p className="text-xs text-[#A1A1AA]">
-            Kelola karya skripsi utama, publikasi jurnal, paper, maupun proyek riset lanjutan secara fleksibel.
+            Kelola dokumentasi teknis skripsi, publikasi jurnal, modul arsitektur, dan bantuan asisten AI.
           </p>
         </div>
 
-        <button onClick={handleOpenNew} className="btn-primary text-xs py-2 px-3.5">
+        <button
+          onClick={handleOpenNew}
+          className="btn-primary text-xs py-2 px-3.5 shadow-lg shadow-[#7790FF]/25 cursor-pointer"
+        >
           <Plus className="w-3.5 h-3.5" />
-          <span>Tambah Riset / Skripsi</span>
+          <span>Tambah Riset Baru</span>
         </button>
       </div>
 
       {status.type && (
         <div
-          className={`p-3.5 rounded-lg flex items-center gap-2.5 text-xs ${
+          className={`p-3.5 rounded-xl flex items-center gap-2.5 text-xs ${
             status.type === "success"
               ? "bg-[#22C55E]/10 border border-[#22C55E]/30 text-[#22C55E]"
               : "bg-[#EF4444]/10 border border-[#EF4444]/30 text-[#EF4444]"
@@ -150,15 +215,22 @@ export default function AdminResearchPage() {
       )}
 
       {loading ? (
-        <div className="text-xs text-[#71717A]">Memuat data riset &amp; skripsi...</div>
+        <div className="text-xs text-[#71717A] py-8 text-center">
+          Memuat data riset &amp; skripsi...
+        </div>
       ) : researchList.length === 0 ? (
-        <div className="p-8 rounded-xl bg-[#15171C] border border-[#2B2D34] text-center flex flex-col items-center gap-3">
+        <div className="p-8 rounded-2xl bg-[#141720] border border-[#232733] text-center flex flex-col items-center gap-3">
           <Cpu className="w-8 h-8 text-[#71717A]" />
-          <span className="text-sm text-[#F3F4F6] font-medium">Belum ada riset atau skripsi yang tersimpan</span>
+          <span className="text-sm text-[#F3F4F6] font-medium">
+            Belum ada dokumentasi penelitian yang tersimpan
+          </span>
           <p className="text-xs text-[#71717A] max-w-sm">
-            Klik tombol &quot;Tambah Riset / Skripsi&quot; untuk mendokumentasikan karya penelitian Anda.
+            Klik tombol &quot;Tambah Riset Baru&quot; untuk mulai mendokumentasikan karya riset skripsi Anda melalui Hybrid Research Editor.
           </p>
-          <button onClick={handleOpenNew} className="btn-primary text-xs py-2 px-4 mt-1">
+          <button
+            onClick={handleOpenNew}
+            className="btn-primary text-xs py-2 px-4 mt-1"
+          >
             <Plus className="w-3.5 h-3.5" />
             <span>Tambah Sekarang</span>
           </button>
@@ -168,237 +240,91 @@ export default function AdminResearchPage() {
           {researchList.map((item) => (
             <div
               key={item.id}
-              className="p-5 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-3 hover:border-[#6D8DFF]/40 transition-colors"
+              className="p-5 sm:p-6 rounded-2xl bg-[#141720] border border-[#232733] flex flex-col gap-4 hover:border-[#7790FF]/40 transition-colors shadow-lg"
             >
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
-                <div className="flex flex-col gap-1.5 flex-1">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-[#6D8DFF]/15 text-[#8B9CFF] border border-[#6D8DFF]/30">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div className="flex flex-col gap-2 flex-1">
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-[#7790FF]/15 text-[#96A9FF] border border-[#7790FF]/30">
                       {item.publishedStatus || "Penelitian Skripsi"}
                     </span>
-                    <span className="text-[11px] text-[#71717A] font-mono">
+                    <span className="text-[11px] text-[#7D8496] font-mono">
+                      {item.institution || "Universitas Muhammadiyah Purwokerto"} &bull; {item.studyProgram || "Teknik Informatika"}
+                    </span>
+                    <span className="text-[11px] text-[#7D8496] font-mono ml-auto">
                       Urutan: {item.orderIndex}
                     </span>
                   </div>
-                  <h3 className="text-sm sm:text-base font-bold text-[#F3F4F6] leading-snug">
+
+                  <h3 className="text-base sm:text-lg font-bold text-[#F1F2F5] leading-snug">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-[#A1A1AA] line-clamp-2 leading-relaxed">
+
+                  <p className="text-xs text-[#A1A6B5] line-clamp-2 leading-relaxed">
                     {item.summary}
                   </p>
+
+                  {/* Technologies tags */}
+                  {item.technologies && item.technologies.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {item.technologies.map((t) => (
+                        <span
+                          key={t}
+                          className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#1B1E29] text-[#A1A6B5] border border-[#272B38]"
+                        >
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-2 shrink-0">
                   <button
                     onClick={() => handleEdit(item)}
-                    className="p-2 rounded-lg bg-[#1B1D23] border border-[#2B2D34] hover:border-[#6D8DFF] text-xs text-[#F3F4F6] flex items-center gap-1.5 transition-colors"
+                    className="p-2.5 rounded-xl bg-[#1B1E29] border border-[#282C3A] hover:border-[#7790FF] text-xs text-[#F1F2F5] flex items-center gap-2 transition-colors cursor-pointer shadow-sm"
                   >
-                    <Edit className="w-3.5 h-3.5 text-[#6D8DFF]" />
-                    <span>Edit</span>
+                    <Edit className="w-3.5 h-3.5 text-[#7790FF]" />
+                    <span className="font-medium">Buka Hybrid Editor</span>
                   </button>
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className="p-2 rounded-lg bg-[#1B1D23] border border-[#2B2D34] hover:border-[#EF4444] text-xs text-[#EF4444] flex items-center gap-1.5 transition-colors"
+                    className="p-2.5 rounded-xl bg-[#1B1E29] border border-[#282C3A] hover:border-[#EF4444] text-xs text-[#EF4444] flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
+                    title="Hapus naskah ini"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
-                    <span>Hapus</span>
                   </button>
                 </div>
               </div>
 
-              {/* Extra details snippet */}
-              <div className="pt-3 border-t border-[#202228] grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-[#71717A]">
-                <div>
-                  <strong className="text-[#A1A1AA]">Modifikasi Model:</strong>{" "}
-                  <span className="line-clamp-1">{item.modelModification || "Standard"}</span>
+              {/* Quick Summary of Sections */}
+              <div className="pt-3 border-t border-[#1E222E] flex items-center justify-between text-[11px] text-[#7D8496] flex-wrap gap-2">
+                <div className="flex items-center gap-2">
+                  <Layers className="w-3.5 h-3.5 text-[#7790FF]" />
+                  <span>
+                    Struktur Dokumen:{" "}
+                    <strong className="text-[#A1A6B5]">
+                      {item.sections?.length || 6} Bagian
+                    </strong>
+                  </span>
                 </div>
-                <div>
-                  <strong className="text-[#A1A1AA]">Dataset:</strong>{" "}
-                  <span className="line-clamp-1">{item.datasetNotes || "Internal"}</span>
+
+                <div className="flex items-center gap-3">
+                  {item.repoUrl && (
+                    <span className="text-[#96A9FF] font-mono">GitHub &bull; OK</span>
+                  )}
+                  {item.pdfUrl && (
+                    <span className="text-[#96A9FF] font-mono">PDF &bull; OK</span>
+                  )}
+                  {item.externalLinks && item.externalLinks.length > 0 && (
+                    <span className="text-[#96A9FF] font-mono">
+                      {item.externalLinks.length} Provider Terhubung
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
           ))}
-        </div>
-      )}
-
-      {/* Modal Editor Form */}
-      {isModalOpen && editingItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
-          <div className="bg-[#15171C] border border-[#2B2D34] rounded-2xl w-full max-w-3xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
-            {/* Modal Header */}
-            <div className="p-5 border-b border-[#202228] flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Cpu className="w-5 h-5 text-[#22C55E]" />
-                <h2 className="text-sm sm:text-base font-bold text-[#F3F4F6]">
-                  {editingItem.id ? "Edit Rincian Riset / Skripsi" : "Tambah Karya Riset Baru"}
-                </h2>
-              </div>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="p-1.5 rounded-lg text-[#71717A] hover:text-[#F3F4F6] hover:bg-[#1B1D23]"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Modal Form Body */}
-            <form onSubmit={handleSave} className="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-[#A1A1AA]">Judul Penelitian / Skripsi *</label>
-                <input
-                  type="text"
-                  required
-                  value={editingItem.title}
-                  onChange={(e) => setEditingItem({ ...editingItem, title: e.target.value })}
-                  placeholder="Contoh: Implementasi YOLOv11 Modifikasi Untuk Deteksi APD..."
-                  className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-[#A1A1AA]">Status Publikasi / Kategori</label>
-                  <select
-                    value={editingItem.publishedStatus}
-                    onChange={(e) => setEditingItem({ ...editingItem, publishedStatus: e.target.value })}
-                    className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
-                  >
-                    <option value="Penelitian Skripsi">Penelitian Skripsi</option>
-                    <option value="Publikasi Jurnal Nasional">Publikasi Jurnal Nasional</option>
-                    <option value="Publikasi Jurnal Internasional">Publikasi Jurnal Internasional</option>
-                    <option value="Prosiding Seminar / Konferensi">Prosiding Seminar / Konferensi</option>
-                    <option value="Eksplorasi AI / R&amp;D">Eksplorasi AI / R&amp;D</option>
-                  </select>
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-[#A1A1AA]">Urutan Tampilan</label>
-                  <input
-                    type="number"
-                    min={1}
-                    value={editingItem.orderIndex}
-                    onChange={(e) => setEditingItem({ ...editingItem, orderIndex: parseInt(e.target.value) || 1 })}
-                    className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-[#A1A1AA]">Ringkasan Eksekutif (Summary) *</label>
-                <textarea
-                  rows={3}
-                  required
-                  value={editingItem.summary}
-                  onChange={(e) => setEditingItem({ ...editingItem, summary: e.target.value })}
-                  placeholder="Ringkasan singkat mengenai fokus penelitian dan capaian utamanya..."
-                  className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-[#A1A1AA]">Latar Belakang Masalah</label>
-                  <textarea
-                    rows={4}
-                    value={editingItem.background}
-                    onChange={(e) => setEditingItem({ ...editingItem, background: e.target.value })}
-                    placeholder="Mengapa penelitian ini penting? Masalah apa yang dipecahkan?"
-                    className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
-                  />
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-[#A1A1AA]">Tujuan Penelitian</label>
-                  <textarea
-                    rows={4}
-                    value={editingItem.objective}
-                    onChange={(e) => setEditingItem({ ...editingItem, objective: e.target.value })}
-                    placeholder="Tujuan terukur yang ingin dicapai melalui penelitian ini..."
-                    className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-medium text-[#A1A1AA]">Metodologi Penelitian</label>
-                <textarea
-                  rows={3}
-                  value={editingItem.methodology}
-                  onChange={(e) => setEditingItem({ ...editingItem, methodology: e.target.value })}
-                  placeholder="Tahapan penelitian: studi literatur, akuisisi dataset, augmentasi, training, evaluasi..."
-                  className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-[#A1A1AA]">Modifikasi Model / Arsitektur</label>
-                  <textarea
-                    rows={3}
-                    value={editingItem.modelModification}
-                    onChange={(e) => setEditingItem({ ...editingItem, modelModification: e.target.value })}
-                    placeholder="Bagian spesifik yang dirombak atau dioptimalkan pada arsitektur model..."
-                    className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
-                  />
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-[#A1A1AA]">Karakteristik &amp; Anotasi Dataset</label>
-                  <textarea
-                    rows={3}
-                    value={editingItem.datasetNotes}
-                    onChange={(e) => setEditingItem({ ...editingItem, datasetNotes: e.target.value })}
-                    placeholder="Jumlah kelas, variasi pencahayaan, sudut kamera, sumber data lapangan..."
-                    className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-[#A1A1AA]">URL GitHub Repository</label>
-                  <input
-                    type="url"
-                    value={editingItem.repoUrl || ""}
-                    onChange={(e) => setEditingItem({ ...editingItem, repoUrl: e.target.value })}
-                    placeholder="https://github.com/wijayadarydimas-coder/..."
-                    className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
-                  />
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-[#A1A1AA]">URL Dokumen Skripsi / Paper (PDF)</label>
-                  <input
-                    type="url"
-                    value={editingItem.pdfUrl || ""}
-                    onChange={(e) => setEditingItem({ ...editingItem, pdfUrl: e.target.value })}
-                    placeholder="https://... atau /uploads/skripsi.pdf"
-                    className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              {/* Modal Footer */}
-              <div className="pt-4 border-t border-[#202228] flex items-center justify-end gap-3 mt-2">
-                <button
-                  type="button"
-                  onClick={() => setIsModalOpen(false)}
-                  className="btn-secondary text-xs py-2 px-4"
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="btn-primary text-xs py-2 px-5"
-                >
-                  <Save className="w-3.5 h-3.5" />
-                  <span>{saving ? "Menyimpan..." : "Simpan Riset"}</span>
-                </button>
-              </div>
-            </form>
-          </div>
         </div>
       )}
     </div>

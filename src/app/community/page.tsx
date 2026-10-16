@@ -22,13 +22,13 @@ export default async function CommunityPage() {
         <div className="container-custom max-w-3xl flex flex-col gap-10">
           <div className="flex flex-col gap-2">
             <span className="text-xs font-mono font-medium text-[#6D8DFF] uppercase tracking-wider">
-              Forum Komunitas
+              KOMUNITAS &amp; DISKUSI
             </span>
             <h1 className="text-3xl sm:text-4xl font-bold text-[#F3F4F6] tracking-tight">
-              Diskusi &amp; Tanggapan Dua Arah
+              Ruang Berbagi &amp; Berdiskusi
             </h1>
             <p className="text-sm text-[#A1A1AA] leading-relaxed">
-              Ruang interaksi publik untuk bertukar pikiran mengenai rekayasa perangkat lunak, sistem machine learning, dan implementasi computer vision.
+              Tempat berbagi pemikiran, bertukar pengalaman, dan berdiskusi seputar teknologi, pemrograman, serta hal-hal yang menarik untuk dipelajari bersama.
             </p>
           </div>
 

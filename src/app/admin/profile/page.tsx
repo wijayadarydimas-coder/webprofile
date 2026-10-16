@@ -24,6 +24,7 @@ export default function AdminProfilePage() {
         if (json.success && json.data) {
           setProfile({
             ...json.data,
+            aboutTitle: json.data.aboutTitle || "Profil, Prinsip Belajar & Fokus Teknis",
             roleTitle: json.data.roleTitle || "Informatics & CV Engineer",
             brandName: json.data.brandName || "Wijaya Dary Dimas",
             logoUrl: json.data.logoUrl || "",
@@ -352,6 +353,20 @@ export default function AdminProfilePage() {
               onChange={(e) => setProfile({ ...profile, shortBio: e.target.value })}
               className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
             />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-medium text-[#A1A1AA]">Judul Seksi Tentang (About Section Heading)</label>
+            <input
+              type="text"
+              value={profile.aboutTitle || ""}
+              onChange={(e) => setProfile({ ...profile, aboutTitle: e.target.value })}
+              placeholder="Profil, Prinsip Belajar & Fokus Teknis"
+              className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
+            />
+            <span className="text-[11px] text-[#71717A]">
+              Mengubah teks judul utama pada seksi Tentang Pemilik di halaman depan.
+            </span>
           </div>
 
           <div className="flex flex-col gap-1.5">
