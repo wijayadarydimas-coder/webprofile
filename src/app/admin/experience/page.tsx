@@ -52,6 +52,27 @@ export default function AdminExperiencePage() {
     }
   };
 
+  const handleDeleteExp = async (id: string, index: number) => {
+    if (!confirm("Hapus pengalaman ini secara permanen?")) return;
+    try {
+      // Jika sudah ada di database, kirim request delete
+      if (id && !id.startsWith("exp-")) {
+        const res = await fetch("/api/admin/content", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ entity: "experience", action: "delete", id }),
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || "Gagal menghapus data.");
+      }
+      setStatus({ type: "success", message: "Pengalaman berhasil dihapus." });
+      loadData();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Gagal menghapus";
+      setStatus({ type: "error", message: msg });
+    }
+  };
+
   const handleSaveEdu = async (edu: Education) => {
     try {
       await fetch("/api/admin/content", {
@@ -63,6 +84,26 @@ export default function AdminExperiencePage() {
       loadData();
     } catch {
       setStatus({ type: "error", message: "Gagal menyimpan pendidikan." });
+    }
+  };
+
+  const handleDeleteEdu = async (id: string, index: number) => {
+    if (!confirm("Hapus riwayat pendidikan ini secara permanen?")) return;
+    try {
+      if (id && !id.startsWith("edu-")) {
+        const res = await fetch("/api/admin/content", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ entity: "education", action: "delete", id }),
+        });
+        const json = await res.json();
+        if (!res.ok) throw new Error(json.error || "Gagal menghapus data.");
+      }
+      setStatus({ type: "success", message: "Pendidikan berhasil dihapus." });
+      loadData();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Gagal menghapus";
+      setStatus({ type: "error", message: msg });
     }
   };
 
@@ -194,9 +235,24 @@ export default function AdminExperiencePage() {
                 />
               </div>
 
+              <div className="flex flex-col gap-1">
+                <label className="text-[11px] text-[#71717A]">URL / Tautan Resmi Instansi (Opsional — kosongkan jika tidak ingin ada tombol link)</label>
+                <input
+                  type="text"
+                  value={exp.url || ""}
+                  onChange={(e) => {
+                    const updated = [...experiences];
+                    updated[index].url = e.target.value;
+                    setExperiences(updated);
+                  }}
+                  placeholder="https://big.go.id"
+                  className="p-2 rounded bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6]"
+                />
+              </div>
+
               <div className="flex items-center justify-between pt-2 border-t border-[#202228]">
                 <button
-                  onClick={() => setExperiences(experiences.filter((_, i) => i !== index))}
+                  onClick={() => handleDeleteExp(exp.id, index)}
                   className="text-xs text-[#EF4444] hover:underline flex items-center gap-1"
                 >
                   <Trash2 className="w-3 h-3" />
@@ -287,9 +343,24 @@ export default function AdminExperiencePage() {
                 />
               </div>
 
+              <div className="flex flex-col gap-1">
+                <label className="text-[11px] text-[#71717A]">URL / Tautan Resmi Institusi (Opsional — kosongkan jika tidak ingin ada tombol link)</label>
+                <input
+                  type="text"
+                  value={edu.url || ""}
+                  onChange={(e) => {
+                    const updated = [...educations];
+                    updated[index].url = e.target.value;
+                    setEducations(updated);
+                  }}
+                  placeholder="https://ump.ac.id"
+                  className="p-2 rounded bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6]"
+                />
+              </div>
+
               <div className="flex items-center justify-between pt-2 border-t border-[#202228]">
                 <button
-                  onClick={() => setEducations(educations.filter((_, i) => i !== index))}
+                  onClick={() => handleDeleteEdu(edu.id, index)}
                   className="text-xs text-[#EF4444] hover:underline flex items-center gap-1"
                 >
                   <Trash2 className="w-3 h-3" />

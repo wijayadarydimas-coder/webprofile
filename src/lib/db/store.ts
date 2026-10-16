@@ -44,6 +44,11 @@ const initialSeed: DataStoreSchema = {
     email: "",
     location: "Purwokerto, Indonesia",
     statusText: "Pranata Komputer di BIG & Riset Deteksi APD YOLOv11",
+    roleTitle: "Informatics & CV Engineer",
+    brandName: "Wijaya Dary Dimas",
+    logoUrl: "",
+    instagramUrl: "",
+    tiktokUrl: "",
     updatedAt: new Date().toISOString(),
   },
   projects: [
@@ -201,6 +206,7 @@ const initialSeed: DataStoreSchema = {
   settings: {
     aiProvider: "gemini",
     aiModel: "gemini-1.5-flash",
+    aiAssistantName: "Asisten AI — Wijaya Dary Dimas",
     contactEmail: "",
     enableAiAssistant: true,
     enableComments: true,

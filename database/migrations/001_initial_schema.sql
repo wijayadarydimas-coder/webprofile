@@ -265,8 +265,9 @@ VALUES ('primary', 'gemini', 'gemini-1.5-flash', '', true, true, false)
 ON CONFLICT (id) DO NOTHING;
 
 -- Seed initial verified experience
-INSERT INTO experiences (organization, role, period, description, type, order_index, url)
+INSERT INTO experiences (id, organization, role, period, description, type, order_index, url)
 VALUES (
+    '11111111-1111-1111-1111-111111111111',
     'Badan Informasi Geospasial',
     'Pranata Komputer',
     'November 2025 – Mei 2026',
@@ -274,23 +275,25 @@ VALUES (
     'internship',
     1,
     'https://big.go.id'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO NOTHING;
 
 -- Seed initial verified education
-INSERT INTO educations (institution, degree, period, description, order_index, url)
+INSERT INTO educations (id, institution, degree, period, description, order_index, url)
 VALUES (
+    '22222222-2222-2222-2222-222222222222',
     'Universitas Muhammadiyah Purwokerto',
     'S1 Teknik Informatika',
     '2021 – Sekarang',
     'Fokus studi pada rekayasa perangkat lunak, arsitektur basis data, kecerdasan buatan, dan pengolahan citra digital. Mengembangkan skripsi modifikasi YOLOv11 untuk deteksi APD dengan alarm otomatis.',
     1,
     'https://ump.ac.id'
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO NOTHING;
 
 -- Seed initial verified research
 INSERT INTO research_items (
-    title, summary, background, objective, methodology, model_modification, dataset_notes, published_status, repo_url, pdf_url, order_index
+    id, title, summary, background, objective, methodology, model_modification, dataset_notes, published_status, repo_url, pdf_url, order_index
 ) VALUES (
+    '33333333-3333-3333-3333-333333333333',
     'Implementasi YOLOv11 Modifikasi Untuk Deteksi Alat Pelindung Diri Helm Rompi, Sarung Tangan Dan Sepatu Dengan Alarm Otomatis.',
     'Penelitian pengembangan arsitektur YOLOv11 yang dimodifikasi untuk mendeteksi kelengkapan Alat Pelindung Diri (APD) pada lingkungan kerja industri dan konstruksi secara real-time disertai mekanisme alarm peringatan otomatis.',
     'Keselamatan dan Kesehatan Kerja (K3) menuntut kedisiplinan penggunaan APD lengkap bagi para pekerja. Pengawasan manual seringkali tidak efektif pada area kerja yang luas, sehingga dibutuhkan sistem computer vision otomatis yang responsif dan berakurasi tinggi.',
@@ -302,7 +305,7 @@ INSERT INTO research_items (
     'https://github.com/wijayadarydimas-coder',
     '',
     1
-) ON CONFLICT DO NOTHING;
+) ON CONFLICT (id) DO NOTHING;
 
 -- Seed initial featured project based on verified research
 INSERT INTO projects (

@@ -60,6 +60,11 @@ export const profileUpdateSchema = z.object({
   email: z.string().trim().email().or(z.literal("")),
   location: z.string().trim().max(100),
   statusText: z.string().trim().max(150),
+  roleTitle: z.string().trim().max(120).optional().default("Informatics & CV Engineer"),
+  brandName: z.string().trim().max(120).optional().default("Wijaya Dary Dimas"),
+  logoUrl: z.string().trim().optional().default(""),
+  instagramUrl: optionalUrl,
+  tiktokUrl: optionalUrl,
 });
 
 export const projectSchema = z.object({
@@ -125,6 +130,7 @@ export const researchSchema = z.object({
 export const siteSettingsSchema = z.object({
   aiProvider: z.string().default("gemini"),
   aiModel: z.string().default("gemini-1.5-flash"),
+  aiAssistantName: z.string().trim().max(120).optional().default("Asisten AI — Wijaya Dary Dimas"),
   contactEmail: z.string().email().or(z.literal("")),
   enableAiAssistant: z.boolean().default(true),
   enableComments: z.boolean().default(true),

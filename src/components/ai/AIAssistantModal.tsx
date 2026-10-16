@@ -14,6 +14,7 @@ interface Message {
 }
 
 export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalProps) {
+  const [assistantName, setAssistantName] = useState("Asisten AI — Wijaya Dary Dimas");
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -26,6 +27,18 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
   const [error, setError] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    // Ambil nama asisten AI dinamis dari konfigurasi admin
+    fetch("/api/site-info")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.aiAssistantName) {
+          setAssistantName(data.aiAssistantName);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -48,39 +61,38 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
     const text = (textToSend || input).trim();
     if (!text || loading) return;
 
-    setError(null);
     setInput("");
-    const newMessages: Message[] = [...messages, { role: "user", content: text }];
-    setMessages(newMessages);
+    setError(null);
+
+    const userMsg: Message = { role: "user", content: text };
+    const updatedMessages = [...messages, userMsg];
+    setMessages(updatedMessages);
     setLoading(true);
 
     try {
-      const res = await fetch("/api/ai/chat", {
+      const res = await fetch("/api/ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({
+          messages: updatedMessages.map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
+        }),
       });
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Gagal menghubungi asisten AI.");
+        throw new Error(data.error || "Gagal memproses pesan AI.");
       }
 
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: data.message },
+        { role: "assistant", content: data.reply || "Maaf, tidak ada tanggapan." },
       ]);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
+      const msg = err instanceof Error ? err.message : "Terjadi kesalahan koneksi";
       setError(msg);
-      setMessages((prev) => [
-        ...prev,
-        {
-          role: "assistant",
-          content:
-            "Maaf, respon tidak dapat ditampilkan saat ini. Silakan coba kembali atau gunakan topik lain.",
-        },
-      ]);
     } finally {
       setLoading(false);
     }
@@ -90,28 +102,20 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
     setMessages([
       {
         role: "assistant",
-        content:
-          "Percakapan telah direset. Silakan tanyakan hal seputar portofolio, latar belakang akademis, atau proyek Wijaya Dary Dimas.",
+        content: `Halo! Saya ${assistantName}. Silakan tanyakan seputar portofolio dan riwayat pengalaman teknis!`,
       },
     ]);
     setError(null);
   };
 
-  const presetQuestions = [
-    "Jelaskan tentang skripsi YOLOv11 APD",
-    "Apa pengalaman di Badan Informasi Geospasial?",
-    "Teknologi apa saja yang dikuasai?",
-    "Di mana Wijaya menempuh pendidikan?",
-  ];
-
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-labelledby="ai-modal-title"
     >
-      <div className="relative w-full max-w-xl h-[600px] max-h-[90vh] bg-[#15171C] border border-[#2B2D34] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+      <div className="relative w-full max-w-xl h-[560px] max-h-[90vh] bg-[#15171C] border border-[#2B2D34] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="px-5 py-3.5 border-b border-[#2B2D34] bg-[#111317] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -120,11 +124,11 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
             </div>
             <div className="flex flex-col">
               <span id="ai-modal-title" className="text-xs font-semibold text-[#F3F4F6]">
-                Asisten AI — Wijaya Dary Dimas
+                {assistantName}
               </span>
               <span className="text-[10px] text-[#22C55E] flex items-center gap-1 font-mono">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
-                Online &bull; Konteks Terverifikasi
+                Online
               </span>
             </div>
           </div>
@@ -181,7 +185,7 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
           {loading && (
             <div className="flex items-center gap-2 text-[#71717A] text-xs">
               <Bot className="w-3.5 h-3.5 text-[#6D8DFF] animate-pulse" />
-              <span>Menyiapkan respon terverifikasi...</span>
+              <span>Sedang mengetik jawaban...</span>
             </div>
           )}
 
@@ -193,20 +197,6 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
           )}
 
           <div ref={messagesEndRef} />
-        </div>
-
-        {/* Quick Suggestion Pills */}
-        <div className="px-4 py-2 border-t border-[#202228] bg-[#111317]/50 flex items-center gap-2 overflow-x-auto no-scrollbar">
-          {presetQuestions.map((q, i) => (
-            <button
-              key={i}
-              onClick={() => handleSend(q)}
-              disabled={loading}
-              className="px-2.5 py-1 rounded-md bg-[#1B1D23] hover:bg-[#22252E] border border-[#2B2D34] text-[11px] text-[#A1A1AA] hover:text-[#F3F4F6] whitespace-nowrap transition-colors shrink-0 disabled:opacity-50"
-            >
-              {q}
-            </button>
-          ))}
         </div>
 
         {/* Input Bar */}
@@ -224,7 +214,7 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
               value={input}
               maxLength={500}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Tanyakan sesuatu tentang Wijaya Dary Dimas..."
+              placeholder="Tanyakan sesuatu tentang proyek atau profil..."
               className="flex-1 px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] placeholder-[#71717A] focus:border-[#6D8DFF] focus:outline-none transition-colors"
             />
             <button
@@ -236,8 +226,7 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
               <Send className="w-3.5 h-3.5" />
             </button>
           </form>
-          <div className="flex justify-between items-center text-[10px] text-[#71717A] mt-1.5 px-1 font-mono">
-            <span>Privasi: Tidak menyimpan histori percakapan</span>
+          <div className="flex justify-end items-center text-[10px] text-[#71717A] mt-1.5 px-1 font-mono">
             <span>{input.length}/500</span>
           </div>
         </div>

@@ -134,6 +134,17 @@ export default function AdminSettingsPage() {
                 className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6] font-mono"
               />
             </div>
+
+            <div className="flex flex-col gap-1.5 sm:col-span-2">
+              <label className="text-[#A1A1AA]">Nama Tampilan Asisten AI (Judul Modal)</label>
+              <input
+                type="text"
+                value={settings.aiAssistantName || ""}
+                onChange={(e) => setSettings({ ...settings, aiAssistantName: e.target.value })}
+                placeholder="Asisten AI — Wijaya Dary Dimas"
+                className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
+              />
+            </div>
           </div>
 
           <div className="flex flex-col gap-2 pt-2">

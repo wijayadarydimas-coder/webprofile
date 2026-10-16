@@ -13,7 +13,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ profile }: HeroSectionProps) {
   return (
-    <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
+    <section id="home" className="relative pt-32 pb-20 md:pt-40 md:pb-28 overflow-hidden">
       {/* Background glow accent */}
       <div
         className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[300px] bg-[#6D8DFF]/10 blur-[120px] rounded-full pointer-events-none -z-10"

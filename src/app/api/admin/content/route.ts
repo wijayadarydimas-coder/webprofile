@@ -43,7 +43,7 @@ export async function GET(req: Request) {
 
     if (entity === "research") {
       const research = await db.getResearchItems();
-      return NextResponse.json({ success: true, data: research[0] || null });
+      return NextResponse.json({ success: true, data: research });
     }
 
     if (entity === "settings") {
@@ -94,7 +94,7 @@ export async function POST(req: Request) {
       }
       if (entity === "research") {
         const research = await db.getResearchItems();
-        return NextResponse.json({ success: true, data: research[0] || null });
+        return NextResponse.json({ success: true, data: research });
       }
       if (entity === "settings") {
         const settings = await db.getSettings();

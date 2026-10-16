@@ -22,6 +22,11 @@ export interface SiteProfile {
   email: string;
   location: string;
   statusText: string;
+  roleTitle?: string;
+  brandName?: string;
+  logoUrl?: string;
+  instagramUrl?: string;
+  tiktokUrl?: string;
   updatedAt: string;
 }
 
@@ -110,6 +115,7 @@ export interface MediaItem {
 export interface SiteSettings {
   aiProvider: string;
   aiModel: string;
+  aiAssistantName?: string;
   contactEmail: string;
   enableAiAssistant: boolean;
   enableComments: boolean;

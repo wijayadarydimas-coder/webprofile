@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { User, Save, Upload, AlertCircle, CheckCircle2 } from "lucide-react";
+import { User, Save, Upload, AlertCircle, CheckCircle2, Globe, Shield, Sparkles } from "lucide-react";
 import type { SiteProfile } from "@/types";
 
 export default function AdminProfilePage() {
@@ -11,6 +11,7 @@ export default function AdminProfilePage() {
   const [saving, setSaving] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [uploadingCv, setUploadingCv] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
   const [status, setStatus] = useState<{ type: "success" | "error" | null; message: string }>({
     type: null,
     message: "",
@@ -21,7 +22,14 @@ export default function AdminProfilePage() {
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data) {
-          setProfile(json.data);
+          setProfile({
+            ...json.data,
+            roleTitle: json.data.roleTitle || "Informatics & CV Engineer",
+            brandName: json.data.brandName || "Wijaya Dary Dimas",
+            logoUrl: json.data.logoUrl || "",
+            instagramUrl: json.data.instagramUrl || "",
+            tiktokUrl: json.data.tiktokUrl || "",
+          });
         }
       })
       .catch((err) => {
@@ -55,7 +63,7 @@ export default function AdminProfilePage() {
       }
 
       setProfile(json.data);
-      setStatus({ type: "success", message: "Profil berhasil diperbarui dan telah diterapkan ke website!" });
+      setStatus({ type: "success", message: "Profil dan branding berhasil diperbarui serta diterapkan langsung ke website!" });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
       setStatus({ type: "error", message: msg });
@@ -64,16 +72,17 @@ export default function AdminProfilePage() {
     }
   };
 
-  const handleFileUpload = async (file: File, target: "avatar" | "cv") => {
+  const handleFileUpload = async (file: File, target: "avatar" | "cv" | "logo") => {
     if (target === "avatar") setUploadingAvatar(true);
-    else setUploadingCv(true);
+    else if (target === "cv") setUploadingCv(true);
+    else setUploadingLogo(true);
 
     try {
       let uploadFile = file;
       let conversionNotice = "";
 
-      // Otomatis konversi foto ke WebP jika target adalah avatar
-      if (target === "avatar" && file.type.startsWith("image/") && file.type !== "image/svg+xml") {
+      // Otomatis konversi foto/logo ke WebP jika target adalah gambar
+      if ((target === "avatar" || target === "logo") && file.type.startsWith("image/") && file.type !== "image/svg+xml") {
         const { convertImageToWebP } = await import("@/lib/utils/image-converter");
         const conv = await convertImageToWebP(file);
         uploadFile = conv.file;
@@ -86,7 +95,10 @@ export default function AdminProfilePage() {
 
       const formData = new FormData();
       formData.append("file", uploadFile);
-      formData.append("altText", target === "avatar" ? "Foto Profil" : "Berkas Resume CV");
+      formData.append(
+        "altText",
+        target === "avatar" ? "Foto Profil" : target === "logo" ? "Logo Website" : "Berkas Resume CV"
+      );
 
       const res = await fetch("/api/upload", {
         method: "POST",
@@ -101,13 +113,15 @@ export default function AdminProfilePage() {
       if (profile) {
         if (target === "avatar") {
           setProfile({ ...profile, avatarUrl: data.url });
-        } else {
+        } else if (target === "cv") {
           setProfile({ ...profile, cvUrl: data.url });
+        } else {
+          setProfile({ ...profile, logoUrl: data.url });
         }
       }
       setStatus({
         type: "success",
-        message: `Berkas berhasil diunggah${conversionNotice}! Jangan lupa klik tombol 'Simpan Perubahan' di bawah.`,
+        message: `Berkas berhasil diunggah${conversionNotice}! Jangan lupa klik tombol 'Simpan Seluruh Perubahan' di bawah.`,
       });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Upload gagal";
@@ -115,6 +129,7 @@ export default function AdminProfilePage() {
     } finally {
       setUploadingAvatar(false);
       setUploadingCv(false);
+      setUploadingLogo(false);
     }
   };
 
@@ -127,10 +142,10 @@ export default function AdminProfilePage() {
       <div className="flex flex-col gap-1 pb-4 border-b border-[#202228]">
         <div className="flex items-center gap-2">
           <User className="w-5 h-5 text-[#6D8DFF]" />
-          <h1 className="text-xl font-bold text-[#F3F4F6]">Pengaturan Profil &amp; Hero</h1>
+          <h1 className="text-xl font-bold text-[#F3F4F6]">Pengaturan Profil &amp; Branding</h1>
         </div>
         <p className="text-xs text-[#A1A1AA]">
-          Ubah informasi identitas publik, tagline, bio hero, foto profil, dan dokumen resume tanpa menyentuh kode program.
+          Ubah nama brand, teks profesi sub-title, logo website, foto profil, dan media sosial tanpa menyentuh kode program.
         </p>
       </div>
 
@@ -151,22 +166,100 @@ export default function AdminProfilePage() {
         </div>
       )}
 
-      {/* Tips Hosting Gratis (Vercel) */}
-      <div className="p-4 rounded-xl bg-[#1B1D23] border border-[#2B2D34] flex items-start gap-3 text-xs text-[#A1A1AA]">
-        <span className="p-1.5 rounded-lg bg-[#6D8DFF]/10 text-[#6D8DFF] shrink-0 mt-0.5">⚡</span>
-        <div className="flex flex-col gap-1">
-          <span className="font-semibold text-[#F3F4F6]">Tips Format Ringan &amp; Optimal (Vercel):</span>
-          <p>
-            • <strong>Foto Profil / Gambar</strong>: Sistem secara otomatis mengompresi gambar Anda menjadi format <strong>WebP</strong> yang sangat ringan namun tetap tajam untuk menghemat bandwidth hosting.<br />
-            • <strong>Berkas CV / Resume</strong>: Gunakan file <strong>PDF</strong> yang sudah terkompresi (ukuran ideal &lt; 2MB) agar cepat diunduh oleh pengunjung dan perekrut.
-          </p>
-        </div>
-      </div>
-
       <form onSubmit={handleSave} className="flex flex-col gap-6">
-        {/* Profile Avatar Card */}
+        {/* Section: Header & Branding (Logo, Nama Brand, Sub-title) */}
+        <div className="p-6 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-5">
+          <div className="flex items-center gap-2 border-b border-[#202228] pb-3">
+            <Globe className="w-4 h-4 text-[#6D8DFF]" />
+            <h2 className="text-sm font-semibold text-[#F3F4F6]">Identitas Logo &amp; Navbar Header</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Logo Box & Upload */}
+            <div className="p-4 rounded-xl bg-[#1B1D23] border border-[#2B2D34] flex items-center gap-4">
+              <div className="relative w-14 h-14 rounded-xl bg-[#15171C] border border-[#2B2D34] flex items-center justify-center overflow-hidden shrink-0">
+                {profile.logoUrl ? (
+                  <Image
+                    src={profile.logoUrl}
+                    alt="Logo Website"
+                    fill
+                    sizes="56px"
+                    className="object-contain p-1"
+                  />
+                ) : (
+                  <span className="font-mono text-xl font-bold text-[#F3F4F6]">
+                    {(profile.brandName || "W")[0]?.toUpperCase() || "W"}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+                <span className="text-xs font-semibold text-[#F3F4F6]">Logo Website</span>
+                <p className="text-[11px] text-[#71717A]">
+                  {profile.logoUrl ? "Logo kustom terpasang" : "Memakai inisial teks default"}
+                </p>
+                <div className="flex items-center gap-2 pt-1">
+                  <label className="btn-secondary text-[11px] py-1 px-2.5 cursor-pointer">
+                    <Upload className="w-3 h-3" />
+                    <span>{uploadingLogo ? "Mengunggah..." : "Ganti Logo"}</span>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp,image/svg+xml"
+                      onChange={(e) => {
+                        if (e.target.files?.[0]) handleFileUpload(e.target.files[0], "logo");
+                      }}
+                      className="hidden"
+                    />
+                  </label>
+                  {profile.logoUrl && (
+                    <button
+                      type="button"
+                      onClick={() => setProfile({ ...profile, logoUrl: "" })}
+                      className="text-[11px] text-[#EF4444] hover:underline"
+                    >
+                      Hapus Logo
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Brand Name & Sub-Title inputs */}
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-medium text-[#A1A1AA]">
+                  Nama Brand di Navbar / Header
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={profile.brandName || ""}
+                  onChange={(e) => setProfile({ ...profile, brandName: e.target.value })}
+                  placeholder="Wijaya Dary Dimas"
+                  className="px-3.5 py-2 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
+                />
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-medium text-[#A1A1AA]">
+                  Sub-Title / Profesi di Navbar (Sebelumnya: [Informatics &amp; CV Engineer])
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={profile.roleTitle || ""}
+                  onChange={(e) => setProfile({ ...profile, roleTitle: e.target.value })}
+                  placeholder="Informatics & CV Engineer"
+                  className="px-3.5 py-2 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Section: Foto Profil & Bio Hero */}
         <div className="p-6 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col sm:flex-row items-center gap-6">
-          <div className="relative w-24 h-24 rounded-2xl overflow-hidden bg-[#1B1D23] border border-[#2B2D34] shrink-0 flex items-center justify-center">
+          <div className="relative w-24 h-24 rounded-2xl bg-[#1B1D23] border border-[#2B2D34] flex items-center justify-center overflow-hidden shrink-0 shadow-lg">
             {profile.avatarUrl ? (
               <Image
                 src={profile.avatarUrl}
@@ -202,11 +295,11 @@ export default function AdminProfilePage() {
           </div>
         </div>
 
-        {/* Form Fields Grid */}
+        {/* Section: Form Fields Biodata */}
         <div className="p-6 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-[#A1A1AA]">Nama Lengkap</label>
+              <label className="text-xs font-medium text-[#A1A1AA]">Nama Lengkap Resmi</label>
               <input
                 type="text"
                 required
@@ -217,7 +310,7 @@ export default function AdminProfilePage() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-[#A1A1AA]">Lokasi</label>
+              <label className="text-xs font-medium text-[#A1A1AA]">Lokasi Domisili</label>
               <input
                 type="text"
                 required
@@ -229,7 +322,7 @@ export default function AdminProfilePage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-[#A1A1AA]">Tagline Utama</label>
+            <label className="text-xs font-medium text-[#A1A1AA]">Tagline Utama (Hero)</label>
             <input
               type="text"
               required
@@ -273,23 +366,35 @@ export default function AdminProfilePage() {
           </div>
         </div>
 
-        {/* Links & Resume */}
+        {/* Section: Kontak & Media Sosial */}
         <div className="p-6 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-4">
-          <h2 className="text-sm font-semibold text-[#F3F4F6]">Tautan Sosial &amp; Dokumen Resume</h2>
+          <h2 className="text-sm font-semibold text-[#F3F4F6]">Kontak, Media Sosial &amp; Dokumen Resume</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-[#A1A1AA]">URL GitHub</label>
+              <label className="text-xs font-medium text-[#A1A1AA]">1. Email Publik Kontak</label>
               <input
-                type="text"
-                value={profile.githubUrl}
-                onChange={(e) => setProfile({ ...profile, githubUrl: e.target.value })}
+                type="email"
+                value={profile.email}
+                onChange={(e) => setProfile({ ...profile, email: e.target.value })}
+                placeholder="kontak@email.com"
                 className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-[#A1A1AA]">URL LinkedIn</label>
+              <label className="text-xs font-medium text-[#A1A1AA]">2. URL GitHub</label>
+              <input
+                type="text"
+                value={profile.githubUrl}
+                onChange={(e) => setProfile({ ...profile, githubUrl: e.target.value })}
+                placeholder="https://github.com/username"
+                className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-[#A1A1AA]">3. URL LinkedIn</label>
               <input
                 type="text"
                 value={profile.linkedinUrl}
@@ -300,12 +405,23 @@ export default function AdminProfilePage() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-[#A1A1AA]">Email Publik Kontak</label>
+              <label className="text-xs font-medium text-[#A1A1AA]">4. URL Instagram</label>
               <input
-                type="email"
-                value={profile.email}
-                onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                placeholder="kontak@email.com"
+                type="text"
+                value={profile.instagramUrl || ""}
+                onChange={(e) => setProfile({ ...profile, instagramUrl: e.target.value })}
+                placeholder="https://instagram.com/username"
+                className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-medium text-[#A1A1AA]">5. URL TikTok</label>
+              <input
+                type="text"
+                value={profile.tiktokUrl || ""}
+                onChange={(e) => setProfile({ ...profile, tiktokUrl: e.target.value })}
+                placeholder="https://tiktok.com/@username"
                 className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
               />
             </div>

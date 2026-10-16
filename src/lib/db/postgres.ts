@@ -51,6 +51,11 @@ function getPool(): Pool {
   return pool;
 }
 
+function isUuid(val?: string | null): boolean {
+  if (!val) return false;
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val);
+}
+
 export class PostgresRepository implements DatabaseRepository {
   private pool: Pool;
 
@@ -77,6 +82,11 @@ export class PostgresRepository implements DatabaseRepository {
         email: "",
         location: "Purwokerto, Indonesia",
         statusText: "Pranata Komputer di BIG & Riset Deteksi APD YOLOv11",
+        roleTitle: "Informatics & CV Engineer",
+        brandName: "Wijaya Dary Dimas",
+        logoUrl: "",
+        instagramUrl: "",
+        tiktokUrl: "",
         updatedAt: new Date().toISOString(),
       };
     }
@@ -95,6 +105,11 @@ export class PostgresRepository implements DatabaseRepository {
       email: r.email,
       location: r.location,
       statusText: r.status_text,
+      roleTitle: r.role_title || "Informatics & CV Engineer",
+      brandName: r.brand_name || "Wijaya Dary Dimas",
+      logoUrl: r.logo_url || "",
+      instagramUrl: r.instagram_url || "",
+      tiktokUrl: r.tiktok_url || "",
       updatedAt: r.updated_at ? new Date(r.updated_at).toISOString() : new Date().toISOString(),
     };
   }
@@ -106,9 +121,10 @@ export class PostgresRepository implements DatabaseRepository {
     const query = `
       INSERT INTO site_profile (
         id, full_name, headline, short_bio, about_me, avatar_url, avatar_alt,
-        cv_url, github_url, linkedin_url, email, location, status_text, updated_at
+        cv_url, github_url, linkedin_url, email, location, status_text,
+        role_title, brand_name, logo_url, instagram_url, tiktok_url, updated_at
       ) VALUES (
-        'primary', $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, NOW()
+        'primary', $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, NOW()
       )
       ON CONFLICT (id) DO UPDATE SET
         full_name = EXCLUDED.full_name,
@@ -123,6 +139,11 @@ export class PostgresRepository implements DatabaseRepository {
         email = EXCLUDED.email,
         location = EXCLUDED.location,
         status_text = EXCLUDED.status_text,
+        role_title = EXCLUDED.role_title,
+        brand_name = EXCLUDED.brand_name,
+        logo_url = EXCLUDED.logo_url,
+        instagram_url = EXCLUDED.instagram_url,
+        tiktok_url = EXCLUDED.tiktok_url,
         updated_at = NOW()
       RETURNING *;
     `;
@@ -140,6 +161,11 @@ export class PostgresRepository implements DatabaseRepository {
       updated.email,
       updated.location,
       updated.statusText,
+      updated.roleTitle || "Informatics & CV Engineer",
+      updated.brandName || "Wijaya Dary Dimas",
+      updated.logoUrl || "",
+      updated.instagramUrl || "",
+      updated.tiktokUrl || "",
     ]);
 
     const r = res.rows[0];
@@ -157,6 +183,11 @@ export class PostgresRepository implements DatabaseRepository {
       email: r.email,
       location: r.location,
       statusText: r.status_text,
+      roleTitle: r.role_title || "Informatics & CV Engineer",
+      brandName: r.brand_name || "Wijaya Dary Dimas",
+      logoUrl: r.logo_url || "",
+      instagramUrl: r.instagram_url || "",
+      tiktokUrl: r.tiktok_url || "",
       updatedAt: r.updated_at ? new Date(r.updated_at).toISOString() : new Date().toISOString(),
     };
   }
@@ -226,7 +257,7 @@ export class PostgresRepository implements DatabaseRepository {
   }
 
   async saveProject(proj: Omit<Project, "id" | "createdAt" | "updatedAt"> & { id?: string }): Promise<Project> {
-    if (proj.id) {
+    if (proj.id && isUuid(proj.id)) {
       const query = `
         UPDATE projects SET
           slug = $1, title = $2, short_description = $3, full_description = $4,
@@ -326,6 +357,7 @@ export class PostgresRepository implements DatabaseRepository {
   }
 
   async deleteProject(id: string): Promise<boolean> {
+    if (!isUuid(id)) return true;
     const res = await this.pool.query("DELETE FROM projects WHERE id = $1", [id]);
     return (res.rowCount ?? 0) > 0;
   }
@@ -346,7 +378,7 @@ export class PostgresRepository implements DatabaseRepository {
   }
 
   async saveExperience(exp: Omit<Experience, "id"> & { id?: string }): Promise<Experience> {
-    if (exp.id) {
+    if (exp.id && isUuid(exp.id)) {
       const query = `
         UPDATE experiences SET
           organization = $1, role = $2, period = $3, description = $4,
@@ -405,6 +437,7 @@ export class PostgresRepository implements DatabaseRepository {
   }
 
   async deleteExperience(id: string): Promise<boolean> {
+    if (!isUuid(id)) return true;
     const res = await this.pool.query("DELETE FROM experiences WHERE id = $1", [id]);
     return (res.rowCount ?? 0) > 0;
   }
@@ -424,7 +457,7 @@ export class PostgresRepository implements DatabaseRepository {
   }
 
   async saveEducation(edu: Omit<Education, "id"> & { id?: string }): Promise<Education> {
-    if (edu.id) {
+    if (edu.id && isUuid(edu.id)) {
       const query = `
         UPDATE educations SET
           institution = $1, degree = $2, period = $3, description = $4,
@@ -479,6 +512,7 @@ export class PostgresRepository implements DatabaseRepository {
   }
 
   async deleteEducation(id: string): Promise<boolean> {
+    if (!isUuid(id)) return true;
     const res = await this.pool.query("DELETE FROM educations WHERE id = $1", [id]);
     return (res.rowCount ?? 0) > 0;
   }
@@ -525,7 +559,7 @@ export class PostgresRepository implements DatabaseRepository {
   }
 
   async saveResearch(resItem: Omit<ResearchItem, "id" | "updatedAt"> & { id?: string }): Promise<ResearchItem> {
-    if (resItem.id) {
+    if (resItem.id && isUuid(resItem.id)) {
       const query = `
         UPDATE research_items SET
           title = $1, summary = $2, background = $3, objective = $4,
@@ -606,6 +640,7 @@ export class PostgresRepository implements DatabaseRepository {
   }
 
   async deleteResearch(id: string): Promise<boolean> {
+    if (!isUuid(id)) return true;
     const res = await this.pool.query("DELETE FROM research_items WHERE id = $1", [id]);
     return (res.rowCount ?? 0) > 0;
   }
@@ -773,6 +808,7 @@ export class PostgresRepository implements DatabaseRepository {
       return {
         aiProvider: "gemini",
         aiModel: "gemini-1.5-flash",
+        aiAssistantName: "Asisten AI — Wijaya Dary Dimas",
         contactEmail: "",
         enableAiAssistant: true,
         enableComments: true,
@@ -783,6 +819,7 @@ export class PostgresRepository implements DatabaseRepository {
     return {
       aiProvider: r.ai_provider,
       aiModel: r.ai_model,
+      aiAssistantName: r.ai_assistant_name || "Asisten AI — Wijaya Dary Dimas",
       contactEmail: r.contact_email || "",
       enableAiAssistant: Boolean(r.enable_ai_assistant),
       enableComments: Boolean(r.enable_comments),
@@ -795,11 +832,12 @@ export class PostgresRepository implements DatabaseRepository {
     const updated = { ...current, ...data };
 
     const query = `
-      INSERT INTO site_settings (id, ai_provider, ai_model, contact_email, enable_ai_assistant, enable_comments, notify_on_comment, updated_at)
-      VALUES ('primary', $1, $2, $3, $4, $5, $6, NOW())
+      INSERT INTO site_settings (id, ai_provider, ai_model, ai_assistant_name, contact_email, enable_ai_assistant, enable_comments, notify_on_comment, updated_at)
+      VALUES ('primary', $1, $2, $3, $4, $5, $6, $7, NOW())
       ON CONFLICT (id) DO UPDATE SET
         ai_provider = EXCLUDED.ai_provider,
         ai_model = EXCLUDED.ai_model,
+        ai_assistant_name = EXCLUDED.ai_assistant_name,
         contact_email = EXCLUDED.contact_email,
         enable_ai_assistant = EXCLUDED.enable_ai_assistant,
         enable_comments = EXCLUDED.enable_comments,
@@ -810,6 +848,7 @@ export class PostgresRepository implements DatabaseRepository {
     const res = await this.pool.query(query, [
       updated.aiProvider,
       updated.aiModel,
+      updated.aiAssistantName || "Asisten AI — Wijaya Dary Dimas",
       updated.contactEmail,
       updated.enableAiAssistant,
       updated.enableComments,
@@ -819,6 +858,7 @@ export class PostgresRepository implements DatabaseRepository {
     return {
       aiProvider: r.ai_provider,
       aiModel: r.ai_model,
+      aiAssistantName: r.ai_assistant_name || "Asisten AI — Wijaya Dary Dimas",
       contactEmail: r.contact_email || "",
       enableAiAssistant: Boolean(r.enable_ai_assistant),
       enableComments: Boolean(r.enable_comments),

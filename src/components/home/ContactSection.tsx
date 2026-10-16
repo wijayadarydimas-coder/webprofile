@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Send, CheckCircle2, AlertCircle, Copy, Check, Mail } from "lucide-react";
-import { GithubIcon, LinkedinIcon } from "@/components/ui/Icons";
+import { GithubIcon, LinkedinIcon, InstagramIcon, TikTokIcon } from "@/components/ui/Icons";
 import type { SiteProfile } from "@/types";
 
 interface ContactSectionProps {
@@ -131,7 +131,51 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                     <div className="flex flex-col">
                       <span className="text-xs text-[#71717A]">LinkedIn</span>
                       <span className="text-xs sm:text-sm font-medium text-[#F3F4F6]">
-                        Profil Profesional
+                        {profile.fullName || "LinkedIn Profile"}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-xs text-[#8B9CFF] font-medium">Kunjungi &rarr;</span>
+                </a>
+              )}
+
+              {profile.instagramUrl && (
+                <a
+                  href={profile.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-4 rounded-xl bg-[#15171C] border border-[#2B2D34] hover:border-[#E1306C]/40 transition-all flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-[#1B1D23] text-[#E1306C]">
+                      <InstagramIcon className="w-4 h-4" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-xs text-[#71717A]">Instagram</span>
+                      <span className="text-xs sm:text-sm font-medium text-[#F3F4F6]">
+                        @{profile.instagramUrl.split("/").filter(Boolean).pop()?.replace(/^@/, "") || "Instagram"}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-xs text-[#8B9CFF] font-medium">Kunjungi &rarr;</span>
+                </a>
+              )}
+
+              {profile.tiktokUrl && (
+                <a
+                  href={profile.tiktokUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-4 rounded-xl bg-[#15171C] border border-[#2B2D34] hover:border-[#25F4EE]/40 transition-all flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-[#1B1D23] text-[#25F4EE]">
+                      <TikTokIcon className="w-4 h-4" />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-xs text-[#71717A]">TikTok</span>
+                      <span className="text-xs sm:text-sm font-medium text-[#F3F4F6]">
+                        @{profile.tiktokUrl.split("/").filter(Boolean).pop()?.replace(/^@/, "") || "TikTok"}
                       </span>
                     </div>
                   </div>
