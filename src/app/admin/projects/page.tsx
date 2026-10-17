@@ -106,9 +106,49 @@ export default function AdminProjectsPage() {
         .map((s) => s.trim())
         .filter(Boolean);
 
+      const rawSlug =
+        editingProj.slug?.trim() ||
+        editingProj.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, "");
+
+      const cleanSlug =
+        rawSlug
+          .toLowerCase()
+          .replace(/[^a-z0-9-]+/g, "-")
+          .replace(/^-+|-+$/g, "") || `proj-${Date.now()}`;
+
+      const cleanRepoUrl = editingProj.repoUrl?.trim()
+        ? /^https?:\/\//i.test(editingProj.repoUrl.trim()) || editingProj.repoUrl.trim().startsWith("/")
+          ? editingProj.repoUrl.trim()
+          : `https://${editingProj.repoUrl.trim()}`
+        : "";
+
+      const cleanLiveUrl = editingProj.liveUrl?.trim()
+        ? /^https?:\/\//i.test(editingProj.liveUrl.trim()) || editingProj.liveUrl.trim().startsWith("/")
+          ? editingProj.liveUrl.trim()
+          : `https://${editingProj.liveUrl.trim()}`
+        : "";
+
       const payload = {
         ...editingProj,
-        technologies: parsedTechs.length > 0 ? parsedTechs : [techInput.trim() || "Technology"],
+        id: editingProj.id?.trim() ? editingProj.id.trim() : undefined,
+        slug: cleanSlug,
+        title: editingProj.title.trim(),
+        shortDescription: editingProj.shortDescription?.trim() || editingProj.title.trim(),
+        fullDescription:
+          editingProj.fullDescription?.trim() ||
+          editingProj.shortDescription?.trim() ||
+          editingProj.title.trim(),
+        problem: editingProj.problem?.trim() || "",
+        solution: editingProj.solution?.trim() || "",
+        results: editingProj.results?.trim() || "",
+        category: editingProj.category?.trim() || "Computer Vision",
+        coverImage: editingProj.coverImage?.trim() || "/images/project-yolo.svg",
+        repoUrl: cleanRepoUrl,
+        liveUrl: cleanLiveUrl,
+        technologies: parsedTechs.length > 0 ? parsedTechs : [techInput.trim() || "General"],
         externalLinks: cleanExternalLinks,
       };
 
@@ -309,9 +349,26 @@ export default function AdminProjectsPage() {
                     value={editingProj.title}
                     onChange={(e) => {
                       const title = e.target.value;
-                      const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-                      setEditingProj({ ...editingProj, title, slug: editingProj.slug || slug });
+                      const autoSlug = title
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]+/g, "-")
+                        .replace(/(^-|-$)/g, "");
+                      setEditingProj((prev) => {
+                        if (!prev) return null;
+                        const isNew = !prev.id;
+                        const prevAutoSlug = prev.title
+                          .toLowerCase()
+                          .replace(/[^a-z0-9]+/g, "-")
+                          .replace(/(^-|-$)/g, "");
+                        const shouldUpdateSlug = isNew || !prev.slug || prev.slug === prevAutoSlug;
+                        return {
+                          ...prev,
+                          title,
+                          slug: shouldUpdateSlug ? autoSlug : prev.slug,
+                        };
+                      });
                     }}
+                    placeholder="Contoh: Real-Time PPE Detection with YOLOv11"
                     className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
                   />
                 </div>
@@ -322,7 +379,11 @@ export default function AdminProjectsPage() {
                     type="text"
                     required
                     value={editingProj.slug}
-                    onChange={(e) => setEditingProj({ ...editingProj, slug: e.target.value })}
+                    onChange={(e) => {
+                      const val = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "");
+                      setEditingProj({ ...editingProj, slug: val });
+                    }}
+                    placeholder="contoh: real-time-ppe-detection"
                     className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6] font-mono"
                   />
                 </div>
