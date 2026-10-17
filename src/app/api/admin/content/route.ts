@@ -124,7 +124,12 @@ export async function POST(req: Request) {
       }
       const parsed = projectSchema.safeParse(data);
       if (!parsed.success) {
-        return NextResponse.json({ error: "Data proyek tidak valid.", details: parsed.error.format() }, { status: 400 });
+        const issues = parsed.error.issues.map((i) => `${i.path.join(".") || "field"}: ${i.message}`).join(", ");
+        console.error("⚠️ [Admin Project Error] Validasi gagal:", issues, "Payload:", data);
+        return NextResponse.json(
+          { error: `Data proyek tidak valid: ${issues}`, details: parsed.error.format() },
+          { status: 400 }
+        );
       }
       const saved = await db.saveProject(parsed.data);
       revalidatePath("/", "layout");
