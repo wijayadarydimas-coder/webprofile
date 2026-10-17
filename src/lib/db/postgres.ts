@@ -466,6 +466,19 @@ export class PostgresRepository implements DatabaseRepository {
       };
     }
 
+    let finalSlug =
+      (proj.slug?.trim() || proj.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "")) ||
+      `proj-${Date.now()}`;
+
+    try {
+      const existing = await this.pool.query("SELECT id FROM projects WHERE slug = $1", [finalSlug]);
+      if (existing.rows.length > 0) {
+        finalSlug = `${finalSlug}-${Math.random().toString(36).substring(2, 6)}`;
+      }
+    } catch {
+      // ignore
+    }
+
     const query = `
       INSERT INTO projects (
         slug, title, short_description, full_description, problem, solution,
@@ -475,7 +488,7 @@ export class PostgresRepository implements DatabaseRepository {
       RETURNING *;
     `;
     const res = await this.pool.query(query, [
-      proj.slug,
+      finalSlug,
       proj.title,
       proj.shortDescription,
       proj.fullDescription,
