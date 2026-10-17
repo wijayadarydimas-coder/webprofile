@@ -44,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className="dark">
+    <html lang="id" className="dark" data-scroll-behavior="smooth">
       <body className="antialiased bg-[#0B0D12] text-[#F1F2F5] min-h-screen">
         {children}
       </body>
