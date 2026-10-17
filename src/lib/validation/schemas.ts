@@ -1,15 +1,19 @@
 import { z } from "zod";
 
-// Safe URL validator
-const optionalUrl = z
+// Safe URL validator: auto-normalizes URLs (adds https:// if missing), accepts empty or slash
+export const optionalUrl = z
   .string()
   .trim()
-  .refine(
-    (val) => val === "" || /^https?:\/\//i.test(val) || val.startsWith("/"),
-    { message: "URL harus diawali dengan http://, https://, atau /" }
-  )
   .optional()
-  .or(z.literal(""));
+  .nullable()
+  .transform((val) => {
+    if (!val) return "";
+    const trimmed = val.trim();
+    if (!trimmed) return "";
+    if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("/")) return trimmed;
+    return `https://${trimmed}`;
+  })
+  .default("");
 
 export const authLoginSchema = z.object({
   email: z.string().trim().email("Format email tidak valid"),
@@ -52,13 +56,17 @@ export const externalLinkSchema = z.object({
   url: z
     .string()
     .trim()
+    .optional()
+    .nullable()
     .transform((val) => {
       if (!val) return "";
-      if (/^https?:\/\//i.test(val) || val.startsWith("/")) return val;
-      return `https://${val}`;
+      const trimmed = val.trim();
+      if (!trimmed) return "";
+      if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("/")) return trimmed;
+      return `https://${trimmed}`;
     })
     .default(""),
-  label: z.string().trim().optional(),
+  label: z.string().trim().optional().nullable().transform((v) => v || undefined),
 });
 
 export const profileUpdateSchema = z.object({
@@ -86,22 +94,44 @@ export const profileUpdateSchema = z.object({
 });
 
 export const projectSchema = z.object({
-  id: z.string().optional(),
-  title: z.string().trim().min(3).max(150),
+  id: z.string().optional().nullable().transform((v) => v || undefined),
+  title: z.string().trim().min(1, "Judul proyek wajib diisi").max(150),
   slug: z
     .string()
     .trim()
-    .min(3)
-    .max(150)
-    .regex(/^[a-z0-9-]+$/, "Slug hanya boleh berisi huruf kecil, angka, dan strip (-)"),
-  shortDescription: z.string().trim().min(10).max(300),
-  fullDescription: z.string().trim().min(20).max(8000),
-  problem: z.string().trim().max(2000).optional().default(""),
-  solution: z.string().trim().max(2000).optional().default(""),
-  results: z.string().trim().max(2000).optional().default(""),
+    .optional()
+    .nullable()
+    .transform((val) => {
+      if (!val) return "";
+      return val
+        .toLowerCase()
+        .replace(/[^a-z0-9-]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    })
+    .default(""),
+  shortDescription: z.string().trim().min(1, "Deskripsi singkat wajib diisi").max(500),
+  fullDescription: z.string().trim().min(1, "Deskripsi lengkap wajib diisi").max(10000),
+  problem: z.string().trim().max(5000).optional().nullable().transform((v) => v || ""),
+  solution: z.string().trim().max(5000).optional().nullable().transform((v) => v || ""),
+  results: z.string().trim().max(5000).optional().nullable().transform((v) => v || ""),
   category: z.string().trim().min(1, "Kategori wajib diisi").max(100),
-  technologies: z.array(z.string().trim()).min(1, "Minimal satu teknologi"),
-  coverImage: z.string().trim().min(1, "Cover image wajib diisi"),
+  technologies: z
+    .union([z.array(z.string().trim()), z.string()])
+    .transform((val) => {
+      if (Array.isArray(val)) {
+        const filtered = val.map((s) => s.trim()).filter(Boolean);
+        return filtered.length > 0 ? filtered : ["General"];
+      }
+      const splitted = val.split(",").map((s) => s.trim()).filter(Boolean);
+      return splitted.length > 0 ? splitted : ["General"];
+    })
+    .default(["General"]),
+  coverImage: z
+    .string()
+    .trim()
+    .optional()
+    .nullable()
+    .transform((v) => v || "/images/project-yolo.svg"),
   repoUrl: optionalUrl,
   liveUrl: optionalUrl,
   externalLinks: z.array(externalLinkSchema).optional().default([]),
