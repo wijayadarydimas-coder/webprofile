@@ -3,8 +3,25 @@ import { cookies } from "next/headers";
 import type { UserRole } from "@/types";
 
 const COOKIE_NAME = "wdd_session_token";
-const DEFAULT_SECRET = "wdd-secret-key-change-in-production-2026-secure-token";
-const SECRET_KEY = new TextEncoder().encode(process.env.AUTH_SECRET || DEFAULT_SECRET);
+const MIN_SECRET_LENGTH = 32;
+
+let cachedSecretKey: Uint8Array | null = null;
+
+/**
+ * Returns the JWT signing key. Fails closed (throws) if AUTH_SECRET is
+ * missing or too short — there is intentionally no hardcoded fallback.
+ */
+function getSecretKey(): Uint8Array {
+  if (cachedSecretKey) return cachedSecretKey;
+  const secret = process.env.AUTH_SECRET;
+  if (!secret || secret.length < MIN_SECRET_LENGTH) {
+    throw new Error(
+      `AUTH_SECRET is not configured or shorter than ${MIN_SECRET_LENGTH} characters.`
+    );
+  }
+  cachedSecretKey = new TextEncoder().encode(secret);
+  return cachedSecretKey;
+}
 
 export interface SessionPayload {
   id: string;
@@ -22,7 +39,7 @@ export async function createSessionToken(payload: SessionPayload): Promise<strin
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("7d")
-    .sign(SECRET_KEY);
+    .sign(getSecretKey());
 }
 
 /**
@@ -30,7 +47,7 @@ export async function createSessionToken(payload: SessionPayload): Promise<strin
  */
 export async function verifySessionToken(token: string): Promise<SessionPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, SECRET_KEY);
+    const { payload } = await jwtVerify(token, getSecretKey(), { algorithms: ["HS256"] });
     return payload as unknown as SessionPayload;
   } catch {
     return null;

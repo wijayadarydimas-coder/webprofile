@@ -1,10 +1,17 @@
 import { NextResponse } from "next/server";
+import { createHash, timingSafeEqual } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { authLoginSchema } from "@/lib/validation/schemas";
 import { checkRateLimit, getClientIp } from "@/lib/security/ratelimit";
 import { createSessionToken, setSessionCookie } from "@/lib/auth/session";
 import { db } from "@/lib/db";
 import { LocalStoreRepository } from "@/lib/db/store";
+
+function safeEqual(a: string, b: string): boolean {
+  const ha = createHash("sha256").update(a).digest();
+  const hb = createHash("sha256").update(b).digest();
+  return timingSafeEqual(ha, hb);
+}
 
 export async function POST(req: Request) {
   try {
@@ -33,12 +40,17 @@ export async function POST(req: Request) {
     // Check if user already exists in database
     let dbUser = await db.findUserByEmail(email);
 
-    // 1. Check environment admin credentials (quick setup & override)
-    const envAdminEmail = process.env.ADMIN_EMAIL || "admin@wijayadarydimas.dev";
-    const envAdminPassword = process.env.ADMIN_PASSWORD || "AdminWDD2026!";
+    // 1. Check environment admin credentials (quick setup & override).
+    // No hardcoded defaults: this path is disabled unless both env vars are set.
+    const envAdminEmail = process.env.ADMIN_EMAIL;
+    const envAdminPassword = process.env.ADMIN_PASSWORD;
 
-    if (email.toLowerCase() === envAdminEmail.toLowerCase()) {
-      const isPasswordMatch = password === envAdminPassword;
+    if (
+      envAdminEmail &&
+      envAdminPassword &&
+      email.toLowerCase() === envAdminEmail.toLowerCase()
+    ) {
+      const isPasswordMatch = safeEqual(password, envAdminPassword);
       if (isPasswordMatch) {
         if (!dbUser) {
           try {

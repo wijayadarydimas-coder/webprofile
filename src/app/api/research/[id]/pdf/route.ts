@@ -49,9 +49,16 @@ export async function GET(
     // 3. Local file path
     if (pdfUrl.startsWith("/")) {
       const cleanPath = pdfUrl.replace(/^\/+/, "");
-      const filePath = path.join(process.cwd(), "public", cleanPath);
+      const publicDir = path.resolve(process.cwd(), "public");
+      const filePath = path.resolve(publicDir, cleanPath);
+      const isAllowed =
+        !cleanPath.includes("..") &&
+        !cleanPath.includes("\0") &&
+        ["uploads", "files"].some((dir) =>
+          filePath.startsWith(path.join(publicDir, dir) + path.sep)
+        );
 
-      if (fs.existsSync(filePath)) {
+      if (isAllowed && fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
         const fileBuffer = fs.readFileSync(filePath);
         return new NextResponse(fileBuffer, {
           status: 200,
@@ -63,6 +70,11 @@ export async function GET(
           },
         });
       }
+
+      return new NextResponse("Naskah PDF penelitian tidak ditemukan.", {
+        status: 404,
+        headers: { "Content-Type": "text/plain; charset=utf-8" },
+      });
     }
 
     return NextResponse.redirect(pdfUrl, 307);
