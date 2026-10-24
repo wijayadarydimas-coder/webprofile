@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Send, CheckCircle2, AlertCircle, Copy, Check, Mail } from "lucide-react";
+import { Send, CheckCircle2, AlertCircle, Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon, InstagramIcon, TikTokIcon } from "@/components/ui/Icons";
 import type { SiteProfile } from "@/types";
 
@@ -16,7 +16,6 @@ export default function ContactSection({ profile }: ContactSectionProps) {
     type: null,
     message: "",
   });
-  const [copied, setCopied] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,13 +47,6 @@ export default function ContactSection({ profile }: ContactSectionProps) {
     }
   };
 
-  const handleCopyEmail = () => {
-    if (!profile.email) return;
-    navigator.clipboard.writeText(profile.email);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
     <section id="contact" className="py-24 md:py-32 border-t border-[#1C202B] relative z-10">
       <div className="container-custom">
@@ -75,9 +67,12 @@ export default function ContactSection({ profile }: ContactSectionProps) {
 
             <div className="flex flex-col gap-3 pt-2">
               {profile.email ? (
-                <div className="p-4 rounded-xl bg-[#171A24] border border-[#292D39] flex items-center justify-between gap-3">
+                <a
+                  href={`mailto:${profile.email}`}
+                  className="p-4 rounded-xl bg-[#171A24] border border-[#292D39] hover:border-[#7790FF]/40 transition-all flex items-center justify-between group"
+                >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="p-2 rounded-lg bg-[#1F2330] text-[#7790FF]">
+                    <div className="p-2 rounded-lg bg-[#1F2330] text-[#7790FF] group-hover:scale-105 transition-transform">
                       <Mail className="w-4 h-4" />
                     </div>
                     <div className="flex flex-col min-w-0">
@@ -87,14 +82,10 @@ export default function ContactSection({ profile }: ContactSectionProps) {
                       </span>
                     </div>
                   </div>
-                  <button
-                    onClick={handleCopyEmail}
-                    className="p-2 rounded-lg hover:bg-[#1F2330] text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors cursor-pointer"
-                    title="Salin alamat email"
-                  >
-                    {copied ? <Check className="w-4 h-4 text-[#22C55E]" /> : <Copy className="w-4 h-4" />}
-                  </button>
-                </div>
+                  <span className="text-xs text-[#96A9FF] font-medium shrink-0 group-hover:translate-x-0.5 transition-transform">
+                    Kirim Email &rarr;
+                  </span>
+                </a>
               ) : null}
 
               <a
