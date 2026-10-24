@@ -4,6 +4,7 @@ import crypto from "node:crypto";
 import { createClient } from "@supabase/supabase-js";
 import { db } from "../db";
 import type { MediaItem } from "@/types";
+import { isSafeSvg, matchesMagicBytes } from "../security/sanitize";
 
 const ALLOWED_MIME_TYPES = new Set([
   "image/jpeg",
@@ -35,12 +36,13 @@ export async function saveUploadedFile(file: File, customAlt = ""): Promise<Uplo
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  // Additional sanity check for SVG: strip dangerous script tags
+  // SVG is active content: refuse anything with scripts, event handlers, or external refs.
   if (file.type === "image/svg+xml") {
-    const text = buffer.toString("utf8");
-    if (/<script[\s\S]*?>/i.test(text) || /javascript:/i.test(text)) {
-      throw new Error("Berkas SVG terdeteksi memiliki script yang tidak diizinkan.");
+    if (!isSafeSvg(buffer.toString("utf8"))) {
+      throw new Error("Berkas SVG terdeteksi memiliki konten aktif (script/event handler/referensi eksternal) yang tidak diizinkan.");
     }
+  } else if (!matchesMagicBytes(buffer, file.type)) {
+    throw new Error("Isi berkas tidak sesuai dengan format yang dideklarasikan.");
   }
 
   // Generate safe unique filename
