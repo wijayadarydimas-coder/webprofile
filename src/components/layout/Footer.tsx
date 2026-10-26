@@ -55,7 +55,7 @@ export default function Footer() {
               Projects
             </Link>
             <Link href="/research" className="text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors">
-              Research &amp; Skripsi
+              Research &amp; Thesis
             </Link>
             <Link href="/community" className="text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors">
               Community
@@ -130,10 +130,10 @@ export default function Footer() {
             <button
               onClick={scrollToTop}
               className="flex items-center gap-1 text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors cursor-pointer ml-2"
-              title="Kembali ke atas"
-              aria-label="Kembali ke atas halaman"
+              title="Back to top"
+              aria-label="Back to top of page"
             >
-              <span>Atas</span>
+              <span>Top</span>
               <ArrowUp className="w-3.5 h-3.5" />
             </button>
           </div>

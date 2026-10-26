@@ -20,31 +20,31 @@ import type { SiteSettings } from "@/types";
 const PERSONA_PRESETS = [
   {
     id: "friendly",
-    label: "🌟 Ramah & Gaul",
-    desc: "Hangat, santai, empatik, suportif, dan senang diajak ngobrol santai maupun curhat.",
+    label: "🌟 Friendly & Casual",
+    desc: "Warm, relaxed, empathetic, supportive, and loves friendly conversations.",
     value:
-      "Anda ramah, hangat, santai, empatik, bijaksana, dan santun. Anda TIDAK HANYA menjawab pertanyaan kaku seputar portfolio. Anda BISA diajak mengobrol santai, berdiskusi tentang berbagai topik (teknologi, coding, karier, kehidupan, perkuliahan), dan Anda siap mendengarkan ketika pengguna ingin bercerita atau curhat dengan memberikan respons yang menenangkan, suportif, dan penuh empati.",
+      "You are friendly, warm, casual, empathetic, wise, and polite. You do NOT only answer rigid portfolio questions. You CAN engage in friendly chats, discuss various topics (technology, coding, career, life, college), and you are ready to listen when users want to share thoughts by providing soothing, supportive, and empathetic responses.",
   },
   {
     id: "academic",
-    label: "🎓 Akademis & Peneliti",
-    desc: "Terstruktur, ilmiah, analitis, mendalam seputar riset skripsi YOLOv11 & Computer Vision.",
+    label: "🎓 Academic & Researcher",
+    desc: "Structured, scientific, analytical, and in-depth regarding YOLOv11 & Computer Vision research.",
     value:
-      "Anda bertindak sebagai asisten akademis yang cerdas, berbasis fakta ilmiah, terstruktur, dan mendalam. Fokus utama Anda adalah menjelaskan metodologi penelitian, implementasi teknis YOLOv11 modifikasi untuk APD, serta keilmuan Computer Vision dan Software Engineering secara jelas dan profesional.",
+      "You act as an intelligent, science-based, structured, and deep academic assistant. Your main focus is explaining research methodologies, technical implementations of modified YOLOv11 for PPE, and Computer Vision & Software Engineering concepts clearly and professionally.",
   },
   {
     id: "cheerful",
-    label: "😄 Ceria & Jenaka",
-    desc: "Penuh energi positif, sedikit humoris, bersahabat, dan menyenangkan.",
+    label: "😄 Cheerful & Witty",
+    desc: "Full of positive energy, lightly humorous, friendly, and engaging.",
     value:
-      "Anda ceria, sedikit jenaka, penuh senyum dan energi positif! Anda berkomunikasi dengan gaya yang santai, bersahabat, dan menyenangkan, namun tetap sopan serta menguasai seluruh informasi karya dan penelitian pemilik website.",
+      "You are cheerful, lightly witty, full of smiles and positive energy! You communicate in a relaxed, friendly, and delightful tone, while staying polite and knowledgeable about all the website owner's projects and research.",
   },
   {
     id: "supportive",
-    label: "🤝 Pendengar Setia",
-    desc: "Sangat sabar, suportif, menenangkan, dan pendengar yang baik untuk diskusi apa pun.",
+    label: "🤝 Attentive Listener",
+    desc: "Extremely patient, supportive, calming, and a great listener for any discussion.",
     value:
-      "Anda adalah asisten yang sangat sabar, penuh perhatian, menenangkan hati, dan suportif. Anda selalu memberikan kata-kata penyemangat positif bagi siapa pun yang lelah atau bingung, sambil tetap sigap menjawab pertanyaan seputar karya pemilik website.",
+      "You are an extremely patient, attentive, calming, and supportive assistant. You always provide words of encouragement to anyone who feels tired or confused, while remaining ready to answer questions about the portfolio owner's work.",
   },
 ];
 
@@ -81,7 +81,7 @@ export default function AdminSettingsPage() {
         }
       })
       .catch((err) => {
-        console.error("Gagal memuat pengaturan:", err);
+        console.error("Failed to load settings:", err);
       });
   }, []);
 
@@ -102,12 +102,12 @@ export default function AdminSettingsPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Gagal menyimpan konfigurasi.");
+      if (!res.ok) throw new Error(data.error || "Failed to save configuration.");
 
       setSettings(data.data);
-      setStatus({ type: "success", message: "Pengaturan sistem & AI Assistant berhasil disimpan dan diterapkan langsung ke API!" });
+      setStatus({ type: "success", message: "System & AI Assistant settings saved and applied to API successfully!" });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
+      const msg = err instanceof Error ? err.message : "An error occurred";
       setStatus({ type: "error", message: msg });
     } finally {
       setSaving(false);
@@ -117,17 +117,17 @@ export default function AdminSettingsPage() {
   const previewName = settings.aiAssistantName?.trim() || "Paijo";
   const previewGreeting =
     settings.aiWelcomeMessage?.trim() ||
-    `Halo! Salam kenal ya. Saya ${previewName}, asisten virtual untuk website personal Wijaya Dary Dimas. Ada yang bisa saya bantu atau ingin kamu obrolkan hari ini? 😊`;
+    `Hello! Nice to meet you. I am ${previewName}, virtual assistant for Wijaya Dary Dimas's personal portfolio. How can I help you or what would you like to talk about today? 😊`;
 
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1 pb-4 border-b border-[#202228]">
         <div className="flex items-center gap-2">
           <Settings className="w-5 h-5 text-[#6D8DFF]" />
-          <h1 className="text-xl font-bold text-[#F3F4F6]">Konfigurasi Sistem &amp; AI Assistant</h1>
+          <h1 className="text-xl font-bold text-[#F3F4F6]">System &amp; AI Assistant Settings</h1>
         </div>
         <p className="text-xs text-[#A1A1AA]">
-          Atur nama identitas AI, gaya bicara (persona), pesan sapaan awal, model engine, dan integrasi API chat publik.
+          Configure AI identity, persona, greeting message, model engine, and public chat integrations.
         </p>
       </div>
 
@@ -152,9 +152,9 @@ export default function AdminSettingsPage() {
       <div className="p-4 rounded-xl bg-[#6D8DFF]/10 border border-[#6D8DFF]/25 flex items-start gap-3">
         <Key className="w-5 h-5 text-[#6D8DFF] shrink-0 mt-0.5" />
         <div className="flex flex-col gap-1 text-xs">
-          <span className="font-semibold text-[#F3F4F6]">Integrasi Langsung ke API &amp; Keamanan API Key</span>
+          <span className="font-semibold text-[#F3F4F6]">Direct API Integration &amp; API Key Security</span>
           <p className="text-[#A1A1AA] leading-relaxed">
-            Nama identitas dan pengaturan persona AI yang Anda simpan di halaman ini akan <strong>langsung diumpankan ke API chat (Google Gemini)</strong> sebagai instruksi sistem resmi. Kunci rahasia <code>AI_API_KEY</code> tetap tersimpan aman di server environment (<code>.env.local</code>) dan terlindungi dari kebocoran publik.
+            AI identity and persona settings saved on this page are <strong>directly injected into the chat API (Google Gemini)</strong> as official system instructions. The secret <code>AI_API_KEY</code> remains securely stored in server environment variables (<code>.env.local</code>) and protected from public exposure.
           </p>
         </div>
       </div>
@@ -165,7 +165,7 @@ export default function AdminSettingsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-[#8B9CFF]">
               <Bot className="w-4 h-4" />
-              <h2 className="text-sm font-semibold text-[#F3F4F6]">Identitas &amp; Karakter AI Assistant</h2>
+              <h2 className="text-sm font-semibold text-[#F3F4F6]">AI Assistant Identity &amp; Persona</h2>
             </div>
             <span className="px-2 py-0.5 rounded-full bg-[#8B9CFF]/10 border border-[#8B9CFF]/20 text-[11px] text-[#8B9CFF]">
               Live API Prompt
@@ -176,17 +176,17 @@ export default function AdminSettingsPage() {
             {/* Nama AI */}
             <div className="flex flex-col gap-1.5 md:col-span-2">
               <label className="text-[#F3F4F6] font-medium flex items-center gap-1.5">
-                <span>Nama Resmi Asisten AI</span>
+                <span>Official AI Assistant Name</span>
                 <span className="text-[#EF4444]">*</span>
                 <span className="text-[10px] text-[#71717A] font-normal">
-                  (Nama ini diakui AI saat pengunjung bertanya &quot;namamu siapa?&quot; atau &quot;namamu {previewName} bukan?&quot;)
+                  (Recognized by AI when visitors ask &quot;what is your name?&quot; or &quot;are you {previewName}?&quot;)
                 </span>
               </label>
               <input
                 type="text"
                 value={settings.aiAssistantName || ""}
                 onChange={(e) => setSettings({ ...settings, aiAssistantName: e.target.value })}
-                placeholder="Misal: Paijo"
+                placeholder="e.g. Paijo"
                 required
                 className="p-3 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6] focus:border-[#6D8DFF] outline-none text-sm font-semibold"
               />
@@ -197,30 +197,30 @@ export default function AdminSettingsPage() {
               <label className="text-[#F3F4F6] font-medium flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
                   <MessageSquare className="w-3.5 h-3.5 text-[#6D8DFF]" />
-                  <span>Pesan Sapaan Awal Chat (Greeting Message)</span>
+                  <span>Initial Chat Greeting Message</span>
                 </span>
                 <button
                   type="button"
                   onClick={() =>
                     setSettings({
                       ...settings,
-                      aiWelcomeMessage: `Halo! Salam kenal ya. Saya ${previewName}, asisten virtual untuk website personal Wijaya Dary Dimas. Ada yang bisa saya bantu atau ingin kamu obrolkan hari ini? 😊`,
+                      aiWelcomeMessage: `Hello! Nice to meet you. I am ${previewName}, virtual assistant for Wijaya Dary Dimas's personal portfolio. How can I help you or what would you like to talk about today? 😊`,
                     })
                   }
                   className="text-[11px] text-[#6D8DFF] hover:underline cursor-pointer"
                 >
-                  Gunakan Template Default
+                  Use Default Template
                 </button>
               </label>
               <textarea
                 rows={2}
                 value={settings.aiWelcomeMessage || ""}
                 onChange={(e) => setSettings({ ...settings, aiWelcomeMessage: e.target.value })}
-                placeholder={`Halo! Salam kenal ya. Saya ${previewName}, asisten virtual untuk website personal Wijaya Dary Dimas. Ada yang bisa saya bantu atau ingin kamu obrolkan hari ini? 😊`}
+                placeholder={`Hello! Nice to meet you. I am ${previewName}, virtual assistant for Wijaya Dary Dimas's personal portfolio. How can I help you or what would you like to talk about today? 😊`}
                 className="p-3 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6] focus:border-[#6D8DFF] outline-none leading-relaxed"
               />
               <p className="text-[11px] text-[#71717A]">
-                Pesan pertama yang langsung ditampilkan di balon chat saat pengunjung membuka widget AI.
+                The first message displayed in the chat bubble when a visitor opens the AI widget.
               </p>
             </div>
 
@@ -228,7 +228,7 @@ export default function AdminSettingsPage() {
             <div className="flex flex-col gap-2 md:col-span-2 pt-1">
               <label className="text-[#F3F4F6] font-medium flex items-center gap-1.5">
                 <Sliders className="w-3.5 h-3.5 text-[#22C55E]" />
-                <span>Pilihan Cepat Gaya Bicara &amp; Sikap (Persona)</span>
+                <span>Quick Persona Presets</span>
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
                 {PERSONA_PRESETS.map((preset) => {
@@ -255,13 +255,13 @@ export default function AdminSettingsPage() {
             {/* Persona Textarea Detail */}
             <div className="flex flex-col gap-1.5 md:col-span-2">
               <label className="text-[#A1A1AA]">
-                Deskripsi Karakter &amp; Persona AI (Dapat Diedit Bebas):
+                AI Character &amp; Persona Description (Freely Editable):
               </label>
               <textarea
                 rows={3}
                 value={settings.aiPersona || ""}
                 onChange={(e) => setSettings({ ...settings, aiPersona: e.target.value })}
-                placeholder="Tuliskan gaya bicara kustom (misal: santai, gaul, suportif, atau formal)..."
+                placeholder="Describe custom persona style (e.g. casual, friendly, supportive, or formal)..."
                 className="p-3 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6] focus:border-[#6D8DFF] outline-none leading-relaxed font-mono text-xs"
               />
             </div>
@@ -270,14 +270,14 @@ export default function AdminSettingsPage() {
             <div className="flex flex-col gap-1.5 md:col-span-2">
               <label className="text-[#A1A1AA] flex items-center gap-1.5">
                 <HelpCircle className="w-3.5 h-3.5 text-[#F59E0B]" />
-                <span>Instruksi Tambahan Sistem (Custom System Prompt)</span>
-                <span className="text-[10px] text-[#71717A]">(Opsional)</span>
+                <span>Additional System Instructions (Custom System Prompt)</span>
+                <span className="text-[10px] text-[#71717A]">(Optional)</span>
               </label>
               <textarea
                 rows={2}
                 value={settings.aiSystemPrompt || ""}
                 onChange={(e) => setSettings({ ...settings, aiSystemPrompt: e.target.value })}
-                placeholder="Contoh: Selalu ingatkan pengunjung untuk membaca bab 4 penelitian YOLOv11 di menu Penelitian, gunakan panggilan 'Kakak', dll."
+                placeholder="e.g. Remind visitors to check chapter 4 of the YOLOv11 research in the Research section, etc."
                 className="p-3 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6] focus:border-[#6D8DFF] outline-none leading-relaxed"
               />
             </div>
@@ -287,7 +287,7 @@ export default function AdminSettingsPage() {
           <div className="mt-2 p-4 rounded-xl bg-[#0F1116] border border-[#262832] flex flex-col gap-3">
             <div className="flex items-center gap-2 text-xs font-semibold text-[#8B9CFF]">
               <Eye className="w-3.5 h-3.5" />
-              <span>Pratinjau Langsung Tampilan Widget Chat Pengunjung</span>
+              <span>Live Preview of Visitor Chat Widget</span>
             </div>
             <div className="rounded-xl border border-[#2A2E3B] bg-[#171A24] overflow-hidden max-w-lg shadow-lg">
               {/* Header preview */}
@@ -324,18 +324,18 @@ export default function AdminSettingsPage() {
         <div className="p-6 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-4">
           <div className="flex items-center gap-2 text-[#8B9CFF]">
             <Sparkles className="w-4 h-4" />
-            <h2 className="text-sm font-semibold text-[#F3F4F6]">Engine &amp; Penyedia AI</h2>
+            <h2 className="text-sm font-semibold text-[#F3F4F6]">AI Engine &amp; Provider</h2>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-[#A1A1AA]">Penyedia Layanan AI (Provider)</label>
+              <label className="text-[#A1A1AA]">AI Service Provider</label>
               <select
                 value={settings.aiProvider}
                 onChange={(e) => setSettings({ ...settings, aiProvider: e.target.value })}
                 className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
               >
-                <option value="gemini">Google Gemini (Disarankan)</option>
+                <option value="gemini">Google Gemini (Recommended)</option>
                 <option value="openai">OpenAI / Compatible Endpoint</option>
                 <option value="custom">Custom Server Endpoint</option>
               </select>
@@ -361,7 +361,7 @@ export default function AdminSettingsPage() {
                 onChange={(e) => setSettings({ ...settings, enableAiAssistant: e.target.checked })}
                 className="rounded bg-[#1B1D23] border-[#2B2D34]"
               />
-              <span className="text-[#F3F4F6]">Aktifkan Tombol &amp; Widget Asisten AI di Halaman Depan</span>
+              <span className="text-[#F3F4F6]">Enable AI Assistant Button &amp; Widget on Public Pages</span>
             </label>
           </div>
         </div>
@@ -370,7 +370,7 @@ export default function AdminSettingsPage() {
         <div className="p-6 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-4">
           <div className="flex items-center gap-2 text-[#22C55E]">
             <Shield className="w-4 h-4" />
-            <h2 className="text-sm font-semibold text-[#F3F4F6]">Pengaturan Komunitas &amp; Keamanan</h2>
+            <h2 className="text-sm font-semibold text-[#F3F4F6]">Community &amp; Security Settings</h2>
           </div>
 
           <div className="flex flex-col gap-2">
@@ -381,7 +381,7 @@ export default function AdminSettingsPage() {
                 onChange={(e) => setSettings({ ...settings, enableComments: e.target.checked })}
                 className="rounded bg-[#1B1D23] border-[#2B2D34]"
               />
-              <span className="text-[#F3F4F6]">Aktifkan Kolom Komentar &amp; Diskusi Publik</span>
+              <span className="text-[#F3F4F6]">Enable Public Comment Section &amp; Discussions</span>
             </label>
 
             <label className="flex items-center gap-2 cursor-pointer">
@@ -391,7 +391,7 @@ export default function AdminSettingsPage() {
                 onChange={(e) => setSettings({ ...settings, notifyOnComment: e.target.checked })}
                 className="rounded bg-[#1B1D23] border-[#2B2D34]"
               />
-              <span className="text-[#F3F4F6]">Simpan Log Notifikasi untuk Komentar Baru</span>
+              <span className="text-[#F3F4F6]">Save Notification Logs for New Comments</span>
             </label>
           </div>
         </div>
@@ -403,7 +403,7 @@ export default function AdminSettingsPage() {
             className="btn-primary py-2.5 px-6 font-semibold disabled:opacity-50 cursor-pointer flex items-center gap-2"
           >
             <Save className="w-4 h-4" />
-            <span>{saving ? "Menyimpan..." : "Simpan Pengaturan"}</span>
+            <span>{saving ? "Saving..." : "Save Settings"}</span>
           </button>
         </div>
       </form>

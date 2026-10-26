@@ -63,121 +63,121 @@ const WRITING_TEMPLATES: {
 }[] = [
   {
     id: "latar-belakang",
-    title: "Latar Belakang Masalah",
+    title: "Background & Problem Statement",
     type: "text",
-    description: "Konteks permasalahan, kondisi saat ini, kesenjangan, dan urgensi penelitian.",
-    template: `### 1. Konteks Permasalahan
-Perkembangan industri manufaktur dan konstruksi menuntut protokol Keselamatan dan Kesehatan Kerja (K3) yang ketat. Kepatuhan terhadap Alat Pelindung Diri (APD) merupakan garis pertahanan utama dalam mencegah cedera fatal di tempat kerja.
+    description: "Problem context, current conditions, research gaps, and urgency of the study.",
+    template: `### 1. Problem Context
+The rapid evolution of manufacturing and construction industries demands rigorous Occupational Health and Safety (OHS/HSE) compliance. Personal Protective Equipment (PPE) adherence serves as the frontline defense in mitigating workplace hazards and preventing injuries.
 
-### 2. Kondisi Saat Ini
-Metode pengawasan manual oleh petugas keselamatan sering kali menghadapi kendala keterbatasan rentang penglihatan, kelelahan, dan ketidakmampuan memantau area luas secara kontinu selama 24 jam.
+### 2. Current Industry Limitations
+Manual surveillance conducted by safety supervisors suffers from human visual fatigue, blind spots, and an inability to maintain 24/7 continuous monitoring across large-scale facilities.
 
-### 3. Kesenjangan yang Ingin Diteliti
-Implementasi deteksi objek berbasis computer vision standar sering mengalami degradasi akurasi saat mendeteksi APD berdimensi kecil (seperti sarung tangan dan sepatu kerja) pada variasi pencahayaan ekstrem dan jarak jauh.
+### 3. Identified Research Gap
+Standard computer vision object detection algorithms frequently experience degraded sensitivity and high false-negative rates when identifying small-dimension PPE items (such as gloves and safety shoes) under extreme lighting and high-angle surveillance cameras.
 
-### 4. Alasan Penelitian Dilakukan
-Penelitian ini mengembangkan arsitektur deteksi objek yang dioptimalkan secara komputasi dengan mekanisme intervensi alarm instan untuk meminimalkan risiko kecelakaan kerja secara otomatis.`,
+### 4. Proposed Solution
+This research introduces an optimized deep learning architecture integrated with automated audio-visual alarm triggering to enforce real-time PPE compliance and reduce workplace accident risks automatically.`,
   },
   {
     id: "tujuan",
-    title: "Tujuan Penelitian & Sasaran",
+    title: "Research Objectives & Key Results",
     type: "text",
-    description: "Tujuan utama dan sasaran terukur yang ingin dicapai melalui eksperimen.",
-    template: `### Sasaran Utama Penelitian
-1. Mengembangkan model modifikasi ekstraksi fitur multi-skala untuk meningkatkan sensitivitas deteksi APD berukuran kecil.
-2. Membangun dataset terstandarisasi untuk 4 kelas APD utama (helm, rompi, sarung tangan, sepatu keselamatan).
-3. Merancang pipeline inferensi real-time yang mampu beroperasi di atas 30 FPS pada perangkat edge computing.
-4. Mengintegrasikan subsistem alarm audio-visual yang terpicu otomatis saat terjadi pelanggaran zona bahaya.`,
+    description: "Primary goals, quantitative milestones, and expected experimental targets.",
+    template: `### Primary Research Objectives
+1. Develop an architectural enhancement for multi-scale feature extraction to boost detection sensitivity on small-scale PPE objects.
+2. Build a standardized annotation dataset covering 4 key industrial PPE classes (helmets, safety vests, gloves, and boots).
+3. Architect an end-to-end real-time inference pipeline operating above 30 FPS on edge-computing devices.
+4. Integrate an automated audio-visual alert subsystem triggered when safety violations occur in hazardous zones.`,
   },
   {
     id: "metodologi",
-    title: "Metodologi Penelitian",
+    title: "Methodology & Experimental Pipeline",
     type: "methodology",
-    description: "Pendekatan penelitian, alur eksperimen, tahapan validasi, dan batasan uji.",
-    template: `### 1. Pendekatan Penelitian
-Penelitian ini menerapkan metodologi eksperimental rekayasa perangkat lunak cerdas (*Applied Deep Learning Engineering*) dengan siklus iteratif pengumpulan data, pelatihan model, dan validasi lapangan.
+    description: "Engineering approach, experimental stages, validation procedures, and testing parameters.",
+    template: `### 1. Engineering Approach
+This study follows an Applied Deep Learning Engineering methodology featuring iterative cycles of dataset curation, architectural tuning, and physical validation.
 
-### 2. Tahapan Alur Eksperimen
-- **Tahap 1 — Akuisisi Data:** Perekaman video CCTV simulasi pabrik dan pengumpulan citra sekunder.
-- **Tahap 2 — Anotasi & Augmentasi:** Pelabelan format YOLO bounding box dengan augmentasi mosaik, penyesuaian kontras, dan rotasi.
-- **Tahap 3 — Modifikasi Arsitektur:** Integrasi modul perhatian dan penyesuaian head deteksi pada arsitektur YOLO.
-- **Tahap 4 — Pelatihan & Hyperparameter Tuning:** Training menggunakan optimizer AdamW, cosine annealing learning rate, dan mixed precision (FP16).
-- **Tahap 5 — Evaluasi Kuantitatif:** Pengukuran metrik presisi, recall, mAP@0.5, serta latency inferensi.
+### 2. Experimental Stages
+- **Stage 1 — Data Acquisition:** Synthetic and simulated factory CCTV recordings combined with field imagery.
+- **Stage 2 — Annotation & Augmentation:** Standardized bounding-box labeling with mosaic, contrast jittering, and rotational augmentations.
+- **Stage 3 — Architectural Adaptation:** Attention module insertion and multi-scale detection head re-engineering.
+- **Stage 4 — Training & Hyperparameter Tuning:** Mixed-precision FP16 training with AdamW optimizer and cosine annealing schedules.
+- **Stage 5 — Quantitative Evaluation:** Metrics benchmarks including Precision, Recall, mAP@0.5, and inference latency.
 
 > [!NOTE]
-> Seluruh eksperimen komputasi dijalankan menggunakan lingkungan CUDA dengan batch size terkontrol untuk menjaga konsistensi bobot gradien.`,
+> All computational experiments were executed in an isolated CUDA environment with deterministic batch sizes to maintain gradient consistency.`,
   },
   {
     id: "modifikasi-model",
-    title: "Modifikasi Arsitektur Model",
+    title: "Model Architecture Modifications",
     type: "architecture",
-    description: "Arsitektur awal, perombakan backbone/neck, alasan perubahan, dan evaluasi performa.",
-    template: `### 1. Arsitektur Awal (Baseline)
-Arsitektur baseline menggunakan varian standar YOLOv11 yang memiliki keunggulan kecepatan tinggi namun cenderung mengalami *false negative* pada objek dengan resolusi spasial rendah di bawah 32x32 piksel.
+    description: "Baseline architecture, backbone/neck modifications, technical rationale, and impact.",
+    template: `### 1. Baseline Architecture
+The baseline model utilizes standard YOLOv11, known for high inference throughput but prone to false negatives on low spatial resolution targets (< 32x32 pixels).
 
-### 2. Perubahan yang Dilakukan
-- **Modul Neck BiFPN:** Menggantikan modul concatenation standar dengan weighted bi-directional feature pyramid network untuk fusi fitur lintas-skala yang lebih efektif.
-- **P2 Small-Object Detection Head:** Menambahkan head deteksi resolusi tinggi khusus untuk menangkap objek berdimensi mikro seperti sarung tangan kerja pada jarak kamera medium.
-- **Attention Mechanism:** Menanamkan modul Efficient Multi-Head Self-Attention pada lapisan teratas backbone.
+### 2. Proposed Architectural Enhancements
+- **BiFPN Neck Module:** Replacing standard concatenation with weighted bi-directional feature pyramid networks for superior cross-scale feature fusion.
+- **P2 Small-Object Detection Head:** Integrating a high-resolution detection head specifically dedicated to detecting small objects such as work gloves at medium camera distances.
+- **Attention Mechanism:** Embedding an Efficient Multi-Head Self-Attention module within the uppermost backbone layers.
 
-### 3. Dampak yang Diharapkan
-Peningkatan deteksi APD kecil tanpa mengorbankan kecepatan inferensi real-time (target frame time < 35 ms).`,
+### 3. Expected Performance Impact
+Substantially improved small PPE recall without compromising real-time inference deadlines (target frame time < 35 ms).`,
   },
   {
     id: "dataset",
-    title: "Akuisisi Dataset & Batasan Pengujian",
+    title: "Dataset Acquisition & Evaluation Boundaries",
     type: "dataset",
-    description: "Karakteristik dataset, distribusi kelas, rasio split, dan skenario pengujian.",
-    template: `### Karakteristik Dataset
-Dataset penelitian terdiri dari kumpulan citra lingkungan kerja industri dengan variasi kondisi pencahayaan (siang, mendung, malam/lampu neon) dan sudut kamera (CCTV sudut tinggi 45° dan eye-level).
+    description: "Dataset characteristics, class distributions, train/val/test splits, and validation setup.",
+    template: `### Dataset Characteristics
+The dataset encompasses diverse industrial workplace scenarios featuring varied lighting conditions (daylight, overcast, nighttime neon) and surveillance angles (45° elevated CCTV and eye-level perspectives).
 
-| Kelas APD | Jumlah Anotasi Bounding Box | Rasio Distribusi |
+| PPE Class | Bounding Box Annotations | Distribution Ratio |
 |---|---|---|
-| Helm Proyek (Hardhat) | 2,450 | 32% |
-| Rompi Keselamatan (Vest) | 2,180 | 28% |
-| Sarung Tangan (Gloves) | 1,840 | 24% |
-| Sepatu Keselamatan (Boots) | 1,230 | 16% |
+| Hardhat / Helmet | 2,450 | 32% |
+| Safety Vest | 2,180 | 28% |
+| Protective Gloves | 1,840 | 24% |
+| Safety Boots | 1,230 | 16% |
 
-### Pembagian Dataset (Split)
-- **Training Set (70%):** Digunakan untuk optimasi bobot model.
-- **Validation Set (20%):** Digunakan untuk tuning hyperparameter dan early stopping.
-- **Testing Set (10%):** Citra independen yang belum pernah dilihat model untuk evaluasi akhir.`,
+### Dataset Partitioning (Split)
+- **Training Set (70%):** Model weights optimization and feature representations.
+- **Validation Set (20%):** Hyperparameter tuning and early stopping calibration.
+- **Testing Set (10%):** Held-out independent test set for final benchmarking.`,
   },
   {
     id: "hasil",
-    title: "Pengujian & Hasil Evaluasi",
+    title: "Testing & Evaluation Results",
     type: "results",
-    description: "Tabel metrik kuantitatif perbandingan model dan analisis capaian.",
-    template: `### Hasil Perbandingan Kinerja Deteksi
+    description: "Quantitative metrics comparison table and performance analysis.",
+    template: `### Comparative Detection Performance
 
 | Model | mAP@0.5 (%) | mAP@0.5:0.95 (%) | Precision (%) | Recall (%) | FPS (TensorRT) |
 |---|---|---|---|---|---|
 | Baseline YOLOv11n | 83.4 | 60.1 | 85.2 | 81.7 | 48.2 |
-| YOLOv11 Modifikasi | 89.6 | 66.8 | 91.4 | 88.3 | 42.1 |
-| **Selisih Peningkatan** | **+6.2%** | **+6.7%** | **+6.2%** | **+6.6%** | -6.1 FPS |
+| Modified YOLOv11 | 89.6 | 66.8 | 91.4 | 88.3 | 42.1 |
+| **Improvement Delta** | **+6.2%** | **+6.7%** | **+6.2%** | **+6.6%** | -6.1 FPS |
 
 > [!TIP]
-> Peningkatan paling signifikan tercatat pada deteksi kelas sarung tangan (+9.4% mAP) berkat penambahan high-resolution feature head P2.`,
+> The most significant accuracy leap was recorded in the glove class (+9.4% mAP) owing to the P2 high-resolution detection head.`,
   },
   {
     id: "alarm",
-    title: "Integrasi Alarm Otomatis",
+    title: "Automated Alarm & Event Integration",
     type: "integration",
-    description: "Logika pemetaan zona bahaya, aturan durasi pelanggaran, dan pemicu alarm.",
-    template: `### Logika Pemetaan Zona Keselamatan (Zone Compliance)
-Sistem memproses bounding box hasil inferensi model terhadap zona poligon virtual (*danger zone*) yang ditentukan administrator area kerja:
+    description: "Zone compliance logic, violation duration thresholds, and alarm triggering mechanisms.",
+    template: `### Danger Zone Compliance Logic
+The system processes model detection bounding boxes against designated virtual polygon safety perimeters (*danger zones*):
 
-1. **Deteksi Kehadiran:** Sistem mendeteksi manusia berada di dalam batas poligon zona bahaya.
-2. **Pemeriksaan Kepatuhan APD:** Algoritma memeriksa apakah objek *person* tersebut beririsan (IoU > 0.4) dengan helm, rompi, sarung tangan, dan sepatu.
-3. **Threshold Waktu Pelanggaran:** Apabila pekerja terdeteksi tanpa kelengkapan APD selama lebih dari 3 frame berturut-turut (~0.1 detik), pelanggaran dikonfirmasi (*state: VIOLATION*).
-4. **Triger Sinyal Alarm:** Controller mengaktifkan relay output untuk membunyikan sirine dan menyalakan lampu strobo peringatan, serta mencatat log insiden.`,
+1. **Worker Presence Detection:** System identifies person bounding boxes within danger zone boundaries.
+2. **PPE Compliance Verification:** Evaluates intersection-over-union (IoU > 0.4) between the detected worker and required PPE classes (helmet, vest, gloves, boots).
+3. **Violation Time Threshold:** If non-compliance persists for > 3 consecutive frames (~0.1 seconds), a confirmed safety violation event is registered (*state: VIOLATION*).
+4. **Alarm Signal Dispatch:** Actuates hardware relays for sirens and strobe lights, recording a timestamped audit event log.`,
   },
   {
     id: "referensi",
-    title: "Referensi & Dokumen Pendukung",
+    title: "References & Scientific Citations",
     type: "references",
-    description: "Daftar pustaka ilmiah, dokumen skripsi, dan tautan repositori.",
-    template: `### Daftar Pustaka Terpilih
+    description: "Peer-reviewed literature, thesis documentation, and source code repositories.",
+    template: `### Selected References
 1. Redmon, J., et al. (2016). *You Only Look Once: Unified, Real-Time Object Detection*. Proceedings of the IEEE CVPR.
 2. Bochkovskiy, A., et al. (2020). *YOLOv4: Optimal Speed and Accuracy of Object Detection*. arXiv preprint arXiv:2004.10934.
 3. Wang, C. Y., et al. (2023). *YOLOv7: Trainable bag-of-freebies sets new state-of-the-art for real-time object detectors*. IEEE CVPR.
@@ -428,13 +428,13 @@ export default function ResearchHybridEditor({
 
       const json = await res.json();
       if (!res.ok || !json.success) {
-        throw new Error(json.error || "Gagal memproses bantuan AI.");
+        throw new Error(json.error || "Failed to process AI assistance.");
       }
 
       setAiResult(json.data);
       setAiReviewedSuggestion(json.data.suggestion);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Terjadi kesalahan saat memanggil AI.";
+      const msg = err instanceof Error ? err.message : "An error occurred while calling AI.";
       setAiError(msg);
     } finally {
       setAiLoading(false);
@@ -452,7 +452,7 @@ export default function ResearchHybridEditor({
   const handleSubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!research.title.trim()) {
-      alert("Judul penelitian wajib diisi.");
+      alert("Research title is required.");
       return;
     }
 
@@ -484,11 +484,11 @@ export default function ResearchHybridEditor({
         <div className="flex items-center gap-3">
           <button
             onClick={() => {
-              if (hasChanges && !confirm("Ada perubahan yang belum disimpan. Yakin ingin kembali?")) return;
+              if (hasChanges && !confirm("You have unsaved changes. Are you sure you want to go back?")) return;
               onCancel();
             }}
             className="p-2 rounded-xl bg-[#1B1E29] border border-[#292D39] text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors cursor-pointer"
-            title="Kembali ke Daftar Riset"
+            title="Back to Research List"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
@@ -501,17 +501,17 @@ export default function ResearchHybridEditor({
               {hasChanges ? (
                 <span className="text-[11px] font-mono text-[#F59E0B] flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#F59E0B] animate-pulse" />
-                  Belum disimpan
+                  Unsaved changes
                 </span>
               ) : (
                 <span className="text-[11px] font-mono text-[#22C55E] flex items-center gap-1">
                   <Check className="w-3 h-3" />
-                  Tersimpan
+                  Saved
                 </span>
               )}
             </div>
             <h1 className="text-sm sm:text-base font-bold text-[#F1F2F5] max-w-md truncate">
-              {research.title || "Penelitian Baru"}
+              {research.title || "New Research"}
             </h1>
           </div>
         </div>
@@ -525,30 +525,30 @@ export default function ResearchHybridEditor({
               className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${
                 viewMode === "editor" ? "bg-[#7790FF] text-white shadow-sm" : "text-[#8E95A8] hover:text-[#F1F2F5]"
               }`}
-              title="Tampilkan hanya editor"
+              title="Show editor only"
             >
               <FileText className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">Editor Saja</span>
+              <span className="hidden md:inline">Editor Only</span>
             </button>
             <button
               onClick={() => setViewMode("split")}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${
                 viewMode === "split" ? "bg-[#7790FF] text-white shadow-sm" : "text-[#8E95A8] hover:text-[#F1F2F5]"
               }`}
-              title="Bagi layar (Editor + Pratinjau Langsung)"
+              title="Split screen (Editor + Live Preview)"
             >
               <Columns className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">Bagi Layar</span>
+              <span className="hidden md:inline">Split Screen</span>
             </button>
             <button
               onClick={() => setViewMode("preview")}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer ${
                 viewMode === "preview" ? "bg-[#7790FF] text-white shadow-sm" : "text-[#8E95A8] hover:text-[#F1F2F5]"
               }`}
-              title="Tampilkan hanya pratinjau publik"
+              title="Show full preview only"
             >
               <Eye className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">Pratinjau Penuh</span>
+              <span className="hidden md:inline">Full Preview</span>
             </button>
           </div>
 
@@ -560,10 +560,10 @@ export default function ResearchHybridEditor({
               setAiModalOpen(true);
             }}
             className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#7790FF]/20 to-[#A855F7]/20 border border-[#7790FF]/40 text-[#96A9FF] hover:text-white text-xs font-medium flex items-center gap-1.5 transition-all shadow-sm cursor-pointer"
-            title="Buka Asisten Penulisan AI"
+            title="Open AI Writing Assistant"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#A855F7]" />
-            <span>Asisten AI</span>
+            <span>AI Assistant</span>
           </button>
 
           {/* Save Button */}
@@ -573,7 +573,7 @@ export default function ResearchHybridEditor({
             className="btn-primary text-xs py-2 px-4 shadow-lg shadow-[#7790FF]/25 cursor-pointer"
           >
             <Save className="w-3.5 h-3.5" />
-            <span>{isSaving ? "Menyimpan..." : "Simpan Perubahan"}</span>
+            <span>{isSaving ? "Saving..." : "Save Changes"}</span>
           </button>
         </div>
       </div>
@@ -588,7 +588,7 @@ export default function ResearchHybridEditor({
               <summary className="font-bold text-xs uppercase tracking-wider text-[#96A9FF] cursor-pointer flex items-center justify-between">
                 <span className="flex items-center gap-2">
                   <Cpu className="w-4 h-4 text-[#7790FF]" />
-                  <span>1. Metadata &amp; Konteks Penelitian</span>
+                  <span>1. Research Metadata &amp; Context</span>
                 </span>
                 <span className="text-[11px] font-mono text-[#7D8496] group-open:rotate-180 transition-transform">
                   &darr;
@@ -598,7 +598,7 @@ export default function ResearchHybridEditor({
               <div className="grid grid-cols-1 gap-4 pt-4 border-t border-[#1E222E]">
                 {/* Judul Penelitian */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-[#A1A6B5]">Judul Penelitian / Skripsi *</label>
+                  <label className="text-xs font-medium text-[#A1A6B5]">Research / Thesis Title *</label>
                   <input
                     type="text"
                     required
@@ -607,7 +607,7 @@ export default function ResearchHybridEditor({
                       setResearch({ ...research, title: e.target.value });
                       setHasChanges(true);
                     }}
-                    placeholder="Implementasi YOLOv11 Modifikasi Untuk Deteksi APD..."
+                    placeholder="e.g. Modified YOLOv11 Implementation for PPE Detection..."
                     className="px-3.5 py-2.5 rounded-xl bg-[#181B26] border border-[#282C3A] text-xs text-[#F1F2F5] focus:border-[#7790FF] focus:outline-none"
                   />
                 </div>
@@ -615,7 +615,7 @@ export default function ResearchHybridEditor({
                 {/* Published Status & Urutan */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-medium text-[#A1A6B5]">Kategori / Status Publikasi</label>
+                    <label className="text-xs font-medium text-[#A1A6B5]">Category / Publication Status</label>
                     <select
                       value={research.publishedStatus}
                       onChange={(e) => {
@@ -624,16 +624,16 @@ export default function ResearchHybridEditor({
                       }}
                       className="px-3.5 py-2.5 rounded-xl bg-[#181B26] border border-[#282C3A] text-xs text-[#F1F2F5] focus:border-[#7790FF] focus:outline-none"
                     >
-                      <option value="Penelitian Skripsi">Penelitian Skripsi</option>
-                      <option value="Publikasi Jurnal Nasional">Publikasi Jurnal Nasional</option>
-                      <option value="Publikasi Jurnal Internasional">Publikasi Jurnal Internasional</option>
-                      <option value="Prosiding Seminar / Konferensi">Prosiding Seminar / Konferensi</option>
-                      <option value="Eksplorasi AI / R&amp;D">Eksplorasi AI / R&amp;D</option>
+                      <option value="Thesis Research">Thesis Research</option>
+                      <option value="National Journal Publication">National Journal Publication</option>
+                      <option value="International Journal Publication">International Journal Publication</option>
+                      <option value="Conference Proceedings">Conference Proceedings</option>
+                      <option value="AI Exploration / R&amp;D">AI Exploration / R&amp;D</option>
                     </select>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-medium text-[#A1A6B5]">Urutan Tampilan</label>
+                    <label className="text-xs font-medium text-[#A1A6B5]">Display Order</label>
                     <input
                       type="number"
                       min={1}
@@ -650,7 +650,7 @@ export default function ResearchHybridEditor({
                 {/* Institusi & Program Studi */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-medium text-[#A1A6B5]">Institusi Akademik</label>
+                    <label className="text-xs font-medium text-[#A1A6B5]">Academic Institution</label>
                     <input
                       type="text"
                       value={research.institution || ""}
@@ -664,7 +664,7 @@ export default function ResearchHybridEditor({
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-medium text-[#A1A6B5]">Program Studi</label>
+                    <label className="text-xs font-medium text-[#A1A6B5]">Study Program / Major</label>
                     <input
                       type="text"
                       value={research.studyProgram || ""}
@@ -680,7 +680,7 @@ export default function ResearchHybridEditor({
 
                 {/* Ringkasan Eksekutif */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-[#A1A6B5]">Ringkasan Eksekutif (Executive Summary) *</label>
+                  <label className="text-xs font-medium text-[#A1A6B5]">Executive Summary *</label>
                   <textarea
                     rows={3}
                     required
@@ -689,14 +689,14 @@ export default function ResearchHybridEditor({
                       setResearch({ ...research, summary: e.target.value });
                       setHasChanges(true);
                     }}
-                    placeholder="Ringkasan singkat mengenai fokus penelitian dan capaian utamanya..."
+                    placeholder="Brief summary of research focus and primary achievements..."
                     className="px-3.5 py-2.5 rounded-xl bg-[#181B26] border border-[#282C3A] text-xs text-[#F1F2F5] focus:border-[#7790FF] focus:outline-none"
                   />
                 </div>
 
                 {/* Technologies Tag Chips */}
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs font-medium text-[#A1A6B5]">Teknologi / Model Kunci</label>
+                  <label className="text-xs font-medium text-[#A1A6B5]">Key Technologies / Models</label>
                   <div className="flex items-center gap-2">
                     <input
                       type="text"
@@ -708,7 +708,7 @@ export default function ResearchHybridEditor({
                           handleAddTech();
                         }
                       }}
-                      placeholder="Ketik teknologi (misal: YOLOv11, PyTorch, TensorRT, CVAT) lalu tekan Enter atau tombol Tambah"
+                      placeholder="Enter technology (e.g. YOLOv11, PyTorch, TensorRT, CVAT) then press Enter or Add"
                       className="flex-1 px-3.5 py-2 rounded-xl bg-[#181B26] border border-[#282C3A] text-xs text-[#F1F2F5] focus:border-[#7790FF] focus:outline-none"
                     />
                     <button
@@ -717,7 +717,7 @@ export default function ResearchHybridEditor({
                       className="btn-secondary text-xs py-2 px-3 shrink-0"
                     >
                       <Plus className="w-3.5 h-3.5" />
-                      <span>Tambah</span>
+                      <span>Add</span>
                     </button>
                   </div>
 
@@ -745,7 +745,7 @@ export default function ResearchHybridEditor({
                 {/* URLs Repo & Paper */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-medium text-[#A1A6B5]">URL GitHub Repository</label>
+                    <label className="text-xs font-medium text-[#A1A6B5]">GitHub Repository URL</label>
                     <input
                       type="url"
                       value={research.repoUrl || ""}
@@ -759,7 +759,7 @@ export default function ResearchHybridEditor({
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-medium text-[#A1A6B5]">URL Dokumen Skripsi / Paper (PDF)</label>
+                    <label className="text-xs font-medium text-[#A1A6B5]">Thesis Document / Paper URL (PDF)</label>
                     <input
                       type="url"
                       value={research.pdfUrl || ""}
@@ -767,7 +767,7 @@ export default function ResearchHybridEditor({
                         setResearch({ ...research, pdfUrl: e.target.value });
                         setHasChanges(true);
                       }}
-                      placeholder="https://... atau /uploads/skripsi.pdf"
+                      placeholder="https://... or /uploads/thesis.pdf"
                       className="px-3.5 py-2.5 rounded-xl bg-[#181B26] border border-[#282C3A] text-xs text-[#F1F2F5] focus:border-[#7790FF] focus:outline-none"
                     />
                   </div>
@@ -781,8 +781,8 @@ export default function ResearchHybridEditor({
                       setResearch({ ...research, externalLinks: updatedLinks });
                       setHasChanges(true);
                     }}
-                    title="Tautan Ekosistem Riset (Roboflow, Hugging Face, Papers With Code, dll.)"
-                    description="Hubungkan karya riset skripsi dengan dataset Roboflow Universe, Hugging Face weights, CVAT annotator task, atau Kaggle notebook."
+                    title="Research Ecosystem Links (Roboflow, Hugging Face, Papers With Code, etc.)"
+                    description="Connect this research with Roboflow Universe datasets, Hugging Face weights, CVAT annotator tasks, or Kaggle notebooks."
                   />
                 </div>
               </div>
@@ -794,7 +794,7 @@ export default function ResearchHybridEditor({
                 <div className="flex items-center gap-2">
                   <Layers className="w-4 h-4 text-[#7790FF]" />
                   <h3 className="font-bold text-xs uppercase tracking-wider text-[#96A9FF]">
-                    2. Struktur &amp; Bagian Penelitian ({currentSections.length})
+                    2. Research Structure &amp; Sections ({currentSections.length})
                   </h3>
                 </div>
 
@@ -804,7 +804,7 @@ export default function ResearchHybridEditor({
                   className="px-3 py-1.5 rounded-xl bg-[#1E2330] hover:bg-[#282D3D] border border-[#2C3244] text-xs font-medium text-[#F1F2F5] flex items-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5 text-[#7790FF]" />
-                  <span>Tambah Bagian / Template</span>
+                  <span>Add Section / Template</span>
                 </button>
               </div>
 
@@ -833,12 +833,12 @@ export default function ResearchHybridEditor({
                             </span>
                             {sec.isVisible === false && (
                               <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-[#EF4444]/15 text-[#EF4444] border border-[#EF4444]/30">
-                                Tersembunyi
+                                Hidden
                               </span>
                             )}
                           </div>
                           <span className="text-[10px] font-mono text-[#7D8496] block truncate">
-                            Tipe: {sec.type} &bull; {sec.content?.length || 0} karakter
+                            Type: {sec.type} &bull; {sec.content?.length || 0} chars
                           </span>
                         </div>
                       </div>
@@ -851,7 +851,7 @@ export default function ResearchHybridEditor({
                           disabled={idx === 0}
                           onClick={() => handleMoveSection(idx, "up")}
                           className="p-1 rounded text-[#7D8496] hover:text-[#F1F2F5] disabled:opacity-30"
-                          title="Naikkan urutan"
+                          title="Move up"
                         >
                           <ChevronUp className="w-3.5 h-3.5" />
                         </button>
@@ -862,7 +862,7 @@ export default function ResearchHybridEditor({
                           disabled={idx === currentSections.length - 1}
                           onClick={() => handleMoveSection(idx, "down")}
                           className="p-1 rounded text-[#7D8496] hover:text-[#F1F2F5] disabled:opacity-30"
-                          title="Turunkan urutan"
+                          title="Move down"
                         >
                           <ChevronDown className="w-3.5 h-3.5" />
                         </button>
@@ -872,7 +872,7 @@ export default function ResearchHybridEditor({
                           type="button"
                           onClick={() => handleDuplicateSection(idx)}
                           className="p-1 rounded text-[#7D8496] hover:text-[#7790FF]"
-                          title="Duplikasi bagian"
+                          title="Duplicate section"
                         >
                           <Copy className="w-3.5 h-3.5" />
                         </button>
@@ -884,7 +884,7 @@ export default function ResearchHybridEditor({
                           className={`p-1 rounded ${
                             sec.isVisible === false ? "text-[#EF4444]" : "text-[#7D8496] hover:text-[#F1F2F5]"
                           }`}
-                          title={sec.isVisible === false ? "Tampilkan bagian ini" : "Sembunyikan bagian ini"}
+                          title={sec.isVisible === false ? "Show this section" : "Hide this section"}
                         >
                           <Eye className="w-3.5 h-3.5" />
                         </button>
@@ -894,7 +894,7 @@ export default function ResearchHybridEditor({
                           type="button"
                           onClick={() => setDeleteConfirmId(sec.id)}
                           className="p-1 rounded text-[#7D8496] hover:text-[#EF4444]"
-                          title="Hapus bagian ini"
+                          title="Delete this section"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -911,7 +911,7 @@ export default function ResearchHybridEditor({
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#1E222E]">
                   <div>
                     <span className="text-[10px] font-mono uppercase tracking-wider text-[#7790FF] block">
-                      Edit Bagian Aktif 0{activeSectionIndex + 1}
+                      Edit Active Section 0{activeSectionIndex + 1}
                     </span>
                     <h3 className="font-bold text-sm text-[#F1F2F5]">
                       {activeSection.title}
@@ -928,20 +928,20 @@ export default function ResearchHybridEditor({
                       }
                       className="px-2.5 py-1 rounded-lg bg-[#181B26] border border-[#282C3A] text-xs text-[#96A9FF] font-mono focus:outline-none"
                     >
-                      <option value="text">Teks / Artikel</option>
-                      <option value="methodology">Metodologi</option>
-                      <option value="architecture">Arsitektur Model</option>
+                      <option value="text">Text / Article</option>
+                      <option value="methodology">Methodology</option>
+                      <option value="architecture">Model Architecture</option>
                       <option value="dataset">Dataset</option>
-                      <option value="results">Hasil &amp; Metrik</option>
-                      <option value="integration">Integrasi Sistem</option>
-                      <option value="references">Referensi</option>
+                      <option value="results">Results &amp; Metrics</option>
+                      <option value="integration">System Integration</option>
+                      <option value="references">References</option>
                     </select>
                   </div>
                 </div>
 
                 {/* Section Title Editor */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-medium text-[#A1A6B5]">Judul Bagian</label>
+                  <label className="text-xs font-medium text-[#A1A6B5]">Section Title</label>
                   <input
                     type="text"
                     value={activeSection.title}
@@ -956,7 +956,7 @@ export default function ResearchHybridEditor({
                     type="button"
                     onClick={() => insertMarkdown("**", "**")}
                     className="p-1.5 rounded-lg text-[#A1A6B5] hover:text-[#F1F2F5] hover:bg-[#202432]"
-                    title="Tebal (**bold**)"
+                    title="Bold (**bold**)"
                   >
                     <Bold className="w-3.5 h-3.5" />
                   </button>
@@ -964,7 +964,7 @@ export default function ResearchHybridEditor({
                     type="button"
                     onClick={() => insertMarkdown("*", "*")}
                     className="p-1.5 rounded-lg text-[#A1A6B5] hover:text-[#F1F2F5] hover:bg-[#202432]"
-                    title="Miring (*italic*)"
+                    title="Italic (*italic*)"
                   >
                     <Italic className="w-3.5 h-3.5" />
                   </button>
@@ -972,7 +972,7 @@ export default function ResearchHybridEditor({
                     type="button"
                     onClick={() => insertMarkdown("## ")}
                     className="p-1.5 rounded-lg text-[#A1A6B5] hover:text-[#F1F2F5] hover:bg-[#202432]"
-                    title="Heading 2 (## Judul)"
+                    title="Heading 2 (## Title)"
                   >
                     <Heading2 className="w-3.5 h-3.5" />
                   </button>
@@ -980,7 +980,7 @@ export default function ResearchHybridEditor({
                     type="button"
                     onClick={() => insertMarkdown("### ")}
                     className="p-1.5 rounded-lg text-[#A1A6B5] hover:text-[#F1F2F5] hover:bg-[#202432]"
-                    title="Heading 3 (### Subjudul)"
+                    title="Heading 3 (### Subtitle)"
                   >
                     <Heading3 className="w-3.5 h-3.5" />
                   </button>
@@ -988,7 +988,7 @@ export default function ResearchHybridEditor({
                     type="button"
                     onClick={() => insertMarkdown("- ")}
                     className="p-1.5 rounded-lg text-[#A1A6B5] hover:text-[#F1F2F5] hover:bg-[#202432]"
-                    title="Bullet List (- poin)"
+                    title="Bullet List (- item)"
                   >
                     <List className="w-3.5 h-3.5" />
                   </button>
@@ -996,15 +996,15 @@ export default function ResearchHybridEditor({
                     type="button"
                     onClick={() => insertMarkdown("1. ")}
                     className="p-1.5 rounded-lg text-[#A1A6B5] hover:text-[#F1F2F5] hover:bg-[#202432]"
-                    title="Numbered List (1. poin)"
+                    title="Numbered List (1. item)"
                   >
                     <ListOrdered className="w-3.5 h-3.5" />
                   </button>
                   <button
                     type="button"
-                    onClick={() => insertMarkdown("```python\n# Kode atau arsitektur\n", "\n```")}
+                    onClick={() => insertMarkdown("```python\n# Code or architecture\n", "\n```")}
                     className="p-1.5 rounded-lg text-[#A1A6B5] hover:text-[#F1F2F5] hover:bg-[#202432]"
-                    title="Blok Kode (```)"
+                    title="Code Block (```)"
                   >
                     <Code className="w-3.5 h-3.5" />
                   </button>
@@ -1012,11 +1012,11 @@ export default function ResearchHybridEditor({
                     type="button"
                     onClick={() =>
                       insertMarkdown(
-                        "\n| Parameter | Nilai |\n|---|---|\n| Resolusi Input | 640x640 |\n| Batch Size | 16 |\n"
+                        "\n| Parameter | Value |\n|---|---|\n| Input Resolution | 640x640 |\n| Batch Size | 16 |\n"
                       )
                     }
                     className="p-1.5 rounded-lg text-[#A1A6B5] hover:text-[#F1F2F5] hover:bg-[#202432]"
-                    title="Tabel Markdown"
+                    title="Markdown Table"
                   >
                     <TableIcon className="w-3.5 h-3.5" />
                   </button>
@@ -1024,15 +1024,15 @@ export default function ResearchHybridEditor({
                     type="button"
                     onClick={() => insertMarkdown("> [!NOTE]\n> ")}
                     className="p-1.5 rounded-lg text-[#A1A6B5] hover:text-[#F1F2F5] hover:bg-[#202432]"
-                    title="Catatan Teknis Callout (> [!NOTE])"
+                    title="Technical Callout Note (> [!NOTE])"
                   >
                     <Quote className="w-3.5 h-3.5" />
                   </button>
                   <button
                     type="button"
-                    onClick={() => insertMarkdown("[Judul Tautan](", ")")}
+                    onClick={() => insertMarkdown("[Link Title](", ")")}
                     className="p-1.5 rounded-lg text-[#A1A6B5] hover:text-[#F1F2F5] hover:bg-[#202432]"
-                    title="Tautan Web [Teks](url)"
+                    title="Web Link [Text](url)"
                   >
                     <Link2 className="w-3.5 h-3.5" />
                   </button>
@@ -1046,10 +1046,10 @@ export default function ResearchHybridEditor({
                         setAiModalOpen(true);
                       }}
                       className="px-2.5 py-1 rounded-lg bg-[#7790FF]/15 text-[#96A9FF] hover:bg-[#7790FF]/25 text-[11px] font-medium flex items-center gap-1 transition-colors"
-                      title="Minta AI mengecek teks ini"
+                      title="Ask AI to review this text"
                     >
                       <Sparkles className="w-3 h-3 text-[#A855F7]" />
-                      <span>Bantuan AI</span>
+                      <span>AI Assistant</span>
                     </button>
                   </div>
                 </div>
@@ -1061,12 +1061,12 @@ export default function ResearchHybridEditor({
                     rows={12}
                     value={activeSection.content}
                     onChange={(e) => updateActiveSection({ content: e.target.value })}
-                    placeholder="Tuliskan isi bagian ini menggunakan format Markdown bersih..."
+                    placeholder="Write section content using clean Markdown format..."
                     className="w-full p-4 rounded-xl bg-[#181B26] border border-[#282C3A] text-xs font-mono text-[#E2E8F0] leading-relaxed focus:border-[#7790FF] focus:outline-none"
                   />
                   <div className="flex items-center justify-between text-[11px] font-mono text-[#7D8496]">
-                    <span>Format: Markdown &bull; Aman &amp; Tersanitasi</span>
-                    <span>{activeSection.content?.length || 0} karakter</span>
+                    <span>Format: Markdown &bull; Safe &amp; Sanitized</span>
+                    <span>{activeSection.content?.length || 0} chars</span>
                   </div>
                 </div>
               </div>
@@ -1082,7 +1082,7 @@ export default function ResearchHybridEditor({
               <div className="flex items-center gap-2">
                 <Eye className="w-4 h-4 text-[#7790FF]" />
                 <span className="text-xs font-bold text-[#F1F2F5]">
-                  Pratinjau Publik (Live Renderer)
+                  Public Live Preview
                 </span>
               </div>
 
@@ -1094,7 +1094,7 @@ export default function ResearchHybridEditor({
                   className={`p-1.5 rounded text-xs transition-colors ${
                     previewDevice === "desktop" ? "bg-[#7790FF] text-white" : "text-[#7D8496] hover:text-[#F1F2F5]"
                   }`}
-                  title="Tampilan Desktop"
+                  title="Desktop View"
                 >
                   <Monitor className="w-3.5 h-3.5" />
                 </button>
@@ -1104,7 +1104,7 @@ export default function ResearchHybridEditor({
                   className={`p-1.5 rounded text-xs transition-colors ${
                     previewDevice === "mobile" ? "bg-[#7790FF] text-white" : "text-[#7D8496] hover:text-[#F1F2F5]"
                   }`}
-                  title="Tampilan Mobile"
+                  title="Mobile View"
                 >
                   <Smartphone className="w-3.5 h-3.5" />
                 </button>
@@ -1125,14 +1125,14 @@ export default function ResearchHybridEditor({
                   <span className="w-2.5 h-2.5 rounded-full bg-[#22C55E]/60" />
                   <span className="ml-2 text-[#96A9FF]">/research</span>
                 </div>
-                <span>Mode Pratinjau</span>
+                <span>Preview Mode</span>
               </div>
 
               {/* Research Header Preview */}
               <div className="p-5 rounded-2xl bg-[#141720] border border-[#232733] flex flex-col gap-3 mb-6">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#7790FF]/15 text-[#96A9FF] border border-[#7790FF]/30">
-                    {research.publishedStatus || "Penelitian Skripsi"}
+                    {research.publishedStatus || "Thesis Research"}
                   </span>
                   <span className="text-[10px] font-mono text-[#7D8496]">
                     {research.institution || "Universitas Muhammadiyah Purwokerto"}
@@ -1140,11 +1140,11 @@ export default function ResearchHybridEditor({
                 </div>
 
                 <h2 className="text-base sm:text-lg font-bold text-[#F1F2F5] leading-snug">
-                  {research.title || "Judul Penelitian"}
+                  {research.title || "Research Title"}
                 </h2>
 
                 <p className="text-xs text-[#A1A6B5] leading-relaxed">
-                  {research.summary || "Ringkasan eksekutif penelitian..."}
+                  {research.summary || "Executive summary of the research..."}
                 </p>
 
                 {research.technologies && research.technologies.length > 0 && (
@@ -1216,7 +1216,7 @@ export default function ResearchHybridEditor({
               <div className="flex items-center gap-2">
                 <Layers className="w-4 h-4 text-[#7790FF]" />
                 <h3 className="text-sm font-bold text-[#F1F2F5]">
-                  Pilih Template Penulisan Penelitian
+                  Choose Research Writing Template
                 </h3>
               </div>
               <button
@@ -1230,7 +1230,7 @@ export default function ResearchHybridEditor({
 
             <div className="p-6 overflow-y-auto flex flex-col gap-3">
               <p className="text-xs text-[#A1A6B5]">
-                Pilih struktur modul penelitian yang ingin ditambahkan. Template ini berfungsi sebagai kerangka panduan profesional yang dapat Anda sesuaikan.
+                Select a research module structure to add. These templates serve as a professional guide frame that you can customize.
               </p>
 
               <div className="grid grid-cols-1 gap-3 pt-2">
@@ -1266,11 +1266,11 @@ export default function ResearchHybridEditor({
             <div className="flex items-center gap-3 text-[#EF4444]">
               <AlertCircle className="w-5 h-5 shrink-0" />
               <h3 className="text-sm font-bold text-[#F1F2F5]">
-                Konfirmasi Hapus Bagian
+                Confirm Section Deletion
               </h3>
             </div>
             <p className="text-xs text-[#A1A6B5] leading-relaxed">
-              Apakah Anda yakin ingin menghapus bagian ini? Konten yang telah tertulis pada bagian ini akan hilang secara permanen setelah disimpan.
+              Are you sure you want to delete this section? Any written content in this section will be permanently removed upon saving.
             </p>
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
@@ -1278,7 +1278,7 @@ export default function ResearchHybridEditor({
                 onClick={() => setDeleteConfirmId(null)}
                 className="btn-secondary text-xs py-2 px-3.5"
               >
-                Batal
+                Cancel
               </button>
               <button
                 type="button"
@@ -1288,7 +1288,7 @@ export default function ResearchHybridEditor({
                 }}
                 className="px-3.5 py-2 rounded-xl bg-[#EF4444] hover:bg-[#DC2626] text-white text-xs font-medium transition-colors"
               >
-                Hapus Bagian
+                Delete Section
               </button>
             </div>
           </div>
@@ -1305,10 +1305,10 @@ export default function ResearchHybridEditor({
                 <Sparkles className="w-5 h-5 text-[#A855F7]" />
                 <div>
                   <h3 className="text-sm font-bold text-[#F1F2F5]">
-                    Asisten Penulisan AI — {activeSection.title}
+                    AI Writing Assistant — {activeSection.title}
                   </h3>
                   <p className="text-[11px] text-[#7D8496]">
-                    Analisis draf, perbaikan tata bahasa akademik, dan penyempurnaan struktur teks secara aman.
+                    Draft analysis, academic phrasing enhancements, and structural polish safely.
                   </p>
                 </div>
               </div>
@@ -1324,20 +1324,20 @@ export default function ResearchHybridEditor({
             {/* AI Control Panel */}
             <div className="p-5 border-b border-[#202431] bg-[#161923] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-2 flex-wrap">
-                <label className="text-xs font-medium text-[#A1A6B5]">Pilih Tindakan AI:</label>
+                <label className="text-xs font-medium text-[#A1A6B5]">Select AI Action:</label>
                 <select
                   value={aiAction}
                   onChange={(e) => setAiAction(e.target.value)}
                   className="px-3 py-1.5 rounded-xl bg-[#1B1E29] border border-[#2B3142] text-xs text-[#96A9FF] font-medium focus:outline-none"
                 >
-                  <option value="academic">Rapikan Bahasa Akademik Formal</option>
-                  <option value="grammar">Perbaiki Tata Bahasa &amp; Ejaan</option>
-                  <option value="concise">Buat Lebih Ringkas &amp; Padat</option>
-                  <option value="expand">Kembangkan Kerangka Menjadi Draf</option>
-                  <option value="structure">Susun Ulang Agar Lebih Terstruktur</option>
-                  <option value="consistency">Periksa Konsistensi Istilah Teknis</option>
-                  <option value="missing_info">Identifikasi Informasi yang Masih Kurang</option>
-                  <option value="check_alignment">Periksa Keselarasan dengan Judul &amp; Ringkasan</option>
+                  <option value="academic">Polish Formal Academic Phrasing</option>
+                  <option value="grammar">Fix Grammar &amp; Spelling</option>
+                  <option value="concise">Make More Concise &amp; Clear</option>
+                  <option value="expand">Expand Outline into Detailed Draft</option>
+                  <option value="structure">Reorganize for Better Structure</option>
+                  <option value="consistency">Check Technical Terminology Consistency</option>
+                  <option value="missing_info">Identify Missing Information</option>
+                  <option value="check_alignment">Check Alignment with Title &amp; Summary</option>
                 </select>
               </div>
 
@@ -1348,7 +1348,7 @@ export default function ResearchHybridEditor({
                 className="btn-primary text-xs py-2 px-4 shadow-md shadow-[#7790FF]/25 cursor-pointer shrink-0"
               >
                 <Sparkles className="w-3.5 h-3.5 text-white" />
-                <span>{aiLoading ? "Memproses AI..." : "Jalankan Asisten AI"}</span>
+                <span>{aiLoading ? "Processing AI..." : "Run AI Assistant"}</span>
               </button>
             </div>
 
@@ -1366,10 +1366,10 @@ export default function ResearchHybridEditor({
                 <div className="flex flex-col gap-2">
                   <span className="text-xs font-bold text-[#8E95A8] uppercase tracking-wider flex items-center gap-1.5">
                     <FileText className="w-3.5 h-3.5" />
-                    <span>Teks Asli Penulis (Saat Ini)</span>
+                    <span>Original Draft (Current)</span>
                   </span>
                   <div className="p-4 rounded-2xl bg-[#11131A] border border-[#222532] text-xs font-mono text-[#A1A6B5] h-72 overflow-y-auto leading-relaxed whitespace-pre-wrap">
-                    {activeSection.content || "Belum ada konten."}
+                    {activeSection.content || "No content yet."}
                   </div>
                 </div>
 
@@ -1378,11 +1378,11 @@ export default function ResearchHybridEditor({
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-[#96A9FF] uppercase tracking-wider flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5 text-[#A855F7]" />
-                      <span>Saran AI (Dapat Diedit Sebelum Diterapkan)</span>
+                      <span>AI Suggestion (Editable Before Applying)</span>
                     </span>
                     {aiResult && (
                       <span className="text-[10px] font-mono text-[#22C55E]">
-                        Selesai diproses
+                        Completed
                       </span>
                     )}
                   </div>
@@ -1393,8 +1393,8 @@ export default function ResearchHybridEditor({
                     onChange={(e) => setAiReviewedSuggestion(e.target.value)}
                     placeholder={
                       aiLoading
-                        ? "AI sedang meninjau dan menyempurnakan tulisan..."
-                        : "Klik tombol 'Jalankan Asisten AI' di atas untuk menghasilkan saran alternatif."
+                        ? "AI is reviewing and refining the draft..."
+                        : "Click 'Run AI Assistant' above to generate suggestions."
                     }
                     className="w-full p-4 rounded-2xl bg-[#181B26] border border-[#2B3142] text-xs font-mono text-[#E2E8F0] h-72 overflow-y-auto leading-relaxed focus:border-[#7790FF] focus:outline-none"
                   />
@@ -1405,7 +1405,7 @@ export default function ResearchHybridEditor({
               {aiResult && (
                 <div className="p-4 rounded-2xl bg-[#161924] border border-[#262B3A] flex flex-col gap-2.5">
                   <span className="text-xs font-bold text-[#F1F2F5]">
-                    Catatan Perbaikan Asisten AI:
+                    AI Assistant Notes &amp; Highlights:
                   </span>
                   {aiResult.explanation && (
                     <p className="text-xs text-[#A1A6B5] leading-relaxed">
@@ -1433,7 +1433,7 @@ export default function ResearchHybridEditor({
             {/* AI Modal Footer */}
             <div className="p-5 border-t border-[#202431] flex items-center justify-between gap-3 bg-[#12141C]">
               <span className="text-[11px] text-[#7D8496]">
-                AI tidak otomatis menimpa naskah Anda tanpa persetujuan.
+                AI will not overwrite your text without your review and approval.
               </span>
               <div className="flex items-center gap-3">
                 <button
@@ -1441,7 +1441,7 @@ export default function ResearchHybridEditor({
                   onClick={() => setAiModalOpen(false)}
                   className="btn-secondary text-xs py-2 px-4"
                 >
-                  Batal
+                  Cancel
                 </button>
                 <button
                   type="button"
@@ -1450,7 +1450,7 @@ export default function ResearchHybridEditor({
                   className="btn-primary text-xs py-2 px-5 cursor-pointer disabled:opacity-50"
                 >
                   <Check className="w-3.5 h-3.5" />
-                  <span>Terapkan ke Bagian Ini</span>
+                  <span>Apply to this Section</span>
                 </button>
               </div>
             </div>

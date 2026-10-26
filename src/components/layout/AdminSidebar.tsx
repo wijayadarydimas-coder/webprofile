@@ -56,7 +56,7 @@ export default function AdminSidebar() {
         <Link
           href="/"
           className="p-1.5 rounded-lg hover:bg-[#1F2330] text-[#7D8496] hover:text-[#F1F2F5] transition-colors"
-          title="Buka Halaman Website Utama"
+          title="Open Main Website"
         >
           <ExternalLink className="w-3.5 h-3.5" />
         </Link>
@@ -91,7 +91,7 @@ export default function AdminSidebar() {
           className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-[#EF4444] hover:bg-[#EF4444]/10 transition-colors cursor-pointer"
         >
           <LogOut className="w-4 h-4 shrink-0" />
-          <span>Keluar Sesi Admin</span>
+          <span>Log Out Admin Session</span>
         </button>
       </div>
     </aside>

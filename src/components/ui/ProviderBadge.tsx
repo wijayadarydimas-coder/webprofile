@@ -56,7 +56,7 @@ export function ProviderBadgeList({
       ))}
       {remainingCount > 0 && (
         <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-[#171A24] text-[#A1A6B5] border border-[#292D39]">
-          +{remainingCount} platform
+          +{remainingCount} platforms
         </span>
       )}
     </div>

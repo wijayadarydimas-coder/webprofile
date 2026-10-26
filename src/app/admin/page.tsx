@@ -35,33 +35,33 @@ export default async function AdminOverviewPage() {
 
   const stats = [
     {
-      title: "Total Portofolio",
+      title: "Total Portfolio",
       value: projects.length,
-      detail: `${projects.filter((p) => p.featured).length} Proyek Unggulan`,
+      detail: `${projects.filter((p) => p.featured).length} Featured Projects`,
       icon: FolderKanban,
       href: "/admin/projects",
       color: "text-[#6D8DFF]",
     },
     {
-      title: "Diskusi Komunitas",
+      title: "Community Discussions",
       value: comments.length,
-      detail: `${hiddenComments.length} Perlu Moderasi`,
+      detail: `${hiddenComments.length} Need Moderation`,
       icon: MessageSquare,
       href: "/admin/comments",
       color: "text-[#8B9CFF]",
     },
     {
-      title: "Berkas & Media",
+      title: "Files & Media",
       value: media.length,
-      detail: "Termasuk CV & Gambar",
+      detail: "Includes CV & Images",
       icon: ImageIcon,
       href: "/admin/media",
       color: "text-[#22C55E]",
     },
     {
-      title: "Pesan Kontak",
+      title: "Contact Messages",
       value: messages.length,
-      detail: `${unreadMessages.length} Belum Dibaca`,
+      detail: `${unreadMessages.length} Unread`,
       icon: Mail,
       href: "#messages",
       color: "text-[#F59E0B]",
@@ -77,17 +77,17 @@ export default async function AdminOverviewPage() {
             <h1 className="text-xl sm:text-2xl font-bold text-[#F3F4F6]">Admin Dashboard</h1>
             <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30 flex items-center gap-1">
               <ShieldCheck className="w-3 h-3" />
-              Sesi Aktif
+              Active Session
             </span>
           </div>
           <p className="text-xs text-[#A1A1AA]">
-            Selamat datang, <span className="text-[#F3F4F6] font-semibold">{profile.fullName}</span>. Kelola seluruh konten website Anda secara real-time.
+            Welcome, <span className="text-[#F3F4F6] font-semibold">{profile.fullName}</span>. Manage all your website content in real-time.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <Link href="/" target="_blank" className="btn-secondary text-xs py-2">
-            <span>Lihat Website Publik</span>
+            <span>View Public Website</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
@@ -121,7 +121,7 @@ export default async function AdminOverviewPage() {
 
       {/* Quick Access Actions */}
       <div className="p-6 rounded-2xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-4">
-        <h2 className="text-sm font-semibold text-[#F3F4F6]">Aksi Cepat Pengelolaan</h2>
+        <h2 className="text-sm font-semibold text-[#F3F4F6]">Quick Management Actions</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Link
             href="/admin/profile"
@@ -129,8 +129,8 @@ export default async function AdminOverviewPage() {
           >
             <User className="w-4 h-4 text-[#6D8DFF]" />
             <div className="flex flex-col">
-              <span className="text-xs font-semibold text-[#F3F4F6]">Edit Profil &amp; Hero</span>
-              <span className="text-[10px] text-[#71717A]">Nama, foto avatar, bio &amp; CV</span>
+              <span className="text-xs font-semibold text-[#F3F4F6]">Edit Profile &amp; Hero</span>
+              <span className="text-[10px] text-[#71717A]">Name, avatar photo, bio &amp; CV</span>
             </div>
           </Link>
 
@@ -140,8 +140,8 @@ export default async function AdminOverviewPage() {
           >
             <FolderKanban className="w-4 h-4 text-[#8B9CFF]" />
             <div className="flex flex-col">
-              <span className="text-xs font-semibold text-[#F3F4F6]">Tambah Proyek Baru</span>
-              <span className="text-[10px] text-[#71717A]">Publikasikan studi kasus proyek</span>
+              <span className="text-xs font-semibold text-[#F3F4F6]">Add New Project</span>
+              <span className="text-[10px] text-[#71717A]">Publish project case studies</span>
             </div>
           </Link>
 
@@ -151,8 +151,8 @@ export default async function AdminOverviewPage() {
           >
             <Cpu className="w-4 h-4 text-[#22C55E]" />
             <div className="flex flex-col">
-              <span className="text-xs font-semibold text-[#F3F4F6]">Kelola Skripsi YOLOv11</span>
-              <span className="text-[10px] text-[#71717A]">Metodologi &amp; dataset APD</span>
+              <span className="text-xs font-semibold text-[#F3F4F6]">Manage YOLOv11 Thesis</span>
+              <span className="text-[10px] text-[#71717A]">PPE methodology &amp; datasets</span>
             </div>
           </Link>
         </div>
@@ -163,14 +163,14 @@ export default async function AdminOverviewPage() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Mail className="w-4 h-4 text-[#F59E0B]" />
-            <h2 className="text-sm font-semibold text-[#F3F4F6]">Kotak Masuk Pesan Pengunjung</h2>
+            <h2 className="text-sm font-semibold text-[#F3F4F6]">Visitor Messages Inbox</h2>
           </div>
-          <span className="text-xs text-[#71717A] font-mono">{messages.length} Total Pesan</span>
+          <span className="text-xs text-[#71717A] font-mono">{messages.length} Total Messages</span>
         </div>
 
         {messages.length === 0 ? (
           <div className="py-8 text-center text-xs text-[#71717A] bg-[#111317] rounded-xl border border-[#2B2D34]/50">
-            Belum ada pesan yang masuk melalui formulir kontak.
+            No messages received through the contact form yet.
           </div>
         ) : (
           <div className="flex flex-col gap-3">
@@ -185,7 +185,7 @@ export default async function AdminOverviewPage() {
                     <span className="text-[11px] text-[#8B9CFF] font-mono">&lt;{msg.email}&gt;</span>
                   </div>
                   <span className="text-[10px] text-[#71717A] font-mono">
-                    {new Date(msg.createdAt).toLocaleDateString("id-ID", {
+                    {new Date(msg.createdAt).toLocaleDateString("en-US", {
                       day: "numeric",
                       month: "short",
                       year: "numeric",

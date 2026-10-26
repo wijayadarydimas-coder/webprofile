@@ -65,7 +65,7 @@ export default function CommentThread({
   useEffect(() => {
     try {
       setFormattedDate(
-        new Date(comment.createdAt).toLocaleDateString("id-ID", {
+        new Date(comment.createdAt).toLocaleDateString("en-US", {
           day: "numeric",
           month: "short",
           year: "numeric",
@@ -126,21 +126,21 @@ export default function CommentThread({
                 onClick={() => setIsEditing(false)}
                 className="btn-secondary py-1 px-2.5 text-xs"
               >
-                Batal
+                Cancel
               </button>
               <button
                 onClick={handleSendEdit}
                 disabled={submitting || !editText.trim()}
                 className="btn-primary py-1 px-3 text-xs"
               >
-                Simpan Perubahan
+                Save Changes
               </button>
             </div>
           </div>
         ) : (
           <div className="text-xs sm:text-sm text-[#A1A6B5] leading-relaxed whitespace-pre-wrap">
             {comment.isDeleted ? (
-              <span className="italic text-[#7D8496]">[Komentar ini telah dihapus oleh penulis]</span>
+              <span className="italic text-[#7D8496]">[This comment has been deleted by the author]</span>
             ) : (
               comment.content
             )}
@@ -156,7 +156,7 @@ export default function CommentThread({
                 className="flex items-center gap-1 text-[#96A9FF] hover:text-[#F1F2F5] transition-colors cursor-pointer"
               >
                 <CornerDownRight className="w-3.5 h-3.5" />
-                <span>Balas</span>
+                <span>Reply</span>
               </button>
             )}
 
@@ -173,12 +173,12 @@ export default function CommentThread({
             {(isAuthor || isAdmin) && (
               <button
                 onClick={() => {
-                  if (confirm("Hapus komentar ini?")) onDelete(comment.id);
+                  if (confirm("Delete this comment?")) onDelete(comment.id);
                 }}
                 className="flex items-center gap-1 text-[#EF4444]/80 hover:text-[#EF4444] transition-colors cursor-pointer"
               >
                 <Trash2 className="w-3 h-3" />
-                <span>Hapus</span>
+                <span>Delete</span>
               </button>
             )}
 
@@ -186,17 +186,17 @@ export default function CommentThread({
               <button
                 onClick={() => onModerate(comment.id, !comment.isHidden)}
                 className="flex items-center gap-1 text-[#F59E0B] hover:text-[#FBBF24] transition-colors ml-auto text-[11px] cursor-pointer"
-                title="Moderasi Admin"
+                title="Admin Moderation"
               >
                 {comment.isHidden ? (
                   <>
                     <Eye className="w-3 h-3" />
-                    <span>Tampilkan</span>
+                    <span>Show</span>
                   </>
                 ) : (
                   <>
                     <EyeOff className="w-3 h-3" />
-                    <span>Sembunyikan</span>
+                    <span>Hide</span>
                   </>
                 )}
               </button>
@@ -211,7 +211,7 @@ export default function CommentThread({
               rows={2}
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
-              placeholder={`Balas kepada ${comment.authorName}...`}
+              placeholder={`Reply to ${comment.authorName}...`}
               className="w-full p-2.5 rounded-lg bg-[#1F2330] border border-[#292D39] text-xs text-[#F1F2F5] focus:border-[#7790FF] focus:outline-none"
             />
             <div className="flex items-center gap-2 justify-end">
@@ -219,14 +219,14 @@ export default function CommentThread({
                 onClick={() => setIsReplying(false)}
                 className="btn-secondary py-1 px-2.5 text-xs"
               >
-                Batal
+                Cancel
               </button>
               <button
                 onClick={handleSendReply}
                 disabled={submitting || !replyText.trim()}
                 className="btn-primary py-1 px-3 text-xs"
               >
-                Kirim Balasan
+                Post Reply
               </button>
             </div>
           </div>

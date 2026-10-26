@@ -32,16 +32,16 @@ export default function CommentForm({ currentUser, onSubmit, onOpenAuth }: Comme
       <div className="p-6 rounded-2xl bg-[#171A24] border border-[#292D39] flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
         <div className="flex flex-col gap-1">
           <span className="text-sm font-semibold text-[#F1F2F5]">
-            Ingin bergabung dalam diskusi?
+            Want to join the discussion?
           </span>
           <p className="text-xs text-[#7D8496]">
-            Masuk atau daftarkan akun komunitas Anda untuk menulis komentar dan tanggapan.
+            Sign in or register your community account to post comments and join discussions.
           </p>
         </div>
 
         <button onClick={onOpenAuth} className="btn-primary shrink-0">
           <LogIn className="w-4 h-4" />
-          <span>Masuk / Daftar Akun</span>
+          <span>Sign In / Register</span>
         </button>
       </div>
     );
@@ -53,7 +53,7 @@ export default function CommentForm({ currentUser, onSubmit, onOpenAuth }: Comme
         <div className="flex items-center gap-2">
           <MessageSquare className="w-4 h-4 text-[#7790FF]" />
           <span className="text-xs font-semibold text-[#F1F2F5]">
-            Tulis Komentar sebagai <span className="text-[#96A9FF]">{currentUser.name}</span>
+            Post a comment as <span className="text-[#96A9FF]">{currentUser.name}</span>
           </span>
         </div>
         <span className="text-[11px] text-[#7D8496] font-mono">
@@ -68,7 +68,7 @@ export default function CommentForm({ currentUser, onSubmit, onOpenAuth }: Comme
           maxLength={1000}
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder="Tuliskan pemikiran, tanggapan teknis, atau pertanyaan Anda..."
+          placeholder="Write your thoughts, technical feedback, or questions..."
           className="w-full p-3 rounded-lg bg-[#1F2330] border border-[#292D39] text-xs text-[#F1F2F5] placeholder-[#7D8496] focus:border-[#7790FF] focus:outline-none transition-colors"
         />
 
@@ -79,7 +79,7 @@ export default function CommentForm({ currentUser, onSubmit, onOpenAuth }: Comme
             className="btn-primary text-xs py-2 px-4 disabled:opacity-50"
           >
             <Send className="w-3.5 h-3.5" />
-            <span>{submitting ? "Mengirimkan..." : "Kirim Komentar"}</span>
+            <span>{submitting ? "Posting..." : "Post Comment"}</span>
           </button>
         </div>
       </form>

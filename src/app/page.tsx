@@ -26,7 +26,7 @@ export default async function HomePage() {
     id: "res-1",
     title: "Implementasi YOLOv11 Modifikasi Untuk Deteksi Alat Pelindung Diri Helm Rompi, Sarung Tangan Dan Sepatu Dengan Alarm Otomatis.",
     summary: "Penelitian skripsi mengenai pengembangan arsitektur YOLOv11 yang dimodifikasi untuk mendeteksi kelengkapan APD.",
-    publishedStatus: "Penelitian Skripsi",
+    publishedStatus: "Thesis Research",
     repoUrl: "https://github.com/wijayadarydimas-coder",
     pdfUrl: "",
   };

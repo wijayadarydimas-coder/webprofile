@@ -27,7 +27,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#171A24] border border-[#292D39] w-fit shadow-sm">
               <span className="w-2 h-2 rounded-full bg-[#22C55E] animate-pulse" />
               <span className="text-xs font-mono text-[#A1A6B5] tracking-wide">
-                {profile.statusText || "Pranata Komputer di BIG & Riset YOLOv11 APD"}
+                {profile.statusText || "Computer Systems Specialist at BIG & YOLOv11 PPE Researcher"}
               </span>
             </div>
 
@@ -49,7 +49,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
             {/* Calls to Action */}
             <div className="flex flex-wrap items-center gap-3 pt-3">
               <Link href="/projects" className="btn-primary">
-                <span>Jelajahi Proyek</span>
+                <span>Explore Projects</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
 
@@ -61,15 +61,15 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                   className="btn-secondary"
                 >
                   <FileText className="w-4 h-4 text-[#A1A6B5]" />
-                  <span>Lihat CV</span>
+                  <span>View CV</span>
                 </a>
               ) : (
                 <button
-                  onClick={() => alert("CV dapat diunggah melalui Admin Dashboard")}
+                  onClick={() => alert("CV can be uploaded via the Admin Dashboard")}
                   className="btn-secondary"
                 >
                   <FileText className="w-4 h-4 text-[#A1A6B5]" />
-                  <span>Lihat CV</span>
+                  <span>View CV</span>
                 </button>
               )}
 
@@ -78,7 +78,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-secondary px-3.5"
-                title="Kunjungi GitHub Wijaya Dary Dimas"
+                title="Visit GitHub profile"
                 aria-label="GitHub Profile"
               >
                 <GithubIcon className="w-4 h-4" />
@@ -90,7 +90,7 @@ export default function HeroSection({ profile }: HeroSectionProps) {
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#171A24] border border-[#7790FF]/30 text-xs font-medium text-[#96A9FF] hover:bg-[#7790FF]/15 transition-all cursor-pointer"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[#7790FF]" />
-                <span>Asisten AI</span>
+                <span>Ask AI</span>
               </button>
             </div>
           </div>

@@ -13,10 +13,10 @@ interface Message {
   content: string;
 }
 
-const DEFAULT_GREETING = "Hai, ada yang bisa saya bantu?";
+const DEFAULT_GREETING = "Hi, how can I help you today?";
 
 export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalProps) {
-  const [assistantName, setAssistantName] = useState("Asisten AI — Wijaya Dary Dimas");
+  const [assistantName, setAssistantName] = useState("AI Assistant — Wijaya Dary Dimas");
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -35,11 +35,11 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
     fetch("/api/site-info")
       .then((res) => res.json())
       .then((data) => {
-        const name = data?.aiAssistantName?.trim() || "Asisten AI — Wijaya Dary Dimas";
+        const name = data?.aiAssistantName?.trim() || "AI Assistant — Wijaya Dary Dimas";
         setAssistantName(name);
 
         const customWelcome = data?.aiWelcomeMessage?.trim();
-        const fallbackWelcome = `Halo! Salam kenal ya. Saya ${name}, asisten virtual untuk website personal ${data?.brandName || "Wijaya Dary Dimas"}. Ada yang bisa saya bantu atau ingin kamu obrolkan hari ini? 😊`;
+        const fallbackWelcome = `Hello! Nice to meet you. I am ${name}, the virtual assistant for ${data?.brandName || "Wijaya Dary Dimas"}'s personal portfolio. How can I help you or what would you like to explore today? 😊`;
         const activeWelcome = customWelcome || fallbackWelcome;
 
         setMessages((prev) => {
@@ -114,15 +114,15 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Gagal memproses pesan AI.");
+        throw new Error(data.error || "Failed to process AI message.");
       }
 
       setMessages((prev) => [
         ...prev,
-        { role: "assistant", content: data.reply || data.message || "Maaf, tidak ada tanggapan." },
+        { role: "assistant", content: data.reply || data.message || "Sorry, no response received." },
       ]);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Terjadi kesalahan koneksi";
+      const msg = err instanceof Error ? err.message : "Connection error occurred";
       setError(msg);
     } finally {
       setLoading(false);
@@ -131,7 +131,7 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
 
   // Fitur hapus riwayat / reset memory secara sukarela
   const handleClearHistory = async () => {
-    if (!confirm("Hapus seluruh riwayat percakapan Anda dengan Asisten AI?")) return;
+    if (!confirm("Delete your entire conversation history with the AI Assistant?")) return;
     try {
       if (isLoggedIn) {
         await fetch("/api/ai/history", { method: "DELETE" });
@@ -139,7 +139,7 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
       setMessages([{ role: "assistant", content: DEFAULT_GREETING }]);
       setError(null);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Gagal menghapus riwayat";
+      const msg = err instanceof Error ? err.message : "Failed to clear conversation history";
       setError(msg);
     }
   };
@@ -166,7 +166,7 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
                 <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]" />
                 Online
                 {isLoggedIn && (
-                  <span className="text-[#96A9FF] font-sans">&bull; Memori Tersimpan</span>
+                  <span className="text-[#96A9FF] font-sans">&bull; Memory Saved</span>
                 )}
               </span>
             </div>
@@ -177,16 +177,16 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
             <button
               onClick={handleClearHistory}
               className="flex items-center gap-1 px-2.5 py-1 rounded-lg hover:bg-[#EF4444]/15 text-[#7D8496] hover:text-[#EF4444] transition-colors text-xs cursor-pointer"
-              title="Hapus seluruh riwayat percakapan Anda"
+              title="Clear all conversation history"
             >
               <Trash2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline text-[11px]">Hapus Riwayat</span>
+              <span className="hidden sm:inline text-[11px]">Clear History</span>
             </button>
 
             <button
               onClick={onClose}
               className="p-1.5 rounded-lg hover:bg-[#1F2330] text-[#7D8496] hover:text-[#F1F2F5] transition-colors cursor-pointer"
-              aria-label="Tutup Asisten AI"
+              aria-label="Close AI Assistant"
             >
               <X className="w-4 h-4" />
             </button>
@@ -227,7 +227,7 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
           {loading && (
             <div className="flex items-center gap-2 text-[#7D8496] text-xs">
               <Bot className="w-3.5 h-3.5 text-[#7790FF] animate-pulse" />
-              <span>Sedang mengetik jawaban...</span>
+              <span>Typing a response...</span>
             </div>
           )}
 
@@ -256,14 +256,14 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
               value={input}
               maxLength={800}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ketik pesan atau tanyakan apa saja..."
+              placeholder="Type a message or ask anything..."
               className="flex-1 px-3.5 py-2.5 rounded-lg bg-[#1F2330] border border-[#292D39] text-xs text-[#F1F2F5] placeholder-[#7D8496] focus:border-[#7790FF] focus:outline-none transition-colors"
             />
             <button
               type="submit"
               disabled={loading || !input.trim()}
               className="p-2.5 rounded-lg bg-[#7790FF] hover:bg-[#5E7DFE] text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
-              title="Kirim pesan"
+              title="Send message"
             >
               <Send className="w-3.5 h-3.5" />
             </button>

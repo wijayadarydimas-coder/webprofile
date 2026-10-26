@@ -16,8 +16,8 @@ interface ExternalLinksEditorProps {
 export default function ExternalLinksEditor({
   links,
   onChange,
-  title = "Tautan Platform Eksternal (Hugging Face, Roboflow, GitHub, Kaggle, dll.)",
-  description = "Hubungkan proyek atau karya skripsi dengan repositori kode, model weights, dataset anotasi, notebook, atau live platform cloud.",
+  title = "External Platform Links (Hugging Face, Roboflow, GitHub, Kaggle, etc.)",
+  description = "Connect your project or thesis research with code repositories, model weights, datasets, notebooks, or live cloud platforms.",
 }: ExternalLinksEditorProps) {
   const [isPickerOpen, setIsPickerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -80,14 +80,14 @@ export default function ExternalLinksEditor({
           className="btn-secondary text-xs py-1.5 px-3 self-start sm:self-auto flex items-center gap-1.5 hover:border-[#6D8DFF] text-[#F3F4F6]"
         >
           <Plus className="w-3.5 h-3.5 text-[#6D8DFF]" />
-          <span>Tambah Provider (+)</span>
+          <span>Add Provider (+)</span>
         </button>
       </div>
 
       {/* Current Links List */}
       {links.length === 0 ? (
         <div className="py-4 px-3 text-center rounded-lg bg-[#15171C] border border-dashed border-[#2B2D34] text-xs text-[#71717A]">
-          Belum ada tautan platform eksternal ditambahkan. Klik tombol &quot;Tambah Provider (+)&quot; untuk memilih Roboflow, Hugging Face, Kaggle, CVAT, dsb.
+          No external platform links added yet. Click &quot;Add Provider (+)&quot; to select Roboflow, Hugging Face, Kaggle, CVAT, etc.
         </div>
       ) : (
         <div className="flex flex-col gap-2.5">
@@ -111,9 +111,9 @@ export default function ExternalLinksEditor({
                   type="text"
                   value={link.label || ""}
                   onChange={(e) => handleUpdateLink(idx, "label", e.target.value)}
-                  placeholder="Label Tampilan (Opsional)"
+                  placeholder="Display Label (Optional)"
                   className="w-full sm:w-44 px-2.5 py-1.5 rounded-md bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
-                  title="Label Teks Tombol (opsional, default: nama provider)"
+                  title="Button label text (optional, default: provider name)"
                 />
 
                 {/* URL Input */}
@@ -132,7 +132,7 @@ export default function ExternalLinksEditor({
                       target="_blank"
                       rel="noopener noreferrer"
                       className="absolute right-2 top-2 text-[#71717A] hover:text-[#6D8DFF]"
-                      title="Buka link di tab baru"
+                      title="Open link in new tab"
                     >
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
@@ -144,7 +144,7 @@ export default function ExternalLinksEditor({
                   type="button"
                   onClick={() => handleRemoveLink(idx)}
                   className="p-1.5 rounded-md text-[#71717A] hover:text-[#EF4444] hover:bg-[#251515] self-end sm:self-auto transition-colors"
-                  title="Hapus tautan ini"
+                  title="Remove this link"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -163,7 +163,7 @@ export default function ExternalLinksEditor({
               <div className="flex items-center gap-2">
                 <Globe className="w-4 h-4 text-[#6D8DFF]" />
                 <h3 className="text-sm sm:text-base font-bold text-[#F3F4F6]">
-                  Pilih Platform / Provider Eksternal
+                  Select Platform / External Provider
                 </h3>
               </div>
               <button
@@ -184,7 +184,7 @@ export default function ExternalLinksEditor({
                   autoFocus
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Cari provider (contoh: roboflow, huggingface, kaggle, cvat, modal, vercel...)"
+                  placeholder="Search provider (e.g. roboflow, huggingface, kaggle, cvat, modal, vercel...)"
                   className="w-full pl-9 pr-3.5 py-2 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
                 />
               </div>
@@ -200,7 +200,7 @@ export default function ExternalLinksEditor({
                       : "bg-[#1B1D23] text-[#A1A1AA] hover:text-[#F3F4F6]"
                   }`}
                 >
-                  Semua ({ALL_PROVIDERS.length})
+                  All ({ALL_PROVIDERS.length})
                 </button>
                 {PROVIDER_CATEGORIES.map((cat) => (
                   <button
@@ -223,7 +223,7 @@ export default function ExternalLinksEditor({
             <div className="flex-1 overflow-y-auto p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
               {filteredProviders.length === 0 ? (
                 <div className="col-span-full py-8 text-center text-xs text-[#71717A]">
-                  Tidak ada provider yang cocok dengan pencarian &quot;{searchQuery}&quot;.
+                  No providers match &quot;{searchQuery}&quot;.
                 </div>
               ) : (
                 filteredProviders.map((prov) => (

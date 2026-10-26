@@ -25,7 +25,7 @@ export default function ProjectCard({ project, priority = false }: ProjectCardPr
         {project.coverImage ? (
           <Image
             src={project.coverImage}
-            alt={`Gambar proyek ${project.title}`}
+            alt={`Project preview for ${project.title}`}
             fill
             priority={priority}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -33,7 +33,7 @@ export default function ProjectCard({ project, priority = false }: ProjectCardPr
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center font-mono text-xs text-[#7D8496]">
-            Pratinjau Tidak Tersedia
+            Preview Unavailable
           </div>
         )}
 
@@ -87,7 +87,7 @@ export default function ProjectCard({ project, priority = false }: ProjectCardPr
               href={`/projects/${project.slug}`}
               className="text-xs font-medium text-[#96A9FF] hover:text-[#7790FF] transition-colors inline-flex items-center gap-1"
             >
-              <span>Baca Studi Kasus</span>
+              <span>Read Case Study</span>
               <span>&rarr;</span>
             </Link>
 
@@ -99,7 +99,7 @@ export default function ProjectCard({ project, priority = false }: ProjectCardPr
                   rel="noopener noreferrer"
                   className="p-1.5 rounded-lg bg-[#1F2330] hover:bg-[#262A38] border border-[#292D39] text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors"
                   title="Source Code"
-                  aria-label={`Repository GitHub untuk ${project.title}`}
+                  aria-label={`GitHub repository for ${project.title}`}
                 >
                   <GithubIcon className="w-3.5 h-3.5" />
                 </a>
@@ -112,7 +112,7 @@ export default function ProjectCard({ project, priority = false }: ProjectCardPr
                   rel="noopener noreferrer"
                   className="p-1.5 rounded-lg bg-[#1F2330] hover:bg-[#262A38] border border-[#292D39] text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors"
                   title="Live Demo"
-                  aria-label={`Live Demo untuk ${project.title}`}
+                  aria-label={`Live demo for ${project.title}`}
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                 </a>

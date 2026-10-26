@@ -14,13 +14,13 @@ export default function TimelineSection({ experiences, educations }: TimelineSec
         {/* Section Header */}
         <div className="flex flex-col gap-2 max-w-xl">
           <span className="text-xs font-mono font-medium text-[#7790FF] uppercase tracking-wider">
-            Perjalanan &amp; Pengalaman
+            Journey &amp; Experience
           </span>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#F1F2F5] tracking-tight">
-            Pengalaman &amp; Pendidikan
+            Experience &amp; Education
           </h2>
           <p className="text-sm text-[#A1A6B5]">
-            Catatan perjalanan belajar dan pengalaman kerja, mulai dari pendidikan formal hingga kesempatan menerapkan pengetahuan dalam lingkungan kerja.
+            A chronicle of academic learning and professional experience, from formal education to delivering real-world engineering solutions.
           </p>
         </div>
 
@@ -32,7 +32,7 @@ export default function TimelineSection({ experiences, educations }: TimelineSec
               <div className="p-2 rounded-lg bg-[#171A24] border border-[#292D39] text-[#7790FF]">
                 <Briefcase className="w-4 h-4" />
               </div>
-              <h3 className="text-base font-semibold text-[#F1F2F5]">Pengalaman Kerja</h3>
+              <h3 className="text-base font-semibold text-[#F1F2F5]">Work Experience</h3>
             </div>
 
             <div className="flex flex-col gap-8 relative pl-6 border-l border-[#292D39]">
@@ -53,7 +53,7 @@ export default function TimelineSection({ experiences, educations }: TimelineSec
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-[#7D8496] hover:text-[#96A9FF] inline-flex items-center transition-colors"
-                              title={`Kunjungi situs ${exp.organization}`}
+                              title={`Visit ${exp.organization}`}
                             >
                               <ExternalLink className="w-3 h-3" />
                             </a>
@@ -84,7 +84,7 @@ export default function TimelineSection({ experiences, educations }: TimelineSec
               <div className="p-2 rounded-lg bg-[#171A24] border border-[#292D39] text-[#96A9FF]">
                 <GraduationCap className="w-4 h-4" />
               </div>
-              <h3 className="text-base font-semibold text-[#F1F2F5]">Pendidikan</h3>
+              <h3 className="text-base font-semibold text-[#F1F2F5]">Formal Education</h3>
             </div>
 
             <div className="flex flex-col gap-8 relative pl-6 border-l border-[#292D39]">
@@ -105,7 +105,7 @@ export default function TimelineSection({ experiences, educations }: TimelineSec
                               target="_blank"
                               rel="noopener noreferrer"
                               className="text-[#7D8496] hover:text-[#96A9FF] inline-flex items-center transition-colors"
-                              title={`Kunjungi situs resmi ${edu.institution}`}
+                              title={`Visit official site of ${edu.institution}`}
                             >
                               <ExternalLink className="w-3 h-3" />
                             </a>

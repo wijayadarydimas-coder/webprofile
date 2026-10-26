@@ -30,13 +30,13 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div className="flex flex-col gap-2 max-w-2xl">
             <span className="text-xs font-mono font-medium text-[#7790FF] uppercase tracking-wider">
-              Proyek
+              PROJECTS
             </span>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#F1F2F5] tracking-tight">
-              Proyek &amp; Eksplorasi
+              Projects &amp; Explorations
             </h2>
             <p className="text-sm text-[#A1A6B5] leading-relaxed">
-              Kumpulan proyek dan eksperimen yang menjadi bagian dari proses belajar, mencoba hal baru, dan mengembangkan ide menjadi sesuatu yang nyata.
+              A collection of projects and explorations reflecting hands-on learning, experimentation, and real-world engineering.
             </p>
           </div>
 
@@ -44,7 +44,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
             href="/projects"
             className="inline-flex items-center gap-1.5 text-xs font-medium text-[#96A9FF] hover:text-[#F1F2F5] transition-colors w-fit shrink-0 group"
           >
-            <span>Jelajahi Proyek</span>
+            <span>Explore Projects</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
@@ -52,7 +52,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
         {/* Dynamic Balanced Composition */}
         {displayProjects.length === 0 ? (
           <div className="p-12 text-center rounded-2xl bg-[#171A24] border border-[#292D39] text-xs text-[#7D8496]">
-            Belum ada proyek yang dipublikasikan.
+            No published projects yet.
           </div>
         ) : displayProjects.length === 1 ? (
           /* SINGLE PROJECT: Full-Width Editorial Spotlight */
@@ -82,7 +82,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#7790FF]/15 text-[#96A9FF] border border-[#7790FF]/30">
-                    Proyek
+                    Featured Case Study
                   </span>
                 </div>
 
@@ -116,7 +116,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
 
                 <div className="flex items-center justify-between pt-2">
                   <Link href={`/projects/${flagship.slug}`} className="btn-primary text-xs py-2 px-4">
-                    <span>Baca Studi Kasus</span>
+                    <span>Read Case Study</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
 
@@ -128,7 +128,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                         rel="noopener noreferrer"
                         className="p-2 rounded-lg bg-[#1F2330] hover:bg-[#262A38] border border-[#292D39] text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors"
                         title="Repository"
-                        aria-label={`Repository untuk ${flagship.title}`}
+                        aria-label={`Repository for ${flagship.title}`}
                       >
                         <GithubIcon className="w-4 h-4" />
                       </a>
@@ -140,7 +140,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                         rel="noopener noreferrer"
                         className="p-2 rounded-lg bg-[#1F2330] hover:bg-[#262A38] border border-[#292D39] text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors"
                         title="Live Demo"
-                        aria-label={`Live demo untuk ${flagship.title}`}
+                        aria-label={`Live demo for ${flagship.title}`}
                       >
                         <ExternalLink className="w-4 h-4" />
                       </a>
@@ -187,7 +187,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center gap-2">
                     <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#7790FF]/15 text-[#96A9FF] border border-[#7790FF]/30">
-                      Karya Utama
+                      Featured Project
                     </span>
                   </div>
 
@@ -214,7 +214,7 @@ export default function FeaturedProjects({ projects }: FeaturedProjectsProps) {
 
                   <div className="flex items-center justify-between pt-2">
                     <Link href={`/projects/${flagship.slug}`} className="btn-primary text-xs py-2 px-4">
-                      <span>Baca Studi Kasus</span>
+                      <span>Read Case Study</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
 

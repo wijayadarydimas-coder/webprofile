@@ -23,7 +23,7 @@ export default function ResearchSection({ research }: ResearchSectionProps) {
         <div className="flex flex-col gap-3 max-w-3xl">
           <div className="flex items-center gap-2.5">
             <span className="text-xs font-mono font-medium text-[#7790FF] uppercase tracking-wider">
-              Penelitian Skripsi
+              Thesis Research
             </span>
             <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono bg-[#7790FF]/15 text-[#96A9FF] border border-[#7790FF]/30">
               {research.publishedStatus}
@@ -47,9 +47,9 @@ export default function ResearchSection({ research }: ResearchSectionProps) {
                 </div>
                 <span className="text-[10px] font-mono text-[#7D8496]">ARCH//01</span>
               </div>
-              <h3 className="text-base font-semibold text-[#F1F2F5]">Modifikasi Arsitektur</h3>
+              <h3 className="text-base font-semibold text-[#F1F2F5]">Architectural Modification</h3>
               <p className="text-xs sm:text-sm text-[#A1A6B5] leading-relaxed">
-                Penyesuaian ekstraksi fitur multi-skala pada modul neck dan backbone YOLOv11 guna meningkatkan sensitivitas deteksi objek berdimensi kecil (seperti sarung tangan dan sepatu).
+                Multi-scale feature extraction tuning on YOLOv11 neck and backbone modules to improve detection sensitivity for small-dimension objects (such as gloves and safety shoes).
               </p>
             </div>
           </div>
@@ -62,9 +62,9 @@ export default function ResearchSection({ research }: ResearchSectionProps) {
                 </div>
                 <span className="text-[10px] font-mono text-[#7D8496]">DET//04</span>
               </div>
-              <h3 className="text-base font-semibold text-[#F1F2F5]">4 Kelas APD Industri</h3>
+              <h3 className="text-base font-semibold text-[#F1F2F5]">4 Industrial PPE Classes</h3>
               <p className="text-xs sm:text-sm text-[#A1A6B5] leading-relaxed">
-                Klasifikasi simultan untuk helm proyek, rompi visibilitas tinggi, sarung tangan pelindung, dan sepatu keselamatan kerja pada berbagai sudut kamera pengawas.
+                Simultaneous multi-class detection for safety helmets, high-visibility vests, protective gloves, and safety boots across varied CCTV camera angles.
               </p>
             </div>
           </div>
@@ -77,9 +77,9 @@ export default function ResearchSection({ research }: ResearchSectionProps) {
                 </div>
                 <span className="text-[10px] font-mono text-[#7D8496]">ALARM//AUTO</span>
               </div>
-              <h3 className="text-base font-semibold text-[#F1F2F5]">Integrasi Alarm Otomatis</h3>
+              <h3 className="text-base font-semibold text-[#F1F2F5]">Automated Alarm Integration</h3>
               <p className="text-xs sm:text-sm text-[#A1A6B5] leading-relaxed">
-                Mekanisme pemicu sinyal audio-visual instan ketika algoritma mendeteksi ketidaklengkapan APD pada zona kerja berbahaya, mendukung kepatuhan K3 real-time.
+                Instant audio-visual alert trigger mechanism whenever PPE violations are detected in hazardous work zones, enforcing real-time HSE safety compliance.
               </p>
             </div>
           </div>
@@ -91,7 +91,7 @@ export default function ResearchSection({ research }: ResearchSectionProps) {
             href="/research"
             className="inline-flex items-center gap-1.5 text-xs font-medium text-[#96A9FF] hover:text-[#F1F2F5] transition-colors group"
           >
-            <span>Buka Halaman Rincian Penelitian</span>
+            <span>View Full Research Documentation</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
           </Link>
 
@@ -104,7 +104,7 @@ export default function ResearchSection({ research }: ResearchSectionProps) {
                 className="btn-secondary text-xs py-2 px-3"
               >
                 <GithubIcon className="w-3.5 h-3.5" />
-                <span>Repository Penelitian</span>
+                <span>Research Repository</span>
               </a>
             )}
 
@@ -116,7 +116,7 @@ export default function ResearchSection({ research }: ResearchSectionProps) {
                 className="btn-secondary text-xs py-2 px-3"
               >
                 <FileText className="w-3.5 h-3.5" />
-                <span>Dokumen PDF</span>
+                <span>PDF Document</span>
               </a>
             )}
 

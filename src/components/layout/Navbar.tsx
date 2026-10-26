@@ -207,8 +207,8 @@ export default function Navbar({ onOpenAi }: NavbarProps) {
           <button
             onClick={onOpenAi}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#171A24] hover:bg-[#1F2330] border border-[#292D39] hover:border-[#7790FF]/50 text-xs font-medium text-[#F1F2F5] transition-all cursor-pointer group shadow-sm"
-            aria-label="Tanya AI Assistant"
-            title={`Tanya seputar profil & proyek ${branding.brandName}`}
+            aria-label="Ask AI Assistant"
+            title={`Ask about ${branding.brandName}'s profile & projects`}
           >
             <Sparkles className="w-3.5 h-3.5 text-[#7790FF] group-hover:rotate-12 transition-transform" />
             <span className="hidden sm:inline">Ask AI</span>
@@ -219,7 +219,7 @@ export default function Navbar({ onOpenAi }: NavbarProps) {
             <Link
               href="/admin"
               className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[#7790FF]/10 border border-[#7790FF]/30 text-xs font-medium text-[#96A9FF] hover:bg-[#7790FF]/20 transition-colors"
-              title="Akses Dashboard Admin"
+              title="Access Admin Dashboard"
             >
               <Shield className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Admin</span>
@@ -230,7 +230,7 @@ export default function Navbar({ onOpenAi }: NavbarProps) {
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden p-2 rounded-full bg-[#171A24] border border-[#292D39] text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors cursor-pointer"
-            aria-label={isOpen ? "Tutup Menu" : "Buka Menu"}
+            aria-label={isOpen ? "Close Menu" : "Open Menu"}
             aria-expanded={isOpen}
           >
             {isOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -278,7 +278,7 @@ export default function Navbar({ onOpenAi }: NavbarProps) {
                 className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#171A24] border border-[#7790FF]/40 text-sm font-medium text-[#F1F2F5] hover:bg-[#1F2330] transition-colors"
               >
                 <Bot className="w-4 h-4 text-[#7790FF]" />
-                Tanya Asisten AI
+                Ask AI Assistant
               </button>
 
               {isAdmin && (
@@ -288,7 +288,7 @@ export default function Navbar({ onOpenAi }: NavbarProps) {
                   className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#7790FF]/15 border border-[#7790FF]/30 text-sm font-medium text-[#96A9FF]"
                 >
                   <Shield className="w-4 h-4" />
-                  Buka Panel Admin
+                  Open Admin Panel
                 </Link>
               )}
             </div>

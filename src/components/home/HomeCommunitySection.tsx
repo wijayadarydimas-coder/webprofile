@@ -15,13 +15,13 @@ export default function HomeCommunitySection({ comments, user }: HomeCommunitySe
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
           <div className="flex flex-col gap-2">
             <span className="text-xs font-mono font-medium text-[#7790FF] uppercase tracking-wider">
-              KOMUNITAS &amp; Diskusi
+              COMMUNITY &amp; DISCUSSIONS
             </span>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#F1F2F5] tracking-tight">
-              Ruang Berbagi &amp; Berdiskusi
+              Community Discussion Board
             </h2>
             <p className="text-sm text-[#A1A6B5] leading-relaxed max-w-xl">
-              Tempat berbagi pemikiran, bertukar pengalaman, dan berdiskusi seputar teknologi, pemrograman, serta hal-hal yang menarik untuk dipelajari bersama.
+              A collaborative space to exchange ideas, share engineering experiences, and discuss computer vision, programming, and emerging technology.
             </p>
           </div>
 
@@ -29,7 +29,7 @@ export default function HomeCommunitySection({ comments, user }: HomeCommunitySe
             href="/community"
             className="inline-flex items-center gap-1.5 text-xs font-medium text-[#96A9FF] hover:text-[#F1F2F5] transition-colors group shrink-0"
           >
-            <span>Kunjungi Ruang Diskusi</span>
+            <span>Visit Discussion Board</span>
             <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>

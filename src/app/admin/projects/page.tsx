@@ -45,7 +45,7 @@ export default function AdminProjectsPage() {
         }
       })
       .catch((err) => {
-        console.error("Gagal memuat proyek:", err);
+        console.error("Failed to load projects:", err);
       })
       .finally(() => {
         setLoading(false);
@@ -164,14 +164,14 @@ export default function AdminProjectsPage() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Gagal menyimpan proyek.");
+        throw new Error(data.error || "Failed to save project.");
       }
 
-      setStatus({ type: "success", message: "Data proyek berhasil disimpan!" });
+      setStatus({ type: "success", message: "Project saved successfully!" });
       setIsModalOpen(false);
       loadProjects();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
+      const msg = err instanceof Error ? err.message : "An error occurred";
       setStatus({ type: "error", message: msg });
     } finally {
       setSaving(false);
@@ -179,7 +179,7 @@ export default function AdminProjectsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Hapus proyek ini secara permanen?")) return;
+    if (!confirm("Permanently delete this project?")) return;
     try {
       await fetch("/api/admin/content", {
         method: "POST",
@@ -187,9 +187,9 @@ export default function AdminProjectsPage() {
         body: JSON.stringify({ entity: "project", action: "delete", id }),
       });
       setProjects(projects.filter((p) => p.id !== id));
-      setStatus({ type: "success", message: "Proyek berhasil dihapus." });
+      setStatus({ type: "success", message: "Project deleted successfully." });
     } catch {
-      setStatus({ type: "error", message: "Gagal menghapus proyek." });
+      setStatus({ type: "error", message: "Failed to delete project." });
     }
   };
 
@@ -205,17 +205,17 @@ export default function AdminProjectsPage() {
 
       const fd = new FormData();
       fd.append("file", uploadFile);
-      fd.append("altText", "Cover Proyek");
+      fd.append("altText", "Project Cover");
 
       const res = await fetch("/api/upload", { method: "POST", body: fd });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Gagal upload gambar.");
+      if (!res.ok) throw new Error(data.error || "Failed to upload image.");
 
       if (editingProj) {
         setEditingProj({ ...editingProj, coverImage: data.url });
       }
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Upload gagal");
+      alert(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setUploadingImage(false);
     }
@@ -227,16 +227,16 @@ export default function AdminProjectsPage() {
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <FolderKanban className="w-5 h-5 text-[#6D8DFF]" />
-            <h1 className="text-xl font-bold text-[#F3F4F6]">Pengelolaan Portofolio &amp; Proyek</h1>
+            <h1 className="text-xl font-bold text-[#F3F4F6]">Portfolio &amp; Project Management</h1>
           </div>
           <p className="text-xs text-[#A1A1AA]">
-            Tambah, edit, sesuaikan urutan, dan sembunyikan/publikasikan studi kasus proyek.
+            Add, edit, adjust ordering, and hide/publish project case studies.
           </p>
         </div>
 
         <button onClick={handleOpenNew} className="btn-primary text-xs py-2 px-3.5">
           <Plus className="w-3.5 h-3.5" />
-          <span>Tambah Proyek Baru</span>
+          <span>Add New Project</span>
         </button>
       </div>
 
@@ -262,11 +262,11 @@ export default function AdminProjectsPage() {
         <table className="w-full text-left text-xs text-[#A1A1AA]">
           <thead className="bg-[#111317] border-b border-[#2B2D34] text-[#F3F4F6] font-medium">
             <tr>
-              <th className="p-3.5">Judul Proyek</th>
-              <th className="p-3.5">Kategori</th>
+              <th className="p-3.5">Project Title</th>
+              <th className="p-3.5">Category</th>
               <th className="p-3.5">Status</th>
-              <th className="p-3.5">Unggulan</th>
-              <th className="p-3.5 text-right">Aksi</th>
+              <th className="p-3.5">Featured</th>
+              <th className="p-3.5 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#202228]">
@@ -285,14 +285,14 @@ export default function AdminProjectsPage() {
                   <span className={`px-2 py-0.5 rounded text-[10px] font-mono ${
                     proj.published ? "bg-[#22C55E]/15 text-[#22C55E]" : "bg-[#71717A]/20 text-[#A1A1AA]"
                   }`}>
-                    {proj.published ? "Terpublikasi" : "Draft"}
+                    {proj.published ? "Published" : "Draft"}
                   </span>
                 </td>
                 <td className="p-3.5">
                   <span className={`px-2 py-0.5 rounded text-[10px] font-mono ${
                     proj.featured ? "bg-[#6D8DFF]/15 text-[#8B9CFF]" : "text-[#71717A]"
                   }`}>
-                    {proj.featured ? "Ya" : "Tidak"}
+                    {proj.featured ? "Yes" : "No"}
                   </span>
                 </td>
                 <td className="p-3.5 text-right">
@@ -307,14 +307,14 @@ export default function AdminProjectsPage() {
                         setIsModalOpen(true);
                       }}
                       className="p-1.5 rounded hover:bg-[#1B1D23] text-[#8B9CFF]"
-                      title="Edit Proyek"
+                      title="Edit Project"
                     >
                       <Edit className="w-3.5 h-3.5" />
                     </button>
                     <button
                       onClick={() => handleDelete(proj.id)}
                       className="p-1.5 rounded hover:bg-[#1B1D23] text-[#EF4444]"
-                      title="Hapus Proyek"
+                      title="Delete Project"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
@@ -332,7 +332,7 @@ export default function AdminProjectsPage() {
           <div className="relative w-full max-w-2xl max-h-[90vh] bg-[#15171C] border border-[#2B2D34] rounded-2xl p-6 overflow-y-auto flex flex-col gap-5 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-[#202228]">
               <h2 className="text-base font-bold text-[#F3F4F6]">
-                {editingProj.id ? "Edit Proyek" : "Tambah Proyek Baru"}
+                {editingProj.id ? "Edit Project" : "Add New Project"}
               </h2>
               <button onClick={() => setIsModalOpen(false)} className="text-[#71717A] hover:text-[#F3F4F6]">
                 <X className="w-4 h-4" />
@@ -342,7 +342,7 @@ export default function AdminProjectsPage() {
             <form onSubmit={handleSave} className="flex flex-col gap-4 text-xs">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[#A1A1AA]">Judul Proyek</label>
+                  <label className="text-[#A1A1AA]">Project Title</label>
                   <input
                     type="text"
                     required
@@ -368,13 +368,13 @@ export default function AdminProjectsPage() {
                         };
                       });
                     }}
-                    placeholder="Contoh: Real-Time PPE Detection with YOLOv11"
+                    placeholder="e.g. Real-Time PPE Detection with YOLOv11"
                     className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6]"
                   />
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[#A1A1AA]">Slug URL</label>
+                  <label className="text-[#A1A1AA]">URL Slug</label>
                   <input
                     type="text"
                     required
@@ -383,7 +383,7 @@ export default function AdminProjectsPage() {
                       const val = e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "");
                       setEditingProj({ ...editingProj, slug: val });
                     }}
-                    placeholder="contoh: real-time-ppe-detection"
+                    placeholder="e.g. real-time-ppe-detection"
                     className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6] font-mono"
                   />
                 </div>
@@ -392,8 +392,8 @@ export default function AdminProjectsPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-[#A1A1AA]">Kategori Proyek</label>
-                    <span className="text-[10px] text-[#71717A]">Pilih cepat atau tulis manual</span>
+                    <label className="text-[#A1A1AA]">Project Category</label>
+                    <span className="text-[10px] text-[#71717A]">Quick select or enter custom</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <input
@@ -402,7 +402,7 @@ export default function AdminProjectsPage() {
                       required
                       value={editingProj.category}
                       onChange={(e) => setEditingProj({ ...editingProj, category: e.target.value })}
-                      placeholder="Pilih atau ketik kategori..."
+                      placeholder="Select or type category..."
                       className="flex-1 p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
                     />
                     <select
@@ -431,8 +431,8 @@ export default function AdminProjectsPage() {
 
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-[#A1A1AA]">Teknologi (pisahkan koma)</label>
-                    <span className="text-[10px] text-[#71717A]">Bebas ketik koma &amp; spasi</span>
+                    <label className="text-[#A1A1AA]">Technologies (comma-separated)</label>
+                    <span className="text-[10px] text-[#71717A]">Comma-separated list</span>
                   </div>
                   <input
                     type="text"
@@ -446,14 +446,14 @@ export default function AdminProjectsPage() {
                         technologies: parsed.length > 0 ? parsed : [val.trim()],
                       });
                     }}
-                    placeholder="Contoh: Python, PyTorch, YOLOv11, OpenCV, FastAPI"
+                    placeholder="e.g. Python, PyTorch, YOLOv11, OpenCV, FastAPI"
                     className="p-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none font-mono text-xs"
                   />
                 </div>
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-[#A1A1AA]">Deskripsi Singkat</label>
+                <label className="text-[#A1A1AA]">Short Description</label>
                 <textarea
                   rows={2}
                   required
@@ -464,7 +464,7 @@ export default function AdminProjectsPage() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-[#A1A1AA]">Deskripsi Lengkap / Pendekatan</label>
+                <label className="text-[#A1A1AA]">Full Description / Approach</label>
                 <textarea
                   rows={4}
                   required
@@ -476,7 +476,7 @@ export default function AdminProjectsPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="flex flex-col gap-1">
-                  <label className="text-[#A1A1AA]">Masalah (Problem)</label>
+                  <label className="text-[#A1A1AA]">Problem Statement</label>
                   <textarea
                     rows={2}
                     value={editingProj.problem || ""}
@@ -485,7 +485,7 @@ export default function AdminProjectsPage() {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-[#A1A1AA]">Solusi (Approach)</label>
+                  <label className="text-[#A1A1AA]">Solution / Approach</label>
                   <textarea
                     rows={2}
                     value={editingProj.solution || ""}
@@ -494,7 +494,7 @@ export default function AdminProjectsPage() {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-[#A1A1AA]">Hasil Nyata (Results)</label>
+                  <label className="text-[#A1A1AA]">Key Results</label>
                   <textarea
                     rows={2}
                     value={editingProj.results || ""}
@@ -506,7 +506,7 @@ export default function AdminProjectsPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[#A1A1AA]">URL GitHub Repo</label>
+                  <label className="text-[#A1A1AA]">GitHub Repo URL</label>
                   <input
                     type="text"
                     value={editingProj.repoUrl || ""}
@@ -516,7 +516,7 @@ export default function AdminProjectsPage() {
                   />
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[#A1A1AA]">URL Live Demo</label>
+                  <label className="text-[#A1A1AA]">Live Demo URL</label>
                   <input
                     type="text"
                     value={editingProj.liveUrl || ""}
@@ -533,8 +533,8 @@ export default function AdminProjectsPage() {
                 onChange={(updatedLinks) =>
                   setEditingProj({ ...editingProj, externalLinks: updatedLinks })
                 }
-                title="Tautan Ekosistem & Platform Proyek (Roboflow, Hugging Face, Kaggle, GitHub, dll.)"
-                description="Hubungkan proyek dengan Roboflow Universe, Hugging Face Hub, Kaggle Notebooks, model weights, API docs, dsb."
+                title="Project Ecosystem & Platform Links (Roboflow, Hugging Face, Kaggle, GitHub, etc.)"
+                description="Connect this project to Roboflow Universe, Hugging Face Hub, Kaggle Notebooks, model weights, API docs, etc."
               />
 
               <div className="flex flex-col gap-1.5">
@@ -570,7 +570,7 @@ export default function AdminProjectsPage() {
                     onChange={(e) => setEditingProj({ ...editingProj, featured: e.target.checked })}
                     className="rounded bg-[#1B1D23] border-[#2B2D34]"
                   />
-                  <span className="text-[#F3F4F6]">Tampilkan sebagai Proyek Unggulan</span>
+                  <span className="text-[#F3F4F6]">Feature as Highlighted Project</span>
                 </label>
 
                 <label className="flex items-center gap-2 cursor-pointer">
@@ -580,7 +580,7 @@ export default function AdminProjectsPage() {
                     onChange={(e) => setEditingProj({ ...editingProj, published: e.target.checked })}
                     className="rounded bg-[#1B1D23] border-[#2B2D34]"
                   />
-                  <span className="text-[#F3F4F6]">Publikasikan Sekarang</span>
+                  <span className="text-[#F3F4F6]">Publish Immediately</span>
                 </label>
               </div>
 
@@ -590,14 +590,14 @@ export default function AdminProjectsPage() {
                   onClick={() => setIsModalOpen(false)}
                   className="btn-secondary py-2 px-4"
                 >
-                  Batal
+                  Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
                   className="btn-primary py-2 px-5 font-semibold"
                 >
-                  {saving ? "Menyimpan..." : "Simpan Proyek"}
+                  {saving ? "Saving..." : "Save Project"}
                 </button>
               </div>
             </form>

@@ -53,7 +53,7 @@ export default function CommunityView({ initialComments, initialUser }: Communit
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Gagal mengirim komentar.");
+    if (!res.ok) throw new Error(data.error || "Failed to post comment.");
 
     await refreshComments();
   };
@@ -66,7 +66,7 @@ export default function CommunityView({ initialComments, initialUser }: Communit
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Gagal mengedit komentar.");
+    if (!res.ok) throw new Error(data.error || "Failed to edit comment.");
 
     await refreshComments();
   };
@@ -77,7 +77,7 @@ export default function CommunityView({ initialComments, initialUser }: Communit
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Gagal menghapus komentar.");
+    if (!res.ok) throw new Error(data.error || "Failed to delete comment.");
 
     await refreshComments();
   };
@@ -90,7 +90,7 @@ export default function CommunityView({ initialComments, initialUser }: Communit
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "Gagal moderasi komentar.");
+    if (!res.ok) throw new Error(data.error || "Failed to moderate comment.");
 
     await refreshComments();
   };
@@ -116,14 +116,14 @@ export default function CommunityView({ initialComments, initialUser }: Communit
           </div>
           <div className="flex flex-col">
             <span className="text-xs font-semibold text-[#F1F2F5]">
-              {currentUser ? `Masuk sebagai: ${currentUser.name}` : "Mode Pengunjung (Tamu)"}
+              {currentUser ? `Signed in as: ${currentUser.name}` : "Guest Mode"}
             </span>
             <span className="text-[11px] text-[#7D8496]">
               {currentUser
                 ? currentUser.role === "admin"
-                  ? "Hak Akses Administrator Aktif"
-                  : "Akun Komunitas Terverifikasi"
-                : "Masuk untuk menulis komentar dan bergabung dalam diskusi."}
+                  ? "Administrator Privileges Active"
+                  : "Verified Community Member"
+                : "Sign in to write comments and join the discussion."}
             </span>
           </div>
         </div>
@@ -135,14 +135,14 @@ export default function CommunityView({ initialComments, initialUser }: Communit
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#1F2330] hover:bg-[#262A38] border border-[#292D39] text-xs text-[#EF4444] transition-colors cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />
-              <span>Keluar Sesi</span>
+              <span>Sign Out</span>
             </button>
           ) : (
             <button
               onClick={() => setIsAuthOpen(true)}
               className="btn-primary text-xs py-1.5 px-3.5"
             >
-              <span>Masuk / Daftar Akun</span>
+              <span>Sign In / Register</span>
             </button>
           )}
         </div>
@@ -160,13 +160,13 @@ export default function CommunityView({ initialComments, initialUser }: Communit
         <div className="flex items-center justify-between pb-2 border-b border-[#1C202B]">
           <h2 className="text-sm font-semibold text-[#F1F2F5] flex items-center gap-2">
             <MessageSquare className="w-4 h-4 text-[#96A9FF]" />
-            <span>Diskusi Terbuka ({comments.length})</span>
+            <span>Public Discussions ({comments.length})</span>
           </h2>
         </div>
 
         {rootComments.length === 0 ? (
           <div className="py-12 text-center text-xs text-[#7D8496] bg-[#171A24] rounded-2xl border border-[#292D39]">
-            Belum ada diskusi terbuka. Jadilah yang pertama memberikan masukan atau pertanyaan!
+            No discussions yet. Be the first to start a conversation or ask a question!
           </div>
         ) : (
           <div className="flex flex-col gap-4">

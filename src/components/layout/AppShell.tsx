@@ -43,13 +43,13 @@ export default function AppShell({ children }: AppShellProps) {
       <button
         onClick={() => setIsAiOpen(true)}
         className="fixed bottom-6 right-6 z-30 flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-[#171A24]/90 hover:bg-[#1F2330] border border-[#292D39] hover:border-[#7790FF]/60 text-xs font-medium text-[#F1F2F5] shadow-xl shadow-black/50 backdrop-blur-md transition-all hover:scale-105 active:scale-95 group cursor-pointer"
-        aria-label="Tanya Asisten AI Wijaya Dary Dimas"
-        title="Tanya Asisten AI tentang profil dan proyek"
+        aria-label="Ask Wijaya Dary Dimas AI Assistant"
+        title="Ask AI Assistant about profile and projects"
       >
         <div className="w-5 h-5 rounded-full bg-[#7790FF]/15 flex items-center justify-center text-[#7790FF] group-hover:rotate-12 transition-transform">
           <Sparkles className="w-3 h-3" />
         </div>
-        <span className="hidden sm:inline">Tanya AI</span>
+        <span className="hidden sm:inline">Ask AI</span>
       </button>
 
       <AIAssistantModal isOpen={isAiOpen} onClose={() => setIsAiOpen(false)} />

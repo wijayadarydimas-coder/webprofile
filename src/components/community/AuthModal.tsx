@@ -37,7 +37,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Gagal melakukan autentikasi.");
+        throw new Error(data.error || "Authentication failed.");
       }
 
       onSuccess(data.user);
@@ -46,7 +46,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
       }
       onClose();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
+      const msg = err instanceof Error ? err.message : "An unexpected error occurred.";
       setError(msg);
     } finally {
       setLoading(false);
@@ -64,12 +64,12 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <h3 className="text-base font-semibold text-[#F1F2F5]">
-              {mode === "login" ? "Masuk ke Komunitas" : "Buat Akun Komunitas"}
+              {mode === "login" ? "Sign In to Community" : "Create Community Account"}
             </h3>
             <p className="text-xs text-[#7D8496]">
               {mode === "login"
-                ? "Gunakan akun Anda untuk berkomentar dan membalas diskusi."
-                : "Daftar dengan cepat menggunakan nama dan email."}
+                ? "Use your account to post comments and join discussions."
+                : "Register quickly with your name and email."}
             </p>
           </div>
           <button
@@ -90,7 +90,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
         <form onSubmit={handleSubmit} className="flex flex-col gap-3.5">
           {mode === "register" && (
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-[#A1A6B5]">Nama Tampilan</label>
+              <label className="text-xs text-[#A1A6B5]">Display Name</label>
               <div className="relative flex items-center">
                 <User className="absolute left-3 w-4 h-4 text-[#7D8496]" />
                 <input
@@ -98,7 +98,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="Nama Lengkap / Panggilan"
+                  placeholder="Full Name / Display Name"
                   className="w-full pl-9 pr-3 py-2 rounded-lg bg-[#1F2330] border border-[#292D39] text-xs text-[#F1F2F5] placeholder-[#7D8496] focus:border-[#7790FF] focus:outline-none"
                 />
               </div>
@@ -106,7 +106,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
           )}
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-[#A1A6B5]">Alamat Email</label>
+            <label className="text-xs text-[#A1A6B5]">Email Address</label>
             <div className="relative flex items-center">
               <Mail className="absolute left-3 w-4 h-4 text-[#7D8496]" />
               <input
@@ -114,14 +114,14 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="nama@email.com"
+                placeholder="name@email.com"
                 className="w-full pl-9 pr-3 py-2 rounded-lg bg-[#1F2330] border border-[#292D39] text-xs text-[#F1F2F5] placeholder-[#7D8496] focus:border-[#7790FF] focus:outline-none"
               />
             </div>
           </div>
 
           <div className="flex flex-col gap-1">
-            <label className="text-xs text-[#A1A6B5]">Kata Sandi</label>
+            <label className="text-xs text-[#A1A6B5]">Password</label>
             <div className="relative flex items-center">
               <Lock className="absolute left-3 w-4 h-4 text-[#7D8496]" />
               <input
@@ -130,7 +130,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
                 minLength={6}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Minimal 6 karakter"
+                placeholder="At least 6 characters"
                 className="w-full pl-9 pr-3 py-2 rounded-lg bg-[#1F2330] border border-[#292D39] text-xs text-[#F1F2F5] placeholder-[#7D8496] focus:border-[#7790FF] focus:outline-none"
               />
             </div>
@@ -141,14 +141,14 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
             disabled={loading}
             className="btn-primary w-full mt-2 py-2 text-xs font-semibold"
           >
-            {loading ? "Memproses..." : mode === "login" ? "Masuk" : "Daftar Akun"}
+            {loading ? "Processing..." : mode === "login" ? "Sign In" : "Register Account"}
           </button>
         </form>
 
         <div className="pt-2 border-t border-[#1C202B] text-center text-xs text-[#7D8496]">
           {mode === "login" ? (
             <span>
-              Belum memiliki akun?{" "}
+              Don&apos;t have an account?{" "}
               <button
                 type="button"
                 onClick={() => {
@@ -157,12 +157,12 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
                 }}
                 className="text-[#7790FF] hover:underline font-medium cursor-pointer"
               >
-                Daftar sekarang
+                Register now
               </button>
             </span>
           ) : (
             <span>
-              Sudah memiliki akun?{" "}
+              Already have an account?{" "}
               <button
                 type="button"
                 onClick={() => {
@@ -171,7 +171,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
                 }}
                 className="text-[#7790FF] hover:underline font-medium cursor-pointer"
               >
-                Masuk di sini
+                Sign in here
               </button>
             </span>
           )}

@@ -21,7 +21,7 @@ export default function AdminMediaPage() {
         }
       })
       .catch((err) => {
-        console.error("Gagal memuat media:", err);
+        console.error("Failed to load media:", err);
       })
       .finally(() => {
         setLoading(false);
@@ -56,11 +56,11 @@ export default function AdminMediaPage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Gagal mengunggah berkas.");
+      if (!res.ok) throw new Error(data.error || "Failed to upload file.");
 
       loadMedia();
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Upload gagal");
+      alert(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setUploading(false);
     }
@@ -73,7 +73,7 @@ export default function AdminMediaPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Hapus file media ini?")) return;
+    if (!confirm("Permanently delete this media file?")) return;
     try {
       await fetch("/api/admin/content", {
         method: "POST",
@@ -82,7 +82,7 @@ export default function AdminMediaPage() {
       });
       setMediaList(mediaList.filter((m) => m.id !== id));
     } catch {
-      alert("Gagal menghapus media.");
+      alert("Failed to delete media file.");
     }
   };
 
@@ -92,16 +92,16 @@ export default function AdminMediaPage() {
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <ImageIcon className="w-5 h-5 text-[#22C55E]" />
-            <h1 className="text-xl font-bold text-[#F3F4F6]">Media Library &amp; Berkas</h1>
+            <h1 className="text-xl font-bold text-[#F3F4F6]">Media Library &amp; Files</h1>
           </div>
           <p className="text-xs text-[#A1A1AA]">
-            Kelola seluruh aset gambar, foto profil, dan dokumen resume PDF yang tersimpan di sistem.
+            Manage all image assets, profile photos, and PDF resume documents stored in the system.
           </p>
         </div>
 
         <label className="btn-primary text-xs py-2 px-4 cursor-pointer">
           <Upload className="w-3.5 h-3.5" />
-          <span>{uploading ? "Mengunggah..." : "Unggah Berkas Baru"}</span>
+          <span>{uploading ? "Uploading..." : "Upload New File"}</span>
           <input
             type="file"
             accept="image/*,application/pdf"
@@ -116,10 +116,10 @@ export default function AdminMediaPage() {
       <div className="p-4 rounded-xl bg-[#1B1D23] border border-[#2B2D34] flex items-start gap-3 text-xs text-[#A1A1AA]">
         <span className="p-1.5 rounded-lg bg-[#22C55E]/10 text-[#22C55E] shrink-0 mt-0.5">💡</span>
         <div className="flex flex-col gap-1">
-          <span className="font-semibold text-[#F3F4F6]">Tips Berkas Optimal (Vercel &amp; Supabase):</span>
+          <span className="font-semibold text-[#F3F4F6]">Optimal File Guidelines (Vercel &amp; Supabase):</span>
           <p>
-            • <strong>Foto / Gambar</strong>: Seluruh gambar (JPG, PNG) otomatis dikonversi ke format <strong>WebP</strong> (menghemat hingga 80% ukuran tanpa mengurangi ketajaman).<br />
-            • <strong>Dokumen PDF</strong>: Gunakan file PDF terkompresi (&lt; 5MB) untuk CV/resume Anda agar cepat diakses dan diunduh.
+            • <strong>Photos / Images</strong>: All images (JPG, PNG) are automatically converted to <strong>WebP</strong> (saving up to 80% filesize with crisp quality).<br />
+            • <strong>PDF Documents</strong>: Use compressed PDF files (&lt; 5MB) for your CV/resume for fast delivery and quick downloading.
           </p>
         </div>
       </div>
@@ -167,17 +167,17 @@ export default function AdminMediaPage() {
                 <button
                   onClick={() => handleCopyUrl(item.id, item.url)}
                   className="flex items-center gap-1 text-[#8B9CFF] hover:text-[#F3F4F6] transition-colors"
-                  title="Salin path URL untuk digunakan di profil/proyek"
+                  title="Copy URL path to use in profile/projects"
                 >
                   {copiedId === item.id ? (
                     <>
                       <Check className="w-3.5 h-3.5 text-[#22C55E]" />
-                      <span className="text-[#22C55E]">Tersalin</span>
+                      <span className="text-[#22C55E]">Copied</span>
                     </>
                   ) : (
                     <>
                       <Copy className="w-3.5 h-3.5" />
-                      <span>Salin URL</span>
+                      <span>Copy URL</span>
                     </>
                   )}
                 </button>
@@ -185,7 +185,7 @@ export default function AdminMediaPage() {
                 <button
                   onClick={() => handleDelete(item.id)}
                   className="p-1 rounded text-[#71717A] hover:text-[#EF4444] transition-colors"
-                  title="Hapus berkas"
+                  title="Delete file"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>

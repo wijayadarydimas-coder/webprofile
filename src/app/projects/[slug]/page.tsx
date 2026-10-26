@@ -15,7 +15,7 @@ export async function generateMetadata({
 }) {
   const { slug } = await params;
   const project = await db.getProjectBySlug(slug);
-  if (!project) return { title: "Proyek Tidak Ditemukan" };
+  if (!project) return { title: "Project Not Found" };
   return {
     title: `${project.title} — Wijaya Dary Dimas`,
     description: project.shortDescription,
@@ -45,7 +45,7 @@ export default async function ProjectDetailPage({
           <div className="flex items-center gap-2 text-xs text-[#71717A]">
             <Link href="/projects" className="inline-flex items-center gap-1.5 text-[#8B9CFF] hover:text-[#F3F4F6] transition-colors">
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Semua Proyek</span>
+              <span>All Projects</span>
             </Link>
             <span>/</span>
             <span className="text-[#A1A1AA] truncate max-w-[200px] sm:max-w-none">{project.title}</span>
@@ -57,7 +57,7 @@ export default async function ProjectDetailPage({
               <span className="badge-tech">{project.category}</span>
               {project.featured && (
                 <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-[#6D8DFF]/20 text-[#8B9CFF] border border-[#6D8DFF]/30">
-                  Unggulan
+                  Featured
                 </span>
               )}
             </div>
@@ -79,7 +79,7 @@ export default async function ProjectDetailPage({
                   className="btn-primary text-xs py-2 px-4"
                 >
                   <GithubIcon className="w-4 h-4" />
-                  <span>Lihat Repository</span>
+                  <span>View Repository</span>
                 </a>
               )}
 
@@ -91,7 +91,7 @@ export default async function ProjectDetailPage({
                   className="btn-secondary text-xs py-2 px-4"
                 >
                   <ExternalLink className="w-4 h-4" />
-                  <span>Kunjungi Live Demo</span>
+                  <span>Visit Live Demo</span>
                 </a>
               )}
 
@@ -123,7 +123,7 @@ export default async function ProjectDetailPage({
               <div className="p-5 rounded-xl bg-[#171A24] border border-[#292D39] flex flex-col gap-2.5">
                 <div className="flex items-center gap-2 text-[#F59E0B]">
                   <AlertTriangle className="w-4 h-4" />
-                  <span className="text-xs font-mono font-semibold uppercase">Masalah (Problem)</span>
+                  <span className="text-xs font-mono font-semibold uppercase">Problem Statement</span>
                 </div>
                 <p className="text-xs sm:text-sm text-[#A1A6B5] leading-relaxed">
                   {project.problem}
@@ -135,7 +135,7 @@ export default async function ProjectDetailPage({
               <div className="p-5 rounded-xl bg-[#171A24] border border-[#292D39] flex flex-col gap-2.5">
                 <div className="flex items-center gap-2 text-[#7790FF]">
                   <Layers className="w-4 h-4" />
-                  <span className="text-xs font-mono font-semibold uppercase">Pendekatan Teknis</span>
+                  <span className="text-xs font-mono font-semibold uppercase">Technical Approach</span>
                 </div>
                 <p className="text-xs sm:text-sm text-[#A1A6B5] leading-relaxed">
                   {project.solution}
@@ -147,7 +147,7 @@ export default async function ProjectDetailPage({
               <div className="p-5 rounded-xl bg-[#171A24] border border-[#292D39] flex flex-col gap-2.5">
                 <div className="flex items-center gap-2 text-[#22C55E]">
                   <CheckCircle2 className="w-4 h-4" />
-                  <span className="text-xs font-mono font-semibold uppercase">Hasil &amp; Evaluasi</span>
+                  <span className="text-xs font-mono font-semibold uppercase">Results &amp; Evaluation</span>
                 </div>
                 <p className="text-xs sm:text-sm text-[#A1A6B5] leading-relaxed">
                   {project.results}
@@ -158,7 +158,7 @@ export default async function ProjectDetailPage({
 
           {/* Full Narrative Content */}
           <div className="p-6 sm:p-8 rounded-2xl bg-[#171A24] border border-[#292D39] flex flex-col gap-4">
-            <h2 className="text-lg font-bold text-[#F1F2F5]">Dokumentasi &amp; Penjelasan Teknis</h2>
+            <h2 className="text-lg font-bold text-[#F1F2F5]">Technical Documentation &amp; Approach</h2>
             <div className="text-sm text-[#A1A6B5] leading-relaxed whitespace-pre-wrap flex flex-col gap-4">
               {project.fullDescription.split("\n\n").map((para, i) => (
                 <p key={i}>{para}</p>
@@ -169,7 +169,7 @@ export default async function ProjectDetailPage({
           {/* Technologies Used */}
           <div className="flex flex-col gap-3 p-6 rounded-2xl bg-[#171A24] border border-[#292D39]">
             <h3 className="text-xs font-mono font-semibold text-[#96A9FF] uppercase">
-              Stack &amp; Perangkat Lunak yang Digunakan
+              Tech Stack &amp; Software Used
             </h3>
             <div className="flex flex-wrap gap-2">
               {project.technologies.map((tech) => (

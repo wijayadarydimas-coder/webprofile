@@ -11,9 +11,9 @@ interface ProjectListProps {
 
 export default function ProjectList({ initialProjects }: ProjectListProps) {
   const [search, setSearch] = useState("");
-  const [selectedTech, setSelectedTech] = useState<string>("Semua");
+  const [selectedTech, setSelectedTech] = useState<string>("All");
 
-  // Ambil maksimal 5 teknologi teratas dari isi 'Teknologi (pisahkan koma)' yang ada di database/admin
+  // Dynamic top 5 technologies extracted from project items
   const dynamicTechs = useMemo(() => {
     const techMap = new Map<string, { original: string; count: number }>();
 
@@ -33,18 +33,17 @@ export default function ProjectList({ initialProjects }: ProjectListProps) {
       }
     }
 
-    // Urutkan berdasarkan frekuensi pemakaian di proyek, batasi maksimal 5 item
     return Array.from(techMap.values())
       .sort((a, b) => b.count - a.count)
       .slice(0, 5)
       .map((item) => item.original);
   }, [initialProjects]);
 
-  const filterOptions = ["Semua", ...dynamicTechs];
+  const filterOptions = ["All", ...dynamicTechs];
 
   const filtered = initialProjects.filter((p) => {
     const matchesTech =
-      selectedTech === "Semua" ||
+      selectedTech === "All" ||
       (Array.isArray(p.technologies) &&
         p.technologies.some((t) => t.toLowerCase() === selectedTech.toLowerCase()));
 
@@ -61,7 +60,7 @@ export default function ProjectList({ initialProjects }: ProjectListProps) {
     <div className="flex flex-col gap-8">
       {/* Search and Dynamic Technology Filter Toolbar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 p-4 rounded-xl bg-[#171A24] border border-[#292D39]">
-        {/* Dynamic Technology Pills (Max 5 + Semua) */}
+        {/* Dynamic Technology Pills (Max 5 + All) */}
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
           {filterOptions.map((item) => (
             <button
@@ -85,7 +84,7 @@ export default function ProjectList({ initialProjects }: ProjectListProps) {
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari proyek atau teknologi..."
+            placeholder="Search projects or technologies..."
             className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-[#1F2330] border border-[#292D39] text-xs text-[#F1F2F5] placeholder-[#7D8496] focus:border-[#7790FF] focus:outline-none"
           />
         </div>
@@ -94,7 +93,7 @@ export default function ProjectList({ initialProjects }: ProjectListProps) {
       {/* Grid of Results */}
       {filtered.length === 0 ? (
         <div className="py-16 text-center text-xs text-[#7D8496] bg-[#171A24] rounded-2xl border border-[#292D39]">
-          Tidak ditemukan proyek yang cocok dengan filter atau kata kunci pencarian.
+          No projects found matching the selected filter or search keywords.
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

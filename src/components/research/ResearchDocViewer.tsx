@@ -58,10 +58,10 @@ function CodeBlock({ code, language = "bash" }: { code: string; language?: strin
         <button
           onClick={handleCopy}
           className="flex items-center gap-1.5 px-2 py-0.5 rounded hover:bg-[#1F2330] hover:text-[#F3F4F6] transition-colors"
-          title="Salin kode"
+          title="Copy code"
         >
           {copied ? <Check className="w-3.5 h-3.5 text-[#22C55E]" /> : <Copy className="w-3.5 h-3.5" />}
-          <span>{copied ? "Tersalin" : "Salin"}</span>
+          <span>{copied ? "Copied" : "Copy"}</span>
         </button>
       </div>
       <pre className="p-4 overflow-x-auto text-xs font-mono text-[#E2E8F0] leading-relaxed">
@@ -198,7 +198,7 @@ export function MarkdownRenderer({ content }: { content: string }) {
           key={`alert-${i}`}
           className={`p-4 rounded-xl border-l-4 my-3 text-xs leading-relaxed ${alertStyles[alertType]}`}
         >
-          {displayQuote || "Catatan Teknis"}
+          {displayQuote || "Technical Note"}
         </div>
       );
       continue;
@@ -406,7 +406,7 @@ export default function ResearchDocViewer({
     return (
       <div className="pt-32 pb-24 text-center">
         <p className="text-sm text-[#71717A]">
-          Belum ada dokumentasi penelitian yang dipublikasikan.
+          No research documentation published yet.
         </p>
       </div>
     );
@@ -429,20 +429,20 @@ export default function ResearchDocViewer({
               className="inline-flex items-center gap-1.5 text-[#8B9CFF] hover:text-[#F3F4F6] transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Beranda</span>
+              <span>Home</span>
             </Link>
             <span className="text-[#3A3D4D]">/</span>
-            <span className="text-[#A1A6B5] font-medium">Dokumentasi Penelitian &amp; Skripsi</span>
+            <span className="text-[#A1A6B5] font-medium">Research &amp; Thesis Documentation</span>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               onClick={handleShare}
               className="px-3 py-1.5 rounded-lg bg-[#171A24] border border-[#292D39] text-[11px] font-mono text-[#A1A6B5] hover:text-[#F1F2F5] transition-colors flex items-center gap-1.5 cursor-pointer"
-              title="Salin tautan penelitian"
+              title="Copy research link"
             >
               {copiedLink ? <Check className="w-3.5 h-3.5 text-[#22C55E]" /> : <Share2 className="w-3.5 h-3.5" />}
-              <span>{copiedLink ? "Tautan Tersalin" : "Bagikan"}</span>
+              <span>{copiedLink ? "Link Copied" : "Share"}</span>
             </button>
           </div>
         </div>
@@ -451,7 +451,7 @@ export default function ResearchDocViewer({
         {researchItems.length > 1 && (
           <div className="flex flex-col gap-2 p-3.5 rounded-2xl bg-[#141720] border border-[#232733]">
             <span className="text-xs font-semibold text-[#A1A6B5] px-1">
-              Koleksi Naskah Riset ({researchItems.length}):
+              Research Papers ({researchItems.length}):
             </span>
             <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
               {researchItems.map((item, idx) => {
@@ -486,7 +486,7 @@ export default function ResearchDocViewer({
           {/* Badges & Academic Context */}
           <div className="flex items-center gap-3 flex-wrap relative z-10">
             <span className="px-3 py-1 rounded-full text-xs font-mono font-medium bg-[#7790FF]/15 text-[#96A9FF] border border-[#7790FF]/30">
-              {activeItem.publishedStatus || "Penelitian Skripsi"}
+              {activeItem.publishedStatus || "Thesis Research"}
             </span>
 
             <span className="text-xs text-[#8A91A5] font-mono flex items-center gap-1.5">
@@ -504,7 +504,7 @@ export default function ResearchDocViewer({
           {/* Executive Summary */}
           <div className="p-5 rounded-2xl bg-[#0F1118]/80 border border-[#222633] text-sm sm:text-base text-[#C2C8D6] leading-relaxed relative z-10">
             <span className="text-[11px] font-mono uppercase tracking-wider text-[#7790FF] block mb-1.5 font-semibold">
-              Ringkasan Eksekutif (Executive Summary)
+              Executive Summary
             </span>
             <p>{activeItem.summary}</p>
           </div>
@@ -512,7 +512,7 @@ export default function ResearchDocViewer({
           {/* Technologies Chips */}
           {activeItem.technologies && activeItem.technologies.length > 0 && (
             <div className="flex items-center gap-2 flex-wrap relative z-10">
-              <span className="text-[11px] font-mono text-[#7D8496] mr-1">Teknologi &amp; Model:</span>
+              <span className="text-[11px] font-mono text-[#7D8496] mr-1">Technologies &amp; Models:</span>
               {activeItem.technologies.map((tech) => (
                 <span
                   key={tech}
@@ -546,7 +546,7 @@ export default function ResearchDocViewer({
                 className="btn-secondary text-xs py-2 px-4"
               >
                 <FileText className="w-4 h-4" />
-                <span>Naskah PDF Lengkap</span>
+                <span>Full PDF Document</span>
               </a>
             )}
 
@@ -567,9 +567,9 @@ export default function ResearchDocViewer({
             <div className="flex items-center gap-2">
               <Menu className="w-4 h-4 text-[#7790FF]" />
               <span>
-                Navigasi Dokumen:{" "}
+                Document Navigation:{" "}
                 <strong className="text-[#7790FF]">
-                  {visibleSections.find((s) => s.id === activeSectionId)?.title || "Daftar Isi"}
+                  {visibleSections.find((s) => s.id === activeSectionId)?.title || "Table of Contents"}
                 </strong>
               </span>
             </div>
@@ -610,10 +610,10 @@ export default function ResearchDocViewer({
               <div className="flex items-center justify-between pb-3 border-b border-[#20232F]">
                 <h3 className="text-xs font-bold text-[#F1F2F5] uppercase tracking-wider flex items-center gap-2">
                   <FileText className="w-3.5 h-3.5 text-[#7790FF]" />
-                  <span>Daftar Isi Penelitian</span>
+                  <span>Table of Contents</span>
                 </h3>
                 <span className="text-[10px] font-mono text-[#7D8496]">
-                  {visibleSections.length} Bagian
+                  {visibleSections.length} Sections
                 </span>
               </div>
 
@@ -653,7 +653,7 @@ export default function ResearchDocViewer({
           <main className="lg:col-span-8 flex flex-col gap-8">
             {visibleSections.length === 0 ? (
               <div className="p-8 text-center rounded-2xl bg-[#141720] border border-[#242835] text-sm text-[#7D8496]">
-                Belum ada rincian konten yang dipublikasikan pada naskah ini.
+                No content sections published for this document yet.
               </div>
             ) : (
               visibleSections.map((sec, idx) => {
@@ -672,7 +672,7 @@ export default function ResearchDocViewer({
                         </div>
                         <div>
                           <span className="text-[10px] font-mono uppercase tracking-wider text-[#7790FF] block">
-                            Bagian 0{idx + 1} &bull; {sec.type}
+                            Section 0{idx + 1} &bull; {sec.type}
                           </span>
                           <h2 className="text-lg sm:text-xl font-bold text-[#F1F2F5]">
                             {sec.title}
@@ -693,20 +693,20 @@ export default function ResearchDocViewer({
             {/* Back to top & next exploration */}
             <div className="p-6 rounded-2xl bg-[#12141C] border border-[#1E222E] flex flex-col sm:flex-row items-center justify-between gap-4 mt-4">
               <span className="text-xs text-[#7D8496]">
-                Dokumentasi resmi rekayasa skripsi &bull; Wijaya Dary Dimas
+                Official thesis engineering documentation &bull; Wijaya Dary Dimas
               </span>
               <div className="flex items-center gap-3">
                 <Link
                   href="/projects"
                   className="btn-secondary text-xs py-2 px-3.5"
                 >
-                  <span>Jelajahi Proyek Lain</span>
+                  <span>Explore Other Projects</span>
                 </Link>
                 <a
                   href="#top"
                   className="btn-secondary text-xs py-2 px-3.5"
                 >
-                  <span>Kembali ke Atas &uarr;</span>
+                  <span>Back to Top &uarr;</span>
                 </a>
               </div>
             </div>

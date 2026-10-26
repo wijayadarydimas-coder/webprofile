@@ -38,7 +38,7 @@ export default function AdminResearchPage() {
         }
       })
       .catch((err) => {
-        console.error("Gagal memuat riset skripsi:", err);
+        console.error("Failed to load thesis research:", err);
       })
       .finally(() => {
         setLoading(false);
@@ -62,7 +62,7 @@ export default function AdminResearchPage() {
       institution: "Universitas Muhammadiyah Purwokerto",
       studyProgram: "S1 Teknik Informatika",
       technologies: ["YOLOv11", "PyTorch", "Computer Vision"],
-      publishedStatus: "Penelitian Skripsi",
+      publishedStatus: "Thesis Research",
       repoUrl: "",
       pdfUrl: "",
       externalLinks: [],
@@ -118,18 +118,18 @@ export default function AdminResearchPage() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Gagal menyimpan rincian riset.");
+        throw new Error(data.error || "Failed to save research details.");
       }
 
       setStatus({
         type: "success",
         message:
-          "Dokumentasi penelitian berhasil disimpan dan disinkronkan ke basis data!",
+          "Research documentation saved and synced to database successfully!",
       });
       setEditingItem(null);
       loadResearch();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
+      const msg = err instanceof Error ? err.message : "An error occurred";
       setStatus({ type: "error", message: msg });
       throw err;
     } finally {
@@ -138,7 +138,7 @@ export default function AdminResearchPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Hapus penelitian/skripsi ini secara permanen dari basis data?"))
+    if (!confirm("Permanently delete this research/thesis from the database?"))
       return;
     try {
       if (id && !id.startsWith("res-")) {
@@ -148,15 +148,15 @@ export default function AdminResearchPage() {
           body: JSON.stringify({ entity: "research", action: "delete", id }),
         });
         const json = await res.json();
-        if (!res.ok) throw new Error(json.error || "Gagal menghapus data.");
+        if (!res.ok) throw new Error(json.error || "Failed to delete data.");
       }
       setStatus({
         type: "success",
-        message: "Data penelitian berhasil dihapus.",
+        message: "Research entry deleted successfully.",
       });
       loadResearch();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Gagal menghapus";
+      const msg = err instanceof Error ? err.message : "Failed to delete";
       setStatus({ type: "error", message: msg });
     }
   };
@@ -180,11 +180,11 @@ export default function AdminResearchPage() {
           <div className="flex items-center gap-2">
             <Cpu className="w-5 h-5 text-[#7790FF]" />
             <h1 className="text-xl font-bold text-[#F3F4F6]">
-              Pengelolaan Penelitian &amp; Skripsi (Dark Matter)
+              Research &amp; Thesis Management (Dark Matter)
             </h1>
           </div>
           <p className="text-xs text-[#A1A1AA]">
-            Kelola dokumentasi teknis skripsi, publikasi jurnal, modul arsitektur, dan bantuan asisten AI.
+            Manage technical thesis documentation, journal publications, architecture modules, and AI writing assistance.
           </p>
         </div>
 
@@ -193,7 +193,7 @@ export default function AdminResearchPage() {
           className="btn-primary text-xs py-2 px-3.5 shadow-lg shadow-[#7790FF]/25 cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5" />
-          <span>Tambah Riset Baru</span>
+          <span>Add New Research</span>
         </button>
       </div>
 
@@ -216,23 +216,23 @@ export default function AdminResearchPage() {
 
       {loading ? (
         <div className="text-xs text-[#71717A] py-8 text-center">
-          Memuat data riset &amp; skripsi...
+          Loading research &amp; thesis data...
         </div>
       ) : researchList.length === 0 ? (
         <div className="p-8 rounded-2xl bg-[#141720] border border-[#232733] text-center flex flex-col items-center gap-3">
           <Cpu className="w-8 h-8 text-[#71717A]" />
           <span className="text-sm text-[#F3F4F6] font-medium">
-            Belum ada dokumentasi penelitian yang tersimpan
+            No research documentation saved yet
           </span>
           <p className="text-xs text-[#71717A] max-w-sm">
-            Klik tombol &quot;Tambah Riset Baru&quot; untuk mulai mendokumentasikan karya riset skripsi Anda melalui Hybrid Research Editor.
+            Click &quot;Add New Research&quot; to begin documenting your thesis research using the Hybrid Research Editor.
           </p>
           <button
             onClick={handleOpenNew}
             className="btn-primary text-xs py-2 px-4 mt-1"
           >
             <Plus className="w-3.5 h-3.5" />
-            <span>Tambah Sekarang</span>
+            <span>Add Now</span>
           </button>
         </div>
       ) : (
@@ -246,13 +246,13 @@ export default function AdminResearchPage() {
                 <div className="flex flex-col gap-2 flex-1">
                   <div className="flex items-center gap-2.5 flex-wrap">
                     <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-medium bg-[#7790FF]/15 text-[#96A9FF] border border-[#7790FF]/30">
-                      {item.publishedStatus || "Penelitian Skripsi"}
+                      {item.publishedStatus || "Thesis Research"}
                     </span>
                     <span className="text-[11px] text-[#7D8496] font-mono">
                       {item.institution || "Universitas Muhammadiyah Purwokerto"} &bull; {item.studyProgram || "Teknik Informatika"}
                     </span>
                     <span className="text-[11px] text-[#7D8496] font-mono ml-auto">
-                      Urutan: {item.orderIndex}
+                      Order: {item.orderIndex}
                     </span>
                   </div>
 
@@ -285,12 +285,12 @@ export default function AdminResearchPage() {
                     className="p-2.5 rounded-xl bg-[#1B1E29] border border-[#282C3A] hover:border-[#7790FF] text-xs text-[#F1F2F5] flex items-center gap-2 transition-colors cursor-pointer shadow-sm"
                   >
                     <Edit className="w-3.5 h-3.5 text-[#7790FF]" />
-                    <span className="font-medium">Buka Hybrid Editor</span>
+                    <span className="font-medium">Open Hybrid Editor</span>
                   </button>
                   <button
                     onClick={() => handleDelete(item.id)}
                     className="p-2.5 rounded-xl bg-[#1B1E29] border border-[#282C3A] hover:border-[#EF4444] text-xs text-[#EF4444] flex items-center gap-1.5 transition-colors cursor-pointer shadow-sm"
-                    title="Hapus naskah ini"
+                    title="Delete this document"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -302,9 +302,9 @@ export default function AdminResearchPage() {
                 <div className="flex items-center gap-2">
                   <Layers className="w-3.5 h-3.5 text-[#7790FF]" />
                   <span>
-                    Struktur Dokumen:{" "}
+                    Document Structure:{" "}
                     <strong className="text-[#A1A6B5]">
-                      {item.sections?.length || 6} Bagian
+                      {item.sections?.length || 6} Sections
                     </strong>
                   </span>
                 </div>
@@ -318,7 +318,7 @@ export default function AdminResearchPage() {
                   )}
                   {item.externalLinks && item.externalLinks.length > 0 && (
                     <span className="text-[#96A9FF] font-mono">
-                      {item.externalLinks.length} Provider Terhubung
+                      {item.externalLinks.length} Providers Connected
                     </span>
                   )}
                 </div>

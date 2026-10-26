@@ -23,10 +23,10 @@ export default function AboutSection({
           {/* Section Header */}
           <div className="flex flex-col gap-2 max-w-xl">
             <span className="text-xs font-mono font-medium text-[#7790FF] uppercase tracking-wider">
-              Tentang Saya
+              About Me
             </span>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#F1F2F5] tracking-tight">
-              {profile.aboutTitle || "Profil, Prinsip Belajar & Fokus Teknis"}
+              {profile.aboutTitle || "Background, Principles & Technical Focus"}
             </h2>
           </div>
 
@@ -38,7 +38,7 @@ export default function AboutSection({
                 {profile.avatarUrl ? (
                   <Image
                     src={profile.avatarUrl}
-                    alt={profile.avatarAlt || `Foto Potret ${profile.fullName}`}
+                    alt={profile.avatarAlt || `Profile portrait of ${profile.fullName}`}
                     fill
                     sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 400px"
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
@@ -46,7 +46,7 @@ export default function AboutSection({
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center font-mono text-sm text-[#7D8496]">
-                    Foto Profil Tidak Tersedia
+                    Profile Photo Unavailable
                   </div>
                 )}
 
@@ -72,7 +72,7 @@ export default function AboutSection({
 
               {/* Sub-card: Core technical discipline */}
               <div className="max-w-[390px] mx-auto lg:mx-0 w-full px-4 py-3 rounded-xl bg-[#171A24]/60 border border-[#292D39] flex items-center justify-between text-xs text-[#A1A6B5]">
-                <span className="font-mono text-[#7D8496]">Spesialisasi</span>
+                <span className="font-mono text-[#7D8496]">Specialization</span>
                 <span className="font-medium text-[#F1F2F5]">{profile.roleTitle || "Informatics & CV Engineer"}</span>
               </div>
             </div>
@@ -106,7 +106,7 @@ export default function AboutSection({
                     className="inline-flex items-center gap-2 text-xs font-medium text-[#F1F2F5] hover:text-[#7790FF] transition-colors"
                   >
                     <FileText className="w-4 h-4" />
-                    <span>Unduh Resume / CV</span>
+                    <span>Download Resume / CV</span>
                   </a>
                 )}
               </div>
@@ -116,7 +116,7 @@ export default function AboutSection({
                 <div className="p-4 rounded-xl bg-[#171A24] border border-[#292D39] flex flex-col gap-2 hover:border-[#7790FF]/30 transition-colors">
                   <div className="flex items-center gap-2 text-[#7790FF]">
                     <GraduationCap className="w-4 h-4" />
-                    <span className="text-[10px] font-mono font-semibold uppercase">Pendidikan</span>
+                    <span className="text-[10px] font-mono font-semibold uppercase">Education</span>
                   </div>
                   <div className="flex flex-col">
                     <span
@@ -136,7 +136,7 @@ export default function AboutSection({
                 <div className="p-4 rounded-xl bg-[#171A24] border border-[#292D39] flex flex-col gap-2 hover:border-[#7790FF]/30 transition-colors">
                   <div className="flex items-center gap-2 text-[#96A9FF]">
                     <Briefcase className="w-4 h-4" />
-                    <span className="text-[10px] font-mono font-semibold uppercase">Pengalaman</span>
+                    <span className="text-[10px] font-mono font-semibold uppercase">Experience</span>
                   </div>
                   <div className="flex flex-col">
                     <span
@@ -157,7 +157,7 @@ export default function AboutSection({
                   <div className="flex items-center gap-2 text-[#22C55E]">
                     <Cpu className="w-4 h-4" />
                     <span className="text-[10px] font-mono font-semibold uppercase">
-                      {primaryResearch?.publishedStatus || "Penelitian Skripsi"}
+                      {primaryResearch?.publishedStatus || "Thesis Research"}
                     </span>
                   </div>
                   <div className="flex flex-col">

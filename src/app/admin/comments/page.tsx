@@ -38,17 +38,17 @@ export default function AdminCommentsPage() {
         comments.map((c) => (c.id === id ? { ...c, isHidden: !isHidden } : c))
       );
     } catch (err) {
-      alert("Gagal memperbarui status moderasi komentar.");
+      alert("Failed to update comment moderation status.");
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Hapus komentar ini secara permanen?")) return;
+    if (!confirm("Permanently delete this comment?")) return;
     try {
       await fetch(`/api/comments?id=${id}`, { method: "DELETE" });
       setComments(comments.filter((c) => c.id !== id));
     } catch {
-      alert("Gagal menghapus komentar.");
+      alert("Failed to delete comment.");
     }
   };
 
@@ -58,10 +58,10 @@ export default function AdminCommentsPage() {
         <div className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <MessageSquare className="w-5 h-5 text-[#8B9CFF]" />
-            <h1 className="text-xl font-bold text-[#F3F4F6]">Moderasi Komentar Komunitas</h1>
+            <h1 className="text-xl font-bold text-[#F3F4F6]">Community Comments Moderation</h1>
           </div>
           <p className="text-xs text-[#A1A1AA]">
-            Tinjau seluruh diskusi, sembunyikan tanggapan yang melanggar norma, atau hapus komentar spam.
+            Review discussions, hide inappropriate comments, or delete spam messages.
           </p>
         </div>
 
@@ -71,13 +71,13 @@ export default function AdminCommentsPage() {
           className="btn-secondary text-xs py-2 px-3.5"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-          <span>Muat Ulang</span>
+          <span>Refresh</span>
         </button>
       </div>
 
       {comments.length === 0 ? (
         <div className="p-12 text-center text-xs text-[#71717A] bg-[#15171C] rounded-2xl border border-[#2B2D34]">
-          Belum ada komentar dalam sistem.
+          No comments in the system yet.
         </div>
       ) : (
         <div className="flex flex-col gap-3">
@@ -103,13 +103,13 @@ export default function AdminCommentsPage() {
                   )}
                   {comment.isHidden && (
                     <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-[#EF4444]/20 text-[#EF4444]">
-                      Disembunyikan dari Publik
+                      Hidden from Public
                     </span>
                   )}
                 </div>
 
                 <span className="text-[11px] text-[#71717A] font-mono">
-                  {new Date(comment.createdAt).toLocaleDateString("id-ID", {
+                  {new Date(comment.createdAt).toLocaleDateString("en-US", {
                     day: "numeric",
                     month: "short",
                     year: "numeric",
@@ -135,12 +135,12 @@ export default function AdminCommentsPage() {
                   {comment.isHidden ? (
                     <>
                       <Eye className="w-3.5 h-3.5" />
-                      <span>Tampilkan Kembali</span>
+                      <span>Show / Restore</span>
                     </>
                   ) : (
                     <>
                       <EyeOff className="w-3.5 h-3.5" />
-                      <span>Sembunyikan</span>
+                      <span>Hide</span>
                     </>
                   )}
                 </button>
@@ -150,7 +150,7 @@ export default function AdminCommentsPage() {
                   className="flex items-center gap-1 text-xs text-[#EF4444] hover:bg-[#EF4444]/15 px-2.5 py-1 rounded transition-colors"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
-                  <span>Hapus</span>
+                  <span>Delete</span>
                 </button>
               </div>
             </div>

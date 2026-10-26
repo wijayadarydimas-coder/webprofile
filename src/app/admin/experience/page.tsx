@@ -28,7 +28,7 @@ export default function AdminExperiencePage() {
         setEducations(eduRes.data);
       }
     } catch (err) {
-      console.error("Gagal memuat data pengalaman/pendidikan:", err);
+      console.error("Failed to load experience/education data:", err);
     } finally {
       setLoading(false);
     }
@@ -45,17 +45,16 @@ export default function AdminExperiencePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ entity: "experience", action: "save", data: exp }),
       });
-      setStatus({ type: "success", message: "Data pengalaman berhasil disimpan!" });
+      setStatus({ type: "success", message: "Experience saved successfully!" });
       loadData();
     } catch {
-      setStatus({ type: "error", message: "Gagal menyimpan pengalaman." });
+      setStatus({ type: "error", message: "Failed to save experience." });
     }
   };
 
   const handleDeleteExp = async (id: string, index: number) => {
-    if (!confirm("Hapus pengalaman ini secara permanen?")) return;
+    if (!confirm("Permanently delete this experience?")) return;
     try {
-      // Jika sudah ada di database, kirim request delete
       if (id && !id.startsWith("exp-")) {
         const res = await fetch("/api/admin/content", {
           method: "POST",
@@ -63,12 +62,12 @@ export default function AdminExperiencePage() {
           body: JSON.stringify({ entity: "experience", action: "delete", id }),
         });
         const json = await res.json();
-        if (!res.ok) throw new Error(json.error || "Gagal menghapus data.");
+        if (!res.ok) throw new Error(json.error || "Failed to delete data.");
       }
-      setStatus({ type: "success", message: "Pengalaman berhasil dihapus." });
+      setStatus({ type: "success", message: "Experience deleted successfully." });
       loadData();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Gagal menghapus";
+      const msg = err instanceof Error ? err.message : "Failed to delete";
       setStatus({ type: "error", message: msg });
     }
   };
@@ -80,15 +79,15 @@ export default function AdminExperiencePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ entity: "education", action: "save", data: edu }),
       });
-      setStatus({ type: "success", message: "Data pendidikan berhasil disimpan!" });
+      setStatus({ type: "success", message: "Education entry saved successfully!" });
       loadData();
     } catch {
-      setStatus({ type: "error", message: "Gagal menyimpan pendidikan." });
+      setStatus({ type: "error", message: "Failed to save education entry." });
     }
   };
 
   const handleDeleteEdu = async (id: string, index: number) => {
-    if (!confirm("Hapus riwayat pendidikan ini secara permanen?")) return;
+    if (!confirm("Permanently delete this education entry?")) return;
     try {
       if (id && !id.startsWith("edu-")) {
         const res = await fetch("/api/admin/content", {
@@ -97,12 +96,12 @@ export default function AdminExperiencePage() {
           body: JSON.stringify({ entity: "education", action: "delete", id }),
         });
         const json = await res.json();
-        if (!res.ok) throw new Error(json.error || "Gagal menghapus data.");
+        if (!res.ok) throw new Error(json.error || "Failed to delete data.");
       }
-      setStatus({ type: "success", message: "Pendidikan berhasil dihapus." });
+      setStatus({ type: "success", message: "Education entry deleted successfully." });
       loadData();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Gagal menghapus";
+      const msg = err instanceof Error ? err.message : "Failed to delete";
       setStatus({ type: "error", message: msg });
     }
   };
@@ -110,10 +109,10 @@ export default function AdminExperiencePage() {
   const handleAddExp = () => {
     const newExp: Experience = {
       id: `exp-${Date.now()}`,
-      organization: "Nama Instansi / Perusahaan",
-      role: "Posisi Jabatan",
-      period: "Bulan Tahun – Bulan Tahun",
-      description: "Deskripsi tugas dan tanggung jawab...",
+      organization: "Institution / Company Name",
+      role: "Role / Position",
+      period: "Month Year – Month Year",
+      description: "Responsibilities and achievements...",
       type: "work",
       orderIndex: experiences.length + 1,
       url: "",
@@ -124,10 +123,10 @@ export default function AdminExperiencePage() {
   const handleAddEdu = () => {
     const newEdu: Education = {
       id: `edu-${Date.now()}`,
-      institution: "Nama Universitas / Institusi",
-      degree: "Jenjang & Jurusan",
-      period: "Tahun – Tahun",
-      description: "Fokus studi dan capaian...",
+      institution: "University / Institution Name",
+      degree: "Degree & Major",
+      period: "Year – Year",
+      description: "Focus of study and milestones...",
       orderIndex: educations.length + 1,
       url: "",
     };
@@ -139,10 +138,10 @@ export default function AdminExperiencePage() {
       <div className="flex flex-col gap-1 pb-4 border-b border-[#202228]">
         <div className="flex items-center gap-2">
           <Briefcase className="w-5 h-5 text-[#6D8DFF]" />
-          <h1 className="text-xl font-bold text-[#F3F4F6]">Pengalaman Kerja &amp; Pendidikan</h1>
+          <h1 className="text-xl font-bold text-[#F3F4F6]">Work Experience &amp; Education</h1>
         </div>
         <p className="text-xs text-[#A1A1AA]">
-          Perbarui riwayat posisi magang (Badan Informasi Geospasial) dan pendidikan (Universitas Muhammadiyah Purwokerto).
+          Update work, internship, and formal education history.
         </p>
       </div>
 
@@ -168,11 +167,11 @@ export default function AdminExperiencePage() {
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold text-[#F3F4F6] flex items-center gap-2">
             <Briefcase className="w-4 h-4 text-[#6D8DFF]" />
-            <span>Pengalaman Kerja &amp; Magang</span>
+            <span>Work &amp; Internship Experience</span>
           </h2>
           <button onClick={handleAddExp} className="btn-secondary text-xs py-1.5 px-3">
             <Plus className="w-3.5 h-3.5" />
-            <span>Tambah Posisi</span>
+            <span>Add Position</span>
           </button>
         </div>
 
@@ -181,7 +180,7 @@ export default function AdminExperiencePage() {
             <div key={exp.id} className="p-5 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-3">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="flex flex-col gap-1">
-                  <label className="text-[11px] text-[#71717A]">Instansi / Perusahaan</label>
+                  <label className="text-[11px] text-[#71717A]">Institution / Company</label>
                   <input
                     type="text"
                     value={exp.organization}
@@ -194,7 +193,7 @@ export default function AdminExperiencePage() {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-[11px] text-[#71717A]">Posisi Jabatan</label>
+                  <label className="text-[11px] text-[#71717A]">Position / Role</label>
                   <input
                     type="text"
                     value={exp.role}
@@ -207,7 +206,7 @@ export default function AdminExperiencePage() {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-[11px] text-[#71717A]">Periode</label>
+                  <label className="text-[11px] text-[#71717A]">Period</label>
                   <input
                     type="text"
                     value={exp.period}
@@ -222,7 +221,7 @@ export default function AdminExperiencePage() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-[11px] text-[#71717A]">Deskripsi Tugas &amp; Capaian</label>
+                <label className="text-[11px] text-[#71717A]">Responsibilities &amp; Achievements</label>
                 <textarea
                   rows={3}
                   value={exp.description}
@@ -236,7 +235,7 @@ export default function AdminExperiencePage() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-[11px] text-[#71717A]">URL / Tautan Resmi Instansi (Opsional — kosongkan jika tidak ingin ada tombol link)</label>
+                <label className="text-[11px] text-[#71717A]">Official Institution URL (Optional — leave empty if no link needed)</label>
                 <input
                   type="text"
                   value={exp.url || ""}
@@ -256,14 +255,14 @@ export default function AdminExperiencePage() {
                   className="text-xs text-[#EF4444] hover:underline flex items-center gap-1"
                 >
                   <Trash2 className="w-3 h-3" />
-                  <span>Hapus</span>
+                  <span>Delete</span>
                 </button>
                 <button
                   onClick={() => handleSaveExp(exp)}
                   className="btn-primary text-xs py-1.5 px-3"
                 >
                   <Save className="w-3.5 h-3.5" />
-                  <span>Simpan</span>
+                  <span>Save</span>
                 </button>
               </div>
             </div>
@@ -276,11 +275,11 @@ export default function AdminExperiencePage() {
         <div className="flex items-center justify-between">
           <h2 className="text-sm font-semibold text-[#F3F4F6] flex items-center gap-2">
             <GraduationCap className="w-4 h-4 text-[#8B9CFF]" />
-            <span>Pendidikan Formal</span>
+            <span>Formal Education</span>
           </h2>
           <button onClick={handleAddEdu} className="btn-secondary text-xs py-1.5 px-3">
             <Plus className="w-3.5 h-3.5" />
-            <span>Tambah Pendidikan</span>
+            <span>Add Education</span>
           </button>
         </div>
 
@@ -289,7 +288,7 @@ export default function AdminExperiencePage() {
             <div key={edu.id} className="p-5 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-3">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="flex flex-col gap-1">
-                  <label className="text-[11px] text-[#71717A]">Institusi / Universitas</label>
+                  <label className="text-[11px] text-[#71717A]">Institution / University</label>
                   <input
                     type="text"
                     value={edu.institution}
@@ -302,7 +301,7 @@ export default function AdminExperiencePage() {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-[11px] text-[#71717A]">Jenjang &amp; Jurusan</label>
+                  <label className="text-[11px] text-[#71717A]">Degree &amp; Major</label>
                   <input
                     type="text"
                     value={edu.degree}
@@ -315,7 +314,7 @@ export default function AdminExperiencePage() {
                   />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <label className="text-[11px] text-[#71717A]">Periode</label>
+                  <label className="text-[11px] text-[#71717A]">Period</label>
                   <input
                     type="text"
                     value={edu.period}
@@ -330,7 +329,7 @@ export default function AdminExperiencePage() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-[11px] text-[#71717A]">Fokus Studi &amp; Catatan</label>
+                <label className="text-[11px] text-[#71717A]">Focus of Study &amp; Highlights</label>
                 <textarea
                   rows={2}
                   value={edu.description}
@@ -344,7 +343,7 @@ export default function AdminExperiencePage() {
               </div>
 
               <div className="flex flex-col gap-1">
-                <label className="text-[11px] text-[#71717A]">URL / Tautan Resmi Institusi (Opsional — kosongkan jika tidak ingin ada tombol link)</label>
+                <label className="text-[11px] text-[#71717A]">Official Institution URL (Optional — leave empty if no link needed)</label>
                 <input
                   type="text"
                   value={edu.url || ""}
@@ -364,14 +363,14 @@ export default function AdminExperiencePage() {
                   className="text-xs text-[#EF4444] hover:underline flex items-center gap-1"
                 >
                   <Trash2 className="w-3 h-3" />
-                  <span>Hapus</span>
+                  <span>Delete</span>
                 </button>
                 <button
                   onClick={() => handleSaveEdu(edu)}
                   className="btn-primary text-xs py-1.5 px-3"
                 >
                   <Save className="w-3.5 h-3.5" />
-                  <span>Simpan</span>
+                  <span>Save</span>
                 </button>
               </div>
             </div>

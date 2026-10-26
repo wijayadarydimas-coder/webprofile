@@ -3,8 +3,8 @@ import AppShell from "@/components/layout/AppShell";
 import ContactSection from "@/components/home/ContactSection";
 
 export const metadata = {
-  title: "Kontak & Kolaborasi — Wijaya Dary Dimas",
-  description: "Hubungi Wijaya Dary Dimas untuk kolaborasi proyek, diskusi riset teknologi, atau peluang profesional.",
+  title: "Contact & Collaboration — Wijaya Dary Dimas",
+  description: "Get in touch with Wijaya Dary Dimas for project collaborations, engineering discussions, or professional opportunities.",
 };
 
 export default async function ContactPage() {

@@ -31,7 +31,7 @@ export default function AdminProfilePage() {
         if (profileJson.success && profileJson.data) {
           setProfile({
             ...profileJson.data,
-            aboutTitle: profileJson.data.aboutTitle || "Profil, Prinsip Belajar & Fokus Teknis",
+            aboutTitle: profileJson.data.aboutTitle || "Profile, Core Principles & Technical Focus",
             aboutEducationId: profileJson.data.aboutEducationId || "",
             aboutExperienceId: profileJson.data.aboutExperienceId || "",
             aboutResearchId: profileJson.data.aboutResearchId || "",
@@ -53,7 +53,7 @@ export default function AdminProfilePage() {
         }
       })
       .catch((err) => {
-        console.error("Gagal memuat profil dan konten:", err);
+        console.error("Failed to load profile and content:", err);
       })
       .finally(() => {
         setLoading(false);
@@ -79,13 +79,13 @@ export default function AdminProfilePage() {
 
       const json = await res.json();
       if (!res.ok) {
-        throw new Error(json.error || "Gagal memperbarui profil.");
+        throw new Error(json.error || "Failed to update profile.");
       }
 
       setProfile(json.data);
-      setStatus({ type: "success", message: "Profil dan branding berhasil diperbarui serta diterapkan langsung ke website!" });
+      setStatus({ type: "success", message: "Profile and branding updated successfully and applied to the website!" });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Terjadi kesalahan";
+      const msg = err instanceof Error ? err.message : "An error occurred";
       setStatus({ type: "error", message: msg });
     } finally {
       setSaving(false);
@@ -109,7 +109,7 @@ export default function AdminProfilePage() {
         if (conv.wasConverted) {
           const beforeKb = (conv.originalSize / 1024).toFixed(0);
           const afterKb = (conv.convertedSize / 1024).toFixed(0);
-          conversionNotice = ` (Dikompresi WebP: ${beforeKb}KB ➡️ ${afterKb}KB)`;
+          conversionNotice = ` (Compressed to WebP: ${beforeKb}KB ➡️ ${afterKb}KB)`;
         }
       }
 
@@ -117,7 +117,7 @@ export default function AdminProfilePage() {
       formData.append("file", uploadFile);
       formData.append(
         "altText",
-        target === "avatar" ? "Foto Profil" : target === "logo" ? "Logo Website" : "Berkas Resume CV"
+        target === "avatar" ? "Profile Photo" : target === "logo" ? "Website Logo" : "CV Resume Document"
       );
 
       const res = await fetch("/api/upload", {
@@ -127,7 +127,7 @@ export default function AdminProfilePage() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Gagal mengunggah berkas.");
+        throw new Error(data.error || "Failed to upload file.");
       }
 
       if (profile) {
@@ -141,10 +141,10 @@ export default function AdminProfilePage() {
       }
       setStatus({
         type: "success",
-        message: `Berkas berhasil diunggah${conversionNotice}! Jangan lupa klik tombol 'Simpan Seluruh Perubahan' di bawah.`,
+        message: `File uploaded successfully${conversionNotice}! Remember to click 'Save All Changes' below.`,
       });
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Upload gagal";
+      const msg = err instanceof Error ? err.message : "Upload failed";
       setStatus({ type: "error", message: msg });
     } finally {
       setUploadingAvatar(false);
@@ -154,7 +154,7 @@ export default function AdminProfilePage() {
   };
 
   if (loading || !profile) {
-    return <div className="text-xs text-[#71717A]">Memuat data profil...</div>;
+    return <div className="text-xs text-[#71717A]">Loading profile data...</div>;
   }
 
   return (
@@ -162,10 +162,10 @@ export default function AdminProfilePage() {
       <div className="flex flex-col gap-1 pb-4 border-b border-[#202228]">
         <div className="flex items-center gap-2">
           <User className="w-5 h-5 text-[#6D8DFF]" />
-          <h1 className="text-xl font-bold text-[#F3F4F6]">Pengaturan Profil &amp; Branding</h1>
+          <h1 className="text-xl font-bold text-[#F3F4F6]">Profile &amp; Branding Settings</h1>
         </div>
         <p className="text-xs text-[#A1A1AA]">
-          Ubah nama brand, teks profesi sub-title, logo website, foto profil, dan media sosial tanpa menyentuh kode program.
+          Update brand name, role subtitle, website logo, profile photo, and social links without touching code.
         </p>
       </div>
 
@@ -191,7 +191,7 @@ export default function AdminProfilePage() {
         <div className="p-6 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-5">
           <div className="flex items-center gap-2 border-b border-[#202228] pb-3">
             <Globe className="w-4 h-4 text-[#6D8DFF]" />
-            <h2 className="text-sm font-semibold text-[#F3F4F6]">Identitas Logo &amp; Navbar Header</h2>
+            <h2 className="text-sm font-semibold text-[#F3F4F6]">Logo &amp; Header Identity</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -201,7 +201,7 @@ export default function AdminProfilePage() {
                 {profile.logoUrl ? (
                   <Image
                     src={profile.logoUrl}
-                    alt="Logo Website"
+                    alt="Website Logo"
                     fill
                     sizes="56px"
                     className="object-contain p-1"
@@ -214,14 +214,14 @@ export default function AdminProfilePage() {
               </div>
 
               <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-                <span className="text-xs font-semibold text-[#F3F4F6]">Logo Website</span>
+                <span className="text-xs font-semibold text-[#F3F4F6]">Website Logo</span>
                 <p className="text-[11px] text-[#71717A]">
-                  {profile.logoUrl ? "Logo kustom terpasang" : "Memakai inisial teks default"}
+                  {profile.logoUrl ? "Custom logo active" : "Using default text initial"}
                 </p>
                 <div className="flex items-center gap-2 pt-1">
                   <label className="btn-secondary text-[11px] py-1 px-2.5 cursor-pointer">
                     <Upload className="w-3 h-3" />
-                    <span>{uploadingLogo ? "Mengunggah..." : "Ganti Logo"}</span>
+                    <span>{uploadingLogo ? "Uploading..." : "Change Logo"}</span>
                     <input
                       type="file"
                       accept="image/jpeg,image/png,image/webp,image/svg+xml"
@@ -237,7 +237,7 @@ export default function AdminProfilePage() {
                       onClick={() => setProfile({ ...profile, logoUrl: "" })}
                       className="text-[11px] text-[#EF4444] hover:underline"
                     >
-                      Hapus Logo
+                      Remove Logo
                     </button>
                   )}
                 </div>
@@ -248,7 +248,7 @@ export default function AdminProfilePage() {
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-medium text-[#A1A1AA]">
-                  Nama Brand di Navbar / Header
+                  Brand Name in Navbar / Header
                 </label>
                 <input
                   type="text"
@@ -262,7 +262,7 @@ export default function AdminProfilePage() {
 
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-medium text-[#A1A1AA]">
-                  Sub-Title / Profesi di Navbar (Sebelumnya: [Informatics &amp; CV Engineer])
+                  Role Subtitle in Navbar (e.g., [Informatics &amp; CV Engineer])
                 </label>
                 <input
                   type="text"
@@ -283,7 +283,7 @@ export default function AdminProfilePage() {
             {profile.avatarUrl ? (
               <Image
                 src={profile.avatarUrl}
-                alt="Foto Profil Avatar"
+                alt="Profile Avatar"
                 fill
                 sizes="96px"
                 className="object-cover"
@@ -294,14 +294,14 @@ export default function AdminProfilePage() {
           </div>
 
           <div className="flex flex-col gap-2 flex-1 text-center sm:text-left">
-            <span className="text-sm font-semibold text-[#F3F4F6]">Foto Profil Resmi</span>
+            <span className="text-sm font-semibold text-[#F3F4F6]">Official Profile Photo</span>
             <p className="text-xs text-[#71717A]">
-              Unggah foto profil Anda sendiri (JPG, PNG, WebP, SVG). Rasio persegi 1:1 disarankan.
+              Upload your own profile photo (JPG, PNG, WebP, SVG). Square 1:1 ratio recommended.
             </p>
             <div className="flex items-center gap-3 pt-1 justify-center sm:justify-start">
               <label className="btn-secondary text-xs py-1.5 cursor-pointer">
                 <Upload className="w-3.5 h-3.5" />
-                <span>{uploadingAvatar ? "Mengunggah..." : "Ganti Foto Profil"}</span>
+                <span>{uploadingAvatar ? "Uploading..." : "Change Profile Photo"}</span>
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/webp,image/svg+xml"
@@ -319,7 +319,7 @@ export default function AdminProfilePage() {
         <div className="p-6 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-[#A1A1AA]">Nama Lengkap Resmi</label>
+              <label className="text-xs font-medium text-[#A1A1AA]">Official Full Name</label>
               <input
                 type="text"
                 required
@@ -330,7 +330,7 @@ export default function AdminProfilePage() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-[#A1A1AA]">Lokasi Domisili</label>
+              <label className="text-xs font-medium text-[#A1A1AA]">Location / Residence</label>
               <input
                 type="text"
                 required
@@ -342,7 +342,7 @@ export default function AdminProfilePage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-[#A1A1AA]">Tagline Utama (Hero)</label>
+            <label className="text-xs font-medium text-[#A1A1AA]">Main Tagline (Hero)</label>
             <input
               type="text"
               required
@@ -353,7 +353,7 @@ export default function AdminProfilePage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-[#A1A1AA]">Status Badge Hero</label>
+            <label className="text-xs font-medium text-[#A1A1AA]">Hero Status Badge</label>
             <input
               type="text"
               required
@@ -364,7 +364,7 @@ export default function AdminProfilePage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-[#A1A1AA]">Deskripsi Singkat (Hero Section)</label>
+            <label className="text-xs font-medium text-[#A1A1AA]">Short Bio (Hero Section)</label>
             <textarea
               rows={3}
               required
@@ -375,21 +375,21 @@ export default function AdminProfilePage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-[#A1A1AA]">Judul Seksi Tentang (About Section Heading)</label>
+            <label className="text-xs font-medium text-[#A1A1AA]">About Section Heading</label>
             <input
               type="text"
               value={profile.aboutTitle || ""}
               onChange={(e) => setProfile({ ...profile, aboutTitle: e.target.value })}
-              placeholder="Profil, Prinsip Belajar & Fokus Teknis"
+              placeholder="Profile, Core Principles & Technical Focus"
               className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
             />
             <span className="text-[11px] text-[#71717A]">
-              Mengubah teks judul utama pada seksi Tentang Pemilik di halaman depan.
+              Modifies the main heading text of the About Me section on the homepage.
             </span>
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-medium text-[#A1A1AA]">Narasi Lengkap (About Me Section)</label>
+            <label className="text-xs font-medium text-[#A1A1AA]">Full Narrative (About Me Section)</label>
             <textarea
               rows={6}
               required
@@ -405,11 +405,11 @@ export default function AdminProfilePage() {
           <div className="flex items-center gap-2">
             <GraduationCap className="w-4 h-4 text-[#7790FF]" />
             <h2 className="text-sm font-semibold text-[#F3F4F6]">
-              Pilihan Kartu Sorotan Tentang Saya (Pendidikan, Pengalaman, &amp; Riset)
+              About Me Highlight Cards (Education, Experience, &amp; Research)
             </h2>
           </div>
           <p className="text-xs text-[#A1A1AA]">
-            Atur data spesifik yang ingin ditampilkan pada 3 kartu ringkasan di bawah foto profil seksi Tentang Saya (About Me) pada halaman depan.
+            Select the specific entries displayed in the 3 summary highlight cards below the profile photo in the About Me section on the homepage.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
@@ -417,14 +417,14 @@ export default function AdminProfilePage() {
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-[#A1A1AA] flex items-center gap-1.5">
                 <GraduationCap className="w-3.5 h-3.5 text-[#7790FF]" />
-                <span>Pendidikan yang Ditampilkan</span>
+                <span>Displayed Education</span>
               </label>
               <select
                 value={profile.aboutEducationId || ""}
                 onChange={(e) => setProfile({ ...profile, aboutEducationId: e.target.value || null })}
                 className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
               >
-                <option value="">Otomatis (Item Teratas / Pertama)</option>
+                <option value="">Automatic (Top / First Item)</option>
                 {educationsList.map((edu) => (
                   <option key={edu.id} value={edu.id}>
                     {edu.institution} — {edu.degree} ({edu.period})
@@ -433,8 +433,8 @@ export default function AdminProfilePage() {
               </select>
               <span className="text-[11px] text-[#71717A]">
                 {profile.aboutEducationId
-                  ? `Terpilih: ${educationsList.find((e) => e.id === profile.aboutEducationId)?.institution || "Kustom"}`
-                  : "Default: Mengikuti urutan pertama"}
+                  ? `Selected: ${educationsList.find((e) => e.id === profile.aboutEducationId)?.institution || "Custom"}`
+                  : "Default: First entry in order"}
               </span>
             </div>
 
@@ -442,14 +442,14 @@ export default function AdminProfilePage() {
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-[#A1A1AA] flex items-center gap-1.5">
                 <Briefcase className="w-3.5 h-3.5 text-[#96A9FF]" />
-                <span>Pengalaman yang Ditampilkan</span>
+                <span>Displayed Experience</span>
               </label>
               <select
                 value={profile.aboutExperienceId || ""}
                 onChange={(e) => setProfile({ ...profile, aboutExperienceId: e.target.value || null })}
                 className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
               >
-                <option value="">Otomatis (Item Teratas / Pertama)</option>
+                <option value="">Automatic (Top / First Item)</option>
                 {experiencesList.map((exp) => (
                   <option key={exp.id} value={exp.id}>
                     {exp.organization} — {exp.role} ({exp.period})
@@ -458,8 +458,8 @@ export default function AdminProfilePage() {
               </select>
               <span className="text-[11px] text-[#71717A]">
                 {profile.aboutExperienceId
-                  ? `Terpilih: ${experiencesList.find((e) => e.id === profile.aboutExperienceId)?.organization || "Kustom"}`
-                  : "Default: Mengikuti urutan pertama"}
+                  ? `Selected: ${experiencesList.find((e) => e.id === profile.aboutExperienceId)?.organization || "Custom"}`
+                  : "Default: First entry in order"}
               </span>
             </div>
 
@@ -467,24 +467,24 @@ export default function AdminProfilePage() {
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-[#A1A1AA] flex items-center gap-1.5">
                 <Cpu className="w-3.5 h-3.5 text-[#22C55E]" />
-                <span>Penelitian yang Ditampilkan</span>
+                <span>Displayed Research</span>
               </label>
               <select
                 value={profile.aboutResearchId || ""}
                 onChange={(e) => setProfile({ ...profile, aboutResearchId: e.target.value || null })}
                 className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
               >
-                <option value="">Otomatis (Item Teratas / Pertama)</option>
+                <option value="">Automatic (Top / First Item)</option>
                 {researchList.map((res) => (
                   <option key={res.id} value={res.id}>
-                    {res.title} ({res.publishedStatus || "Penelitian"})
+                    {res.title} ({res.publishedStatus || "Research"})
                   </option>
                 ))}
               </select>
               <span className="text-[11px] text-[#71717A]">
                 {profile.aboutResearchId
-                  ? `Terpilih: ${researchList.find((r) => r.id === profile.aboutResearchId)?.title?.slice(0, 32) || "Kustom"}...`
-                  : "Default: Mengikuti urutan pertama"}
+                  ? `Selected: ${researchList.find((r) => r.id === profile.aboutResearchId)?.title?.slice(0, 32) || "Custom"}...`
+                  : "Default: First entry in order"}
               </span>
             </div>
           </div>
@@ -492,22 +492,22 @@ export default function AdminProfilePage() {
 
         {/* Section: Kontak & Media Sosial */}
         <div className="p-6 rounded-xl bg-[#15171C] border border-[#2B2D34] flex flex-col gap-4">
-          <h2 className="text-sm font-semibold text-[#F3F4F6]">Kontak, Media Sosial &amp; Dokumen Resume</h2>
+          <h2 className="text-sm font-semibold text-[#F3F4F6]">Contact, Social Media &amp; Resume Document</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-[#A1A1AA]">1. Email Publik Kontak</label>
+              <label className="text-xs font-medium text-[#A1A1AA]">1. Public Contact Email</label>
               <input
                 type="email"
                 value={profile.email}
                 onChange={(e) => setProfile({ ...profile, email: e.target.value })}
-                placeholder="kontak@email.com"
+                placeholder="contact@email.com"
                 className="px-3.5 py-2.5 rounded-lg bg-[#1B1D23] border border-[#2B2D34] text-xs text-[#F3F4F6] focus:border-[#6D8DFF] focus:outline-none"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-[#A1A1AA]">2. URL GitHub</label>
+              <label className="text-xs font-medium text-[#A1A1AA]">2. GitHub URL</label>
               <input
                 type="text"
                 value={profile.githubUrl}
@@ -518,7 +518,7 @@ export default function AdminProfilePage() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-[#A1A1AA]">3. URL LinkedIn</label>
+              <label className="text-xs font-medium text-[#A1A1AA]">3. LinkedIn URL</label>
               <input
                 type="text"
                 value={profile.linkedinUrl}
@@ -529,7 +529,7 @@ export default function AdminProfilePage() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-[#A1A1AA]">4. URL Instagram</label>
+              <label className="text-xs font-medium text-[#A1A1AA]">4. Instagram URL</label>
               <input
                 type="text"
                 value={profile.instagramUrl || ""}
@@ -540,7 +540,7 @@ export default function AdminProfilePage() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-[#A1A1AA]">5. URL TikTok</label>
+              <label className="text-xs font-medium text-[#A1A1AA]">5. TikTok URL</label>
               <input
                 type="text"
                 value={profile.tiktokUrl || ""}
@@ -551,7 +551,7 @@ export default function AdminProfilePage() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-[#A1A1AA]">Dokumen CV / Resume</label>
+              <label className="text-xs font-medium text-[#A1A1AA]">CV / Resume Document</label>
               <div className="flex items-center gap-2">
                 <input
                   type="text"
@@ -585,7 +585,7 @@ export default function AdminProfilePage() {
             className="btn-primary py-2.5 px-6 text-xs font-semibold disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
-            <span>{saving ? "Menyimpan Perubahan..." : "Simpan Seluruh Perubahan"}</span>
+            <span>{saving ? "Saving Changes..." : "Save All Changes"}</span>
           </button>
         </div>
       </form>
